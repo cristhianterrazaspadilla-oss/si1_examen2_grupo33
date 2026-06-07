@@ -1,0 +1,537 @@
+@import 'tailwindcss';
+@plugin "daisyui";
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+@layer base {
+    body.app-shell {
+        background-color: #020617;
+        color: #e2e8f0;
+    }
+
+    .login-screen input,
+    .login-screen textarea,
+    .login-screen select {
+        color-scheme: dark;
+    }
+}
+
+@layer components {
+    .login-screen .input,
+    .login-screen input[type="email"],
+    .login-screen input[type="password"],
+    .login-screen textarea,
+    .login-screen select {
+        border-color: rgba(96, 165, 250, 0.2) !important;
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.72) 0%, rgba(19, 31, 55, 0.7) 100%) !important;
+        color: #f8fafc !important;
+        -webkit-text-fill-color: #f8fafc !important;
+        box-shadow: 0 10px 24px rgba(2, 6, 23, 0.16) !important;
+        transition:
+            border-color 180ms ease,
+            background-color 180ms ease,
+            box-shadow 180ms ease;
+        caret-color: #f8fafc;
+    }
+
+    .login-screen label.input {
+        gap: 0.85rem;
+        overflow: hidden;
+    }
+
+    .login-screen label.input svg,
+    .login-screen label.input button,
+    .login-screen label.input span {
+        border: 0 !important;
+        box-shadow: none !important;
+        background: transparent !important;
+    }
+
+    .login-screen label.input input {
+        min-height: auto;
+        padding-inline: 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+    }
+
+    .login-screen .input:hover,
+    .login-screen input:hover,
+    .login-screen textarea:hover,
+    .login-screen select:hover {
+        border-color: rgba(125, 211, 252, 0.28) !important;
+        background: linear-gradient(180deg, rgba(20, 31, 56, 0.78) 0%, rgba(24, 39, 68, 0.74) 100%) !important;
+    }
+
+    .login-screen .input:focus,
+    .login-screen input:focus,
+    .login-screen textarea:focus,
+    .login-screen select:focus,
+    .login-screen .input:focus-within {
+        border-color: rgba(59, 130, 246, 0.52) !important;
+        background: linear-gradient(180deg, rgba(24, 39, 68, 0.84) 0%, rgba(28, 45, 78, 0.8) 100%) !important;
+        box-shadow:
+            0 0 0 1px rgba(59, 130, 246, 0.34),
+            0 0 0 4px rgba(37, 99, 235, 0.14),
+            0 18px 38px rgba(29, 78, 216, 0.12) !important;
+        outline: none;
+    }
+
+    .login-screen input::placeholder,
+    .login-screen textarea::placeholder {
+        color: rgba(148, 163, 184, 0.82) !important;
+    }
+
+    .login-screen input:-webkit-autofill,
+    .login-screen input:-webkit-autofill:hover,
+    .login-screen input:-webkit-autofill:focus,
+    .login-screen input:-webkit-autofill:active,
+    .login-screen textarea:-webkit-autofill,
+    .login-screen textarea:-webkit-autofill:hover,
+    .login-screen textarea:-webkit-autofill:focus,
+    .login-screen select:-webkit-autofill,
+    .login-screen select:-webkit-autofill:hover,
+    .login-screen select:-webkit-autofill:focus {
+        -webkit-text-fill-color: #f8fafc !important;
+        caret-color: #f8fafc !important;
+        border: 1px solid rgba(96, 165, 250, 0.2) !important;
+        -webkit-box-shadow:
+            0 0 0 1000px rgba(17, 24, 39, 0.94) inset,
+            0 0 0 1px rgba(96, 165, 250, 0.18),
+            0 10px 24px rgba(2, 6, 23, 0.16) !important;
+        box-shadow:
+            0 0 0 1000px rgba(17, 24, 39, 0.94) inset,
+            0 0 0 1px rgba(96, 165, 250, 0.18),
+            0 10px 24px rgba(2, 6, 23, 0.16) !important;
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.82) 0%, rgba(19, 31, 55, 0.78) 100%) !important;
+        transition: background-color 99999s ease-in-out 0s;
+    }
+
+    .app-shell .card {
+        border: 1px solid rgba(148, 163, 184, 0.12);
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.82) 0%, rgba(15, 23, 42, 0.62) 100%);
+        box-shadow: 0 25px 80px rgba(2, 6, 23, 0.55);
+        backdrop-filter: blur(24px);
+    }
+
+    .app-shell .form-control {
+        gap: 0.6rem;
+    }
+
+    .app-shell .card-title,
+    .app-shell h1,
+    .app-shell h2,
+    .app-shell h3,
+    .app-shell h4 {
+        color: #f8fafc;
+    }
+
+    .app-shell .text-base-content\/70,
+    .app-shell .text-base-content\/60,
+    .app-shell .label-text,
+    .app-shell p {
+        color: rgba(226, 232, 240, 0.78);
+    }
+
+    .app-shell .label-text {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: rgba(226, 232, 240, 0.92);
+    }
+
+    .app-shell .label-text-alt {
+        color: rgba(148, 163, 184, 0.82);
+    }
+
+    .app-shell .alert {
+        border: 1px solid rgba(148, 163, 184, 0.12);
+        background: rgba(15, 23, 42, 0.72);
+        color: #e2e8f0;
+        box-shadow: 0 18px 45px rgba(2, 6, 23, 0.35);
+    }
+
+    .app-shell .input,
+    .app-shell .select,
+    .app-shell .textarea,
+    .app-shell .file-input,
+    .app-shell input[type="text"],
+    .app-shell input[type="email"],
+    .app-shell input[type="password"],
+    .app-shell input[type="number"],
+    .app-shell input[type="date"],
+    .app-shell input[type="time"],
+    .app-shell input[type="file"],
+    .app-shell textarea,
+    .app-shell select {
+        border-color: rgba(96, 165, 250, 0.22);
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.9) 0%, rgba(19, 31, 55, 0.88) 100%) !important;
+        color: #f8fafc !important;
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.03),
+            inset 0 -1px 0 rgba(15, 23, 42, 0.35),
+            0 10px 24px rgba(2, 6, 23, 0.18) !important;
+        border-radius: 1rem;
+        min-height: 3.4rem;
+        padding-inline: 1rem;
+        -webkit-text-fill-color: #f8fafc;
+        transition:
+            border-color 180ms ease,
+            background-color 180ms ease,
+            box-shadow 180ms ease,
+            transform 180ms ease;
+    }
+
+    .app-shell .select {
+        appearance: none;
+        background-image:
+            linear-gradient(45deg, transparent 50%, rgba(191, 219, 254, 0.82) 50%),
+            linear-gradient(135deg, rgba(191, 219, 254, 0.82) 50%, transparent 50%);
+        background-position:
+            calc(100% - 1.2rem) calc(50% - 0.14rem),
+            calc(100% - 0.85rem) calc(50% - 0.14rem);
+        background-size: 0.45rem 0.45rem, 0.45rem 0.45rem;
+        background-repeat: no-repeat;
+        padding-right: 2.8rem;
+    }
+
+    .app-shell .textarea {
+        min-height: 8rem;
+        padding-block: 0.95rem;
+    }
+
+    .app-shell .file-input {
+        padding-inline: 0.35rem;
+        padding-block: 0.35rem;
+    }
+
+    .app-shell .file-input::file-selector-button {
+        border: 0;
+        border-radius: 0.8rem;
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.92) 0%, rgba(14, 165, 233, 0.82) 100%);
+        color: #fff;
+        margin-right: 0.8rem;
+        padding: 0.75rem 1rem;
+        cursor: pointer;
+    }
+
+    .app-shell select,
+    .app-shell option {
+        background-color: #0f172a !important;
+        color: #f8fafc !important;
+    }
+
+    .app-shell .input::placeholder,
+    .app-shell .textarea::placeholder,
+    .app-shell input::placeholder,
+    .app-shell textarea::placeholder,
+    .app-shell select:invalid {
+        color: rgba(148, 163, 184, 0.82);
+    }
+
+    .app-shell .input:hover,
+    .app-shell .select:hover,
+    .app-shell .textarea:hover,
+    .app-shell .file-input:hover,
+    .app-shell input:hover,
+    .app-shell select:hover,
+    .app-shell textarea:hover {
+        border-color: rgba(125, 211, 252, 0.28);
+        background: linear-gradient(180deg, rgba(20, 31, 56, 0.94) 0%, rgba(24, 39, 68, 0.9) 100%) !important;
+    }
+
+    .app-shell .input:focus,
+    .app-shell .select:focus,
+    .app-shell .textarea:focus,
+    .app-shell .file-input:focus,
+    .app-shell input:focus,
+    .app-shell select:focus,
+    .app-shell textarea:focus {
+        outline: none;
+        border-color: rgba(59, 130, 246, 0.48) !important;
+        background: linear-gradient(180deg, rgba(24, 39, 68, 0.96) 0%, rgba(28, 45, 78, 0.92) 100%) !important;
+        box-shadow:
+            0 0 0 1px rgba(59, 130, 246, 0.34),
+            0 0 0 4px rgba(37, 99, 235, 0.14),
+            0 18px 38px rgba(29, 78, 216, 0.14),
+            inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
+    }
+
+    .app-shell .input:focus-visible,
+    .app-shell .select:focus-visible,
+    .app-shell .textarea:focus-visible,
+    .app-shell .file-input:focus-visible {
+        outline: none;
+    }
+
+    .app-shell input:disabled,
+    .app-shell input[readonly],
+    .app-shell select:disabled,
+    .app-shell textarea:disabled,
+    .app-shell textarea[readonly] {
+        background: rgba(15, 23, 42, 0.65) !important;
+        color: rgba(226, 232, 240, 0.82) !important;
+        border-color: rgba(148, 163, 184, 0.16) !important;
+        opacity: 0.9;
+        -webkit-text-fill-color: rgba(226, 232, 240, 0.82);
+    }
+
+    .app-shell input:-webkit-autofill,
+    .app-shell input:-webkit-autofill:hover,
+    .app-shell input:-webkit-autofill:focus,
+    .app-shell textarea:-webkit-autofill,
+    .app-shell textarea:-webkit-autofill:hover,
+    .app-shell textarea:-webkit-autofill:focus,
+    .app-shell select:-webkit-autofill,
+    .app-shell select:-webkit-autofill:hover,
+    .app-shell select:-webkit-autofill:focus {
+        -webkit-text-fill-color: #f8fafc !important;
+        caret-color: #f8fafc;
+        border: 1px solid rgba(96, 165, 250, 0.22) !important;
+        -webkit-box-shadow:
+            0 0 0 1000px rgba(17, 24, 39, 0.96) inset,
+            0 0 0 1px rgba(96, 165, 250, 0.18),
+            0 10px 24px rgba(2, 6, 23, 0.18) !important;
+        box-shadow:
+            0 0 0 1000px rgba(17, 24, 39, 0.96) inset,
+            0 0 0 1px rgba(96, 165, 250, 0.18),
+            0 10px 24px rgba(2, 6, 23, 0.18) !important;
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.96) 0%, rgba(19, 31, 55, 0.92) 100%) !important;
+        transition: background-color 99999s ease-in-out 0s;
+    }
+
+    .app-shell .btn {
+        border-radius: 1rem;
+        font-weight: 600;
+        transition: all 180ms ease;
+    }
+
+    .app-shell .btn-primary {
+        border: 0;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 45%, #0ea5e9 100%);
+        color: #fff;
+        box-shadow: 0 18px 40px rgba(29, 78, 216, 0.28);
+    }
+
+    .app-shell .btn-primary:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.08);
+    }
+
+    .app-shell .btn-outline {
+        border-color: rgba(96, 165, 250, 0.18);
+        background: rgba(15, 23, 42, 0.48);
+        color: #e2e8f0;
+    }
+
+    .app-shell .btn-outline:hover {
+        border-color: rgba(96, 165, 250, 0.32);
+        background: rgba(30, 41, 59, 0.88);
+        color: #fff;
+    }
+
+    .app-shell .btn-info {
+        border: 1px solid rgba(34, 211, 238, 0.18);
+        background: linear-gradient(135deg, rgba(8, 47, 73, 0.9) 0%, rgba(6, 182, 212, 0.32) 100%);
+        color: #d5f5ff;
+        box-shadow: 0 14px 30px rgba(6, 182, 212, 0.12);
+    }
+
+    .app-shell .btn-info:hover {
+        filter: brightness(1.08);
+    }
+
+    .app-shell .btn-warning {
+        border: 1px solid rgba(251, 191, 36, 0.18);
+        background: linear-gradient(135deg, rgba(69, 26, 3, 0.95) 0%, rgba(217, 119, 6, 0.35) 100%);
+        color: #fde68a;
+        box-shadow: 0 14px 30px rgba(245, 158, 11, 0.14);
+    }
+
+    .app-shell .btn-error,
+    .app-shell .btn-danger {
+        border: 1px solid rgba(248, 113, 113, 0.18);
+        background: linear-gradient(135deg, rgba(69, 10, 10, 0.95) 0%, rgba(239, 68, 68, 0.32) 100%);
+        color: #fecaca;
+        box-shadow: 0 14px 30px rgba(239, 68, 68, 0.14);
+    }
+
+    .app-shell .btn-sm {
+        min-height: 2.4rem;
+        padding-inline: 0.95rem;
+    }
+
+    .app-shell .table {
+        border-radius: 1.25rem;
+        overflow: hidden;
+        background: rgba(15, 23, 42, 0.22);
+        border: 1px solid rgba(148, 163, 184, 0.08);
+    }
+
+    .app-shell .table thead tr,
+    .app-shell .table tfoot tr {
+        border-bottom-color: rgba(148, 163, 184, 0.12);
+        color: rgba(191, 219, 254, 0.78);
+    }
+
+    .app-shell .table tbody tr {
+        border-bottom-color: rgba(148, 163, 184, 0.08);
+    }
+
+    .app-shell .table tbody tr:hover {
+        background: rgba(30, 41, 59, 0.48);
+    }
+
+    .app-shell .table th,
+    .app-shell .table td {
+        padding-block: 1rem;
+        vertical-align: middle;
+    }
+
+    .app-shell .badge-success {
+        border-color: rgba(52, 211, 153, 0.24);
+        background: rgba(16, 185, 129, 0.14);
+        color: #a7f3d0;
+    }
+
+    .app-shell .badge-warning {
+        border-color: rgba(251, 191, 36, 0.24);
+        background: rgba(245, 158, 11, 0.14);
+        color: #fde68a;
+    }
+
+    .app-shell .badge-error {
+        border-color: rgba(248, 113, 113, 0.24);
+        background: rgba(239, 68, 68, 0.14);
+        color: #fecaca;
+    }
+
+    .app-shell .badge-info {
+        border-color: rgba(34, 211, 238, 0.24);
+        background: rgba(6, 182, 212, 0.14);
+        color: #bae6fd;
+    }
+
+    .app-shell .badge {
+        border-radius: 999px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+    }
+
+    .app-shell .app-form {
+        display: grid;
+        gap: 1.5rem;
+    }
+
+    .app-shell .app-form-section {
+        border: 1px solid rgba(148, 163, 184, 0.1);
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.46) 0%, rgba(15, 23, 42, 0.24) 100%);
+        border-radius: 1.4rem;
+        padding: 1.25rem;
+    }
+
+    .app-shell .app-section-title {
+        margin-bottom: 1rem;
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        color: #f8fafc;
+    }
+
+    .app-shell .app-section-subtitle {
+        margin-top: 0.25rem;
+        margin-bottom: 1rem;
+        color: rgba(148, 163, 184, 0.78);
+        font-size: 0.9rem;
+    }
+
+    .app-shell .app-form-grid {
+        display: grid;
+        gap: 1rem;
+    }
+
+    @media (min-width: 768px) {
+        .app-shell .app-form-grid.cols-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    .app-shell .app-form-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        justify-content: flex-start;
+    }
+
+    .app-shell .detail-grid {
+        display: grid;
+        gap: 1rem;
+    }
+
+    @media (min-width: 768px) {
+        .app-shell .detail-grid.cols-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    .app-shell .detail-item {
+        border: 1px solid rgba(148, 163, 184, 0.1);
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.46) 0%, rgba(15, 23, 42, 0.24) 100%);
+        border-radius: 1.2rem;
+        padding: 1rem 1.1rem;
+    }
+
+    .app-shell .detail-item-label {
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgba(191, 219, 254, 0.72);
+    }
+
+    .app-shell .detail-item-value {
+        margin-top: 0.55rem;
+        font-size: 1rem;
+        line-height: 1.7;
+        color: #f8fafc;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .app-shell .pagination,
+    .app-shell nav[role="navigation"] {
+        color: #e2e8f0;
+    }
+
+    .app-shell .app-time-input {
+        color-scheme: dark;
+        appearance: none;
+    }
+
+    .app-shell .app-time-input::-webkit-calendar-picker-indicator {
+        filter: invert(87%) sepia(11%) saturate(604%) hue-rotate(181deg) brightness(100%) contrast(95%);
+        opacity: 0.9;
+        cursor: pointer;
+    }
+
+    .app-shell .app-time-input::-webkit-datetime-edit,
+    .app-shell .app-time-input::-webkit-datetime-edit-fields-wrapper,
+    .app-shell .app-time-input::-webkit-datetime-edit-hour-field,
+    .app-shell .app-time-input::-webkit-datetime-edit-minute-field,
+    .app-shell .app-time-input::-webkit-datetime-edit-text {
+        color: #f8fafc;
+        padding: 0;
+    }
+
+    .app-shell .app-time-input::-webkit-clear-button,
+    .app-shell .app-time-input::-webkit-inner-spin-button,
+    .app-shell .app-time-input::-webkit-outer-spin-button {
+        display: none;
+    }
+}

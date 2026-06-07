@@ -1,0 +1,76 @@
+@extends('layouts.app')
+
+@section('title', 'CU13 Registrar Asistencia Docente | Editar asistencia')
+
+@section('content')
+    <div class="flex items-center justify-between gap-4">
+        <x-page-title title="Editar asistencia docente" subtitle="Actualiza el horario, el estado de asistencia, la hora de registro y las observaciones del registro." />
+        <a href="{{ route('gestion-academica-cup.asistencias-docentes.show', $asistencia) }}" class="btn btn-outline">Volver</a>
+    </div>
+
+    @if ($errors->any())
+        <div class="mb-6 space-y-2">
+            @foreach ($errors->all() as $error)
+                <x-alert type="error" :message="$error" />
+            @endforeach
+        </div>
+    @endif
+
+    <x-card title="Formulario de edicion">
+        <form method="POST" action="{{ route('gestion-academica-cup.asistencias-docentes.update', $asistencia) }}" class="app-form">
+            @csrf
+            @method('PUT')
+            <section class="app-form-section">
+                <h2 class="app-section-title">Fecha y horario</h2>
+                <div class="app-form-grid cols-2">
+                    <label class="form-control">
+                        <span class="label-text">Fecha</span>
+                        <input type="date" name="fecha" value="{{ old('fecha', optional($asistencia->fecha)->format('Y-m-d') ?? $asistencia->fecha) }}" class="input input-bordered" required>
+                    </label>
+                    <label class="form-control md:col-span-2">
+                        <span class="label-text">Horario</span>
+                        <select name="horario_id" class="select select-bordered" required>
+                            <option value="">Selecciona un horario</option>
+                            @foreach ($horarios as $horario)
+                                <option value="{{ $horario->id }}" @selected((string) old('horario_id', $asistencia->horario_id) === (string) $horario->id)>
+                                    {{ $horario->dia_semana }} {{ substr((string) $horario->hora_inicio, 0, 5) }}-{{ substr((string) $horario->hora_fin, 0, 5) }} | {{ $horario->grupo?->nombre }} | {{ $horario->materia?->nombre }} | {{ trim(($horario->docente?->nombres ?? '') . ' ' . ($horario->docente?->apellidos ?? '')) }} | {{ $horario->aula?->nombre }} | Gestion {{ $horario->grupo?->gestion }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </label>
+                </div>
+            </section>
+
+            <section class="app-form-section">
+                <h2 class="app-section-title">Estado de asistencia</h2>
+                <div class="app-form-grid cols-2">
+                    <label class="form-control">
+                        <span class="label-text">Estado asistencia</span>
+                        <select name="estado_asistencia" class="select select-bordered" required>
+                            @foreach ($estadosAsistencia as $estadoOption)
+                                <option value="{{ $estadoOption }}" @selected(old('estado_asistencia', $asistencia->estado_asistencia) === $estadoOption)>{{ $estadoOption }}</option>
+                            @endforeach
+                        </select>
+                    </label>
+                    <label class="form-control">
+                        <span class="label-text">Hora de registro</span>
+                        <input type="time" name="hora_registro" value="{{ old('hora_registro', $asistencia->hora_registro ? substr((string) $asistencia->hora_registro, 0, 5) : '') }}" class="input input-bordered">
+                    </label>
+                </div>
+            </section>
+
+            <section class="app-form-section">
+                <h2 class="app-section-title">Observacion</h2>
+                <label class="form-control">
+                    <span class="label-text">Observacion</span>
+                    <textarea name="observacion" class="textarea textarea-bordered">{{ old('observacion', $asistencia->observacion) }}</textarea>
+                </label>
+            </section>
+
+            <div class="app-form-actions">
+                <button type="submit" class="btn btn-primary">Actualizar</button>
+                <a href="{{ route('gestion-academica-cup.asistencias-docentes.show', $asistencia) }}" class="btn btn-outline">Volver</a>
+            </div>
+        </form>
+    </x-card>
+@endsection
