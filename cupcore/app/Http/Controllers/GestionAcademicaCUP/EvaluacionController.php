@@ -12,6 +12,12 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
+/**
+ * Paquete: Gestión Académica del CUP
+ * Caso de Uso: CU9 (Administrar Materias y Evaluaciones - Sección Evaluaciones)
+ * 
+ * Gestiona la ponderación y calendarios de exámenes (máximo 3 por materia: 1er Parcial 30%, 2do Parcial 30%, Examen Final 40%).
+ */
 class EvaluacionController extends Controller
 {
     // Controlador del caso de uso: CU9 Administrar Materias y Evaluaciones

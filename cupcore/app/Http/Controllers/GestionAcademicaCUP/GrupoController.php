@@ -15,6 +15,13 @@ use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Throwable;
 
+/**
+ * Paquete: Gestión Académica del CUP
+ * Caso de Uso: CU10 (Organizar Grupos Académicos)
+ * 
+ * Implementa el algoritmo de distribución y agrupamiento automático de postulantes inscritos.
+ * Organiza a los estudiantes en grupos alfabéticos con capacidad parametrizable (máximo 70 estudiantes).
+ */
 class GrupoController extends Controller
 {
     // Controlador del caso de uso: CU10 Organizar Grupos Academicos

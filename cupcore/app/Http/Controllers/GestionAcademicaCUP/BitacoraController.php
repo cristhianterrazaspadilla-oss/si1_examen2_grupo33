@@ -11,8 +11,18 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
+/**
+ * Paquete: Reportes, Dashboard y Comunicación (Consolidado en este namespace)
+ * Caso de Uso: CU17 - Consulta de bitácora y auditoría del sistema.
+ *
+ * Proporciona a los administradores y auditoría la capacidad de rastrear las acciones
+ * ejecutadas por los usuarios en el sistema, detallando el módulo, acción, descripción e IP.
+ */
 class BitacoraController extends Controller
 {
+    /**
+     * Listado paginado de auditoría con filtros por usuario, acción, módulo y rango de fechas.
+     */
     public function index(Request $request): View|RedirectResponse
     {
         $this->authorizeRoles();
@@ -125,6 +135,9 @@ class BitacoraController extends Controller
         ]);
     }
 
+    /**
+     * Muestra el detalle particular de una acción auditada.
+     */
     public function show(int $id): View
     {
         $this->authorizeRoles();

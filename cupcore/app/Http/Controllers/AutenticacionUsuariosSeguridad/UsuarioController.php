@@ -12,6 +12,14 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
+/**
+ * Paquete: Autenticación, Usuarios y Seguridad
+ * Caso de Uso: CU3 (Administrar Usuarios y Roles - Sección Usuarios)
+ * 
+ * Gestiona el ciclo de vida de los usuarios institucionales (Administradores, Coordinadores, Docentes y Postulantes).
+ * Registra auditorías automáticas a través de BitacoraHelper en la creación, edición, asignación de roles 
+ * y cambios de estado (activar/desactivar).
+ */
 class UsuarioController extends Controller
 {
     // Controlador del caso de uso: CU3 Administrar Usuarios y Roles

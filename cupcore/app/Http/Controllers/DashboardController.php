@@ -5,6 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
 
+/**
+ * Dashboard General del Sistema
+ * 
+ * Funciona como landing page tras la autenticación y actúa como resumen ejecutivo del sistema.
+ * Adapta dinámicamente los KPIs y estadísticas principales en base al Rol del usuario activo.
+ * El menú de navegación (sidebar) se filtra de forma dinámica por rol directamente en el layout 
+ * principal (layouts/app.blade.php), eliminando la necesidad de una página activa "/panel-control".
+ */
 class DashboardController extends Controller
 {
     public function index(): View

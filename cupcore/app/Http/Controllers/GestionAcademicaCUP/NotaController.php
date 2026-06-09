@@ -19,8 +19,18 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
+/**
+ * Paquete: Gestión Académica del CUP
+ * Caso de Uso: CU14 - Registro de notas y seguimiento académico.
+ *
+ * Administra el registro de calificaciones de los postulantes para las evaluaciones académicas (1, 2 y 3).
+ * Cuenta con control de alcance de visibilidad según el rol del usuario (ej. docente limitado a sus asignaciones).
+ */
 class NotaController extends Controller
 {
+    /**
+     * Muestra el listado de calificaciones registradas con filtros por materia, evaluación y grupo.
+     */
     public function index(Request $request): View
     {
         $filters = $this->extractFilters($request);
@@ -57,6 +67,10 @@ class NotaController extends Controller
         ]);
     }
 
+    /**
+     * Registra una nueva calificación en el sistema.
+     * Resuelve el contexto académico y valida la pertenencia activa del postulante al grupo, registrando en bitácora.
+     */
     public function store(Request $request): RedirectResponse
     {
         $access = $this->accessContext();
@@ -106,6 +120,10 @@ class NotaController extends Controller
         ]);
     }
 
+    /**
+     * Actualiza una calificación previamente registrada.
+     * Valida que no exista duplicidad y registra la actualización en la bitácora de auditoría.
+     */
     public function update(Request $request, Nota $nota): RedirectResponse
     {
         $access = $this->accessContext();
@@ -132,6 +150,10 @@ class NotaController extends Controller
             ->with('success', 'Nota actualizada correctamente.');
     }
 
+    /**
+     * Muestra la sábana o matriz de seguimiento académico.
+     * Permite visualizar de forma consolidada el avance y promedio ponderado de las 3 evaluaciones obligatorias por materia.
+     */
     public function seguimiento(Request $request): View
     {
         $filters = $this->extractFilters($request);
@@ -236,6 +258,11 @@ class NotaController extends Controller
             });
     }
 
+    /**
+     * Resuelve y valida el contexto académico previo a registrar o editar una nota.
+     * Verifica que el postulante esté INSCRITO, pertenezca al grupo activo, que la materia y evaluación existan y
+     * correspondan, y que el docente tenga asignada la materia en la gestión correspondiente.
+     */
     protected function resolveAcademicContext(array $validated, array $access, ?Nota $currentNota = null): array
     {
         $grupo = Grupo::query()->findOrFail((int) $validated['grupo_id']);
@@ -434,6 +461,11 @@ class NotaController extends Controller
         return $rows->sum(fn (array $row) => count($row['faltantes']));
     }
 
+    /**
+     * Obtiene los datos consolidados de postulantes y sus evaluaciones por materia.
+     * Calcula dinámicamente el promedio ponderado final basándose en el porcentaje de cada evaluación (1, 2, 3)
+     * e identifica si el registro académico del postulante está incompleto.
+     */
     protected function buildSeguimientoRows(array $filters, array $access)
     {
         $pairs = DB::table('grupo_postulantes')

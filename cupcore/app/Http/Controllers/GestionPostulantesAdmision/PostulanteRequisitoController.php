@@ -13,6 +13,14 @@ use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
+/**
+ * Paquete: Gestión de Postulantes y Admisión
+ * Casos de Uso: CU6 (Cargar Requisitos de Inscripción) y CU7 (Validar Requisitos de Inscripción)
+ * 
+ * Modela la relación N:M entre postulantes y requisitos de inscripción.
+ * Permite a los coordinadores validar, observar o marcar requisitos como aprobados, 
+ * actualizando el estado de inscripción del postulante de forma automática.
+ */
 class PostulanteRequisitoController extends Controller
 {
     // Controlador del caso de uso: CU6 Gestionar Requisitos de Admisión

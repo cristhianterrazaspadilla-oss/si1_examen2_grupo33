@@ -15,6 +15,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
+/**
+ * Paquete: Reportes, Dashboard y Comunicación (Consolidado en este namespace)
+ * Caso de Uso: CU19 - Gestión de notificaciones internas.
+ *
+ * Canaliza la mensajería y alertas del sistema hacia los usuarios, soportando la comunicación
+ * de hitos como confirmación de pagos, publicación de notas/resultados y cambios de horarios.
+ */
 class NotificacionController extends Controller
 {
     /**
@@ -31,6 +38,9 @@ class NotificacionController extends Controller
         'SISTEMA',
     ];
 
+    /**
+     * Muestra la bandeja de entrada del usuario actual con filtros de estado de lectura y tipo.
+     */
     public function index(Request $request): View
     {
         $user = $request->user();
@@ -71,6 +81,9 @@ class NotificacionController extends Controller
         ]);
     }
 
+    /**
+     * Muestra la bandeja de salida (notificaciones enviadas) para usuarios autorizados.
+     */
     public function enviadas(Request $request): View
     {
         $user = $request->user();
@@ -120,6 +133,9 @@ class NotificacionController extends Controller
         ]);
     }
 
+    /**
+     * Guarda y despacha la notificación a su destinatario, registrando la operación en la bitácora.
+     */
     public function store(Request $request): RedirectResponse
     {
         $user = $request->user();
@@ -176,6 +192,9 @@ class NotificacionController extends Controller
         ]);
     }
 
+    /**
+     * Marca la notificación recibida como leída registrando la marca de tiempo de lectura.
+     */
     public function marcarLeida(Request $request, Notificacion $notificacion): RedirectResponse
     {
         $user = $request->user();

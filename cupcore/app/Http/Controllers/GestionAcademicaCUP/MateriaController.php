@@ -10,6 +10,12 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
+/**
+ * Paquete: Gestión Académica del CUP
+ * Caso de Uso: CU9 (Administrar Materias y Evaluaciones - Sección Materias)
+ * 
+ * Modela las asignaturas académicas que componen el curso preuniversitario.
+ */
 class MateriaController extends Controller
 {
     // Controlador del caso de uso: CU9 Administrar Materias y Evaluaciones

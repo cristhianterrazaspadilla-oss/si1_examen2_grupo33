@@ -7,8 +7,19 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
+/**
+ * Helper de Auditoría General del Sistema.
+ *
+ * Centraliza la persistencia de las actividades y eventos generados por los usuarios
+ * en la tabla `bitacoras`. Diseñado de forma tolerante a fallos: si el registro
+ * de bitácora falla, la operación principal no debe verse interrumpida, 
+ * sino que se captura la excepción y se escribe una advertencia en el log de Laravel.
+ */
 class BitacoraHelper
 {
+    /**
+     * Registra un evento de auditoría en la base de datos de manera tolerante a fallos.
+     */
     public static function registrar(
         string $accion,
         string $modulo,

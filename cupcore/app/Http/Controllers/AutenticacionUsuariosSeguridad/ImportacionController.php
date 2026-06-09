@@ -10,6 +10,14 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 
+/**
+ * Paquete: Autenticación, Usuarios y Seguridad
+ * Caso de Uso: CU4 (Importar Datos Masivos Excel/CSV)
+ * 
+ * Permite cargar masivamente cuentas de usuario desde archivos compatibles (XLSX, XLS, CSV).
+ * Delega la validación de filas e inserciones a la clase de importación UsuariosImport, 
+ * y audita el resultado final a través de BitacoraHelper.
+ */
 class ImportacionController extends Controller
 {
     // Controlador del caso de uso: CU4 Importar Datos Masivos Excel/CSV

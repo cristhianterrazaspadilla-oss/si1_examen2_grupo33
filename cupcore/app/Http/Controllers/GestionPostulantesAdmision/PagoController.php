@@ -16,6 +16,14 @@ use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
 use Throwable;
 
+/**
+ * Paquete: Gestión de Postulantes y Admisión
+ * Caso de Uso: CU8 (Registrar Pagos / Integración Pasarela Stripe)
+ * 
+ * Gestiona el registro de pagos de inscripción de postulantes.
+ * Se integra con Stripe SDK para la creación y verificación de sesiones de pago (Checkout Sessions).
+ * Tras confirmar el pago (Paid), inscribe formalmente al postulante en el preuniversitario.
+ */
 class PagoController extends Controller
 {
     // Controlador del caso de uso: CU7 Gestionar Pagos

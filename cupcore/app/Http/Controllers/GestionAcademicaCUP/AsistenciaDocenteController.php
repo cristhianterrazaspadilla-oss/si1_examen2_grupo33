@@ -13,8 +13,18 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
+/**
+ * Paquete: Gestión Académica del CUP (Consolidado técnicamente en este namespace)
+ * Caso de Uso: CU13 - Registro y seguimiento de asistencia docente.
+ *
+ * Administra el registro de asistencia diaria de los docentes en base a su asignación y horario.
+ * Permite el control de presentismo, ausencias, retrasos y justificaciones.
+ */
 class AsistenciaDocenteController extends Controller
 {
+    /**
+     * Listado paginado de asistencias de docentes con filtros avanzados.
+     */
     public function index(Request $request): View
     {
         $fecha = $request->string('fecha')->toString();
@@ -75,6 +85,10 @@ class AsistenciaDocenteController extends Controller
         ]);
     }
 
+    /**
+     * Registra la asistencia para un docente en un horario y fecha.
+     * Valida que el horario esté activo y no sea un registro duplicado, y escribe en bitácora.
+     */
     public function store(Request $request): RedirectResponse
     {
         $validated = $this->validateAsistenciaRequest($request);
@@ -123,6 +137,10 @@ class AsistenciaDocenteController extends Controller
         ]);
     }
 
+    /**
+     * Actualiza una asistencia docente existente.
+     * Valida que el horario siga siendo elegible, comprueba duplicados y audita la acción.
+     */
     public function update(Request $request, AsistenciaDocente $asistenciaDocente): RedirectResponse
     {
         $validated = $this->validateAsistenciaRequest($request);
@@ -163,6 +181,10 @@ class AsistenciaDocenteController extends Controller
         ]);
     }
 
+    /**
+     * Resuelve el horario y valida la integridad y estado activo de todas sus relaciones.
+     * Si alguna entidad (docente, grupo, materia, aula) está inactiva, lanza excepción de validación.
+     */
     protected function resolveHorarioValido(int $horarioId): Horario
     {
         $horario = Horario::query()

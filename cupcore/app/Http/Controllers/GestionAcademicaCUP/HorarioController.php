@@ -16,6 +16,13 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Throwable;
 
+/**
+ * Paquete: Gestión Académica del CUP
+ * Caso de Uso: CU11 (Administrar Horarios y Aulas - Sección Horarios)
+ * 
+ * Planifica los bloques horarios de clases.
+ * Valida la no colisión de recursos críticos (mismo docente, aula o grupo no pueden tener cruces horarios).
+ */
 class HorarioController extends Controller
 {
     public function index(Request $request): View

@@ -23,10 +23,20 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Throwable;
 
+/**
+ * Paquete: Gestión Académica del CUP
+ * Caso de Uso: CU15 - Generación y recalculo de resultados de admisión.
+ *
+ * Evalúa el promedio final de notas de los postulantes, define su estado de aprobación (min. 51.00) 
+ * y les asigna carrera/cupo disponible según sus opciones de preferencia (1ra y 2da opción).
+ */
 class ResultadoAdmisionController extends Controller
 {
     protected float $notaMinimaAprobacion = 51.00;
 
+    /**
+     * Listado general de resultados de admisión con filtros de gestión, carrera y estado del resultado.
+     */
     public function index(Request $request): View
     {
         $this->authorizeRoles();
@@ -63,6 +73,9 @@ class ResultadoAdmisionController extends Controller
         ]);
     }
 
+    /**
+     * Genera de forma individual el resultado de admisión para un postulante específico.
+     */
     public function store(Request $request): RedirectResponse
     {
         $this->authorizeRoles();
@@ -134,6 +147,10 @@ class ResultadoAdmisionController extends Controller
         ]);
     }
 
+    /**
+     * Modifica las observaciones del resultado o gatilla el recalculo general de notas y cupos.
+     * El recalculo se ejecuta bajo una transacción y exige una justificación de modificación.
+     */
     public function update(Request $request, ResultadoAdmision $resultado): RedirectResponse
     {
         $this->authorizeRoles();
@@ -230,6 +247,10 @@ class ResultadoAdmisionController extends Controller
         ]);
     }
 
+    /**
+     * Lote masivo que recorre todos los postulantes inscritos y genera su resultado
+     * si todas sus calificaciones de materias están cargadas de forma completa.
+     */
     public function generacionMasiva(Request $request): RedirectResponse
     {
         $this->authorizeRoles();
@@ -481,6 +502,10 @@ class ResultadoAdmisionController extends Controller
         }
     }
 
+    /**
+     * Motor principal de generación de resultados. Realiza el cálculo de promedios, valida la disponibilidad 
+     * de cupos en base a opciones de carrera e inserta el resultado atómicamente, actualizando los contadores de cupos.
+     */
     protected function generarResultadoParaPostulante(Postulante $postulante): ResultadoAdmision
     {
         if ($postulante->estado_inscripcion !== 'INSCRITO') {
@@ -606,6 +631,10 @@ class ResultadoAdmisionController extends Controller
         return ResultadoAdmision::query()->findOrFail($resultadoId);
     }
 
+    /**
+     * Recalcula el promedio del postulante y realiza transiciones de cupos (liberando el anterior
+     * y ocupando el nuevo) si la asignación de carrera varía como producto de nuevas notas registradas.
+     */
     protected function recalcularResultadoExistente(ResultadoAdmision $resultado, string $justificacion): void
     {
         $resultado->load(['postulante', 'carreraAsignada']);
@@ -655,6 +684,11 @@ class ResultadoAdmisionController extends Controller
         ]);
     }
 
+    /**
+     * Aplica las reglas del negocio de asignación:
+     * Si el promedio final es menor a 51.00 es REPROBADO.
+     * Si aprueba, evalúa disponibilidad de cupos en Carrera Primera Opción, luego en Segunda Opción.
+     */
     protected function asignarCarrera(Postulante $postulante, string $gestion, float $promedioFinal): array
     {
         if ($promedioFinal < $this->notaMinimaAprobacion) {

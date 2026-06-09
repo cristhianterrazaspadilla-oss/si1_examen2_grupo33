@@ -11,6 +11,13 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
+/**
+ * Paquete: Gestión de Postulantes y Admisión
+ * Caso de Uso: CU8 (Administrar Carreras y Cupos - Sección Cupos)
+ * 
+ * Configura la disponibilidad de vacantes (cupo máximo, ocupados y disponibles) por carrera y gestión académica.
+ * Estos cupos se reducen atómicamente al confirmarse resultados de admisión aprobatorios.
+ */
 class CupoCarreraController extends Controller
 {
     // Controlador del caso de uso: CU8 Administrar Carreras y Cupos

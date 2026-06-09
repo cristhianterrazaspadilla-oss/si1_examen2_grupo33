@@ -16,6 +16,14 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Throwable;
 
+/**
+ * Paquete: Gestión Docente y Evaluación Académica
+ * Caso de Uso: CU12 (Gestionar Docentes y Asignaciones - Sección Docentes)
+ * 
+ * NOTA DE ARQUITECTURA: Por motivos de alta cohesión del dominio, este controlador reside en el 
+ * namespace de Gestión Académica, favoreciendo las consultas y cruces con el calendario de horarios.
+ * Modela los datos profesionales de los docentes y su enlace con cuentas de usuario.
+ */
 class DocenteController extends Controller
 {
     public function index(Request $request): View

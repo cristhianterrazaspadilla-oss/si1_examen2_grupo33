@@ -7,6 +7,13 @@ use App\Support\BitacoraHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Paquete: Autenticación, Usuarios y Seguridad
+ * Casos de Uso: CU1 (Iniciar Sesión) y CU2 (Cerrar Sesión)
+ * 
+ * Implementa la autenticación nativa de Laravel para credenciales de usuarios con estado ACTIVO.
+ * Aplica regeneración de ID de sesión tras el login exitoso para prevenir ataques de Session Fixation.
+ */
 class AuthController extends Controller
 {
     public function showLogin()

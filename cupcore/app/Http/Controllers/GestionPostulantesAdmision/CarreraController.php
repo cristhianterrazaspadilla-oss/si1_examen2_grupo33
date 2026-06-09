@@ -10,6 +10,12 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
+/**
+ * Paquete: Gestión de Postulantes y Admisión
+ * Caso de Uso: CU8 (Administrar Carreras y Cupos - Sección Carreras)
+ * 
+ * Gestiona el catálogo de carreras universitarias autorizadas para la admisión.
+ */
 class CarreraController extends Controller
 {
     // Controlador del caso de uso: CU8 Administrar Carreras y Cupos

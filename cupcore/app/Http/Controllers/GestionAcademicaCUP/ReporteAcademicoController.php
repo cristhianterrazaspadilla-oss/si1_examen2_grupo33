@@ -20,10 +20,22 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
+/**
+ * Paquete: Reportes, Dashboard y Comunicación (Consolidado en este namespace)
+ * Caso de Uso: CU16 - Reportes filtrables, exportaciones y dashboard académico.
+ *
+ * Administra el panel de control del sistema (métricas, gráficos y KPIs) y la consulta de reportes.
+ * Permite exportar datos a CSV, Excel y PDF, y cuenta con un intérprete de lenguaje natural con IA (Groq/LLaMA)
+ * para preseleccionar filtros de forma interactiva.
+ * SEGURIDAD CRÍTICA: La IA jamás ejecuta código SQL; la interpretación solo devuelve filtros controlados por código Laravel.
+ */
 class ReporteAcademicoController extends Controller
 {
     protected const EXPORT_LIMIT = 5000;
 
+    /**
+     * Redirecciona a la sección de consulta.
+     */
     public function index(): RedirectResponse
     {
         $this->authorizeRoles();
@@ -31,6 +43,9 @@ class ReporteAcademicoController extends Controller
         return redirect()->route('gestion-academica-cup.reportes.consulta');
     }
 
+    /**
+     * Muestra el panel interactivo (Dashboard) con métricas globales de postulantes, pagos, promedios y cupos.
+     */
     public function dashboard(Request $request): View|RedirectResponse
     {
         $this->authorizeRoles();
@@ -189,6 +204,9 @@ class ReporteAcademicoController extends Controller
         ]);
     }
 
+    /**
+     * Presenta la interfaz de consulta de reportes y carga los resultados filtrados en tiempo real.
+     */
     public function consulta(Request $request): View|RedirectResponse
     {
         $this->authorizeRoles();
@@ -215,6 +233,10 @@ class ReporteAcademicoController extends Controller
         ]);
     }
 
+    /**
+     * Procesa la interpretación de una instrucción del usuario escrita en lenguaje natural mediante IA.
+     * Retorna exclusivamente un objeto JSON con los filtros reconocidos para ser aplicados de manera segura.
+     */
     public function interpretarComando(Request $request): JsonResponse
     {
         $this->authorizeRoles();
@@ -309,6 +331,9 @@ class ReporteAcademicoController extends Controller
         }
     }
 
+    /**
+     * Genera la descarga en formato de archivo CSV con el contenido del reporte y filtros seleccionados.
+     */
     public function exportarCsv(Request $request): StreamedResponse|RedirectResponse
     {
         $this->authorizeRoles();
@@ -359,6 +384,9 @@ class ReporteAcademicoController extends Controller
         ]);
     }
 
+    /**
+     * Genera la descarga en formato de archivo Excel (HTML plano) con el contenido del reporte.
+     */
     public function exportarExcel(Request $request): StreamedResponse|RedirectResponse
     {
         $this->authorizeRoles();
@@ -418,6 +446,9 @@ class ReporteAcademicoController extends Controller
         ]);
     }
 
+    /**
+     * Genera una vista limpia y optimizada para impresión (con CSS print/PDF) del reporte actual.
+     */
     public function imprimir(Request $request): View|RedirectResponse
     {
         $this->authorizeRoles();
@@ -452,6 +483,9 @@ class ReporteAcademicoController extends Controller
         ]);
     }
 
+    /**
+     * Consulta el historial detallado de exportaciones de reportes efectuadas por los usuarios.
+     */
     public function historial(Request $request): View|RedirectResponse
     {
         $this->authorizeRoles();
@@ -706,6 +740,10 @@ class ReporteAcademicoController extends Controller
         ];
     }
 
+    /**
+     * Construye las directivas de comportamiento del sistema de IA para asegurar que NO retorne código SQL
+     * y se limite estrictamente a rellenar la estructura JSON de filtros esperados.
+     */
     protected function groqSystemPrompt(array $catalogo): string
     {
         return implode("\n", [

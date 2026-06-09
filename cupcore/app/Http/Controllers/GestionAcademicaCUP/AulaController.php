@@ -13,6 +13,12 @@ use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Throwable;
 
+/**
+ * Paquete: Gestión Académica del CUP
+ * Caso de Uso: CU11 (Administrar Horarios y Aulas - Sección Aulas)
+ * 
+ * Configura los salones físicos (ubicación y capacidad máxima) disponibles para los horarios de clases.
+ */
 class AulaController extends Controller
 {
     public function index(Request $request): View

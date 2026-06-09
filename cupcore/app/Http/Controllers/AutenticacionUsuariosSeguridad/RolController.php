@@ -9,6 +9,13 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
+/**
+ * Paquete: Autenticación, Usuarios y Seguridad
+ * Caso de Uso: CU3 (Administrar Usuarios y Roles - Sección Roles)
+ * 
+ * Modela los roles y alcances del sistema (Administrador, Coordinador, Docente, Postulante, Autoridad Académica).
+ * Los roles inactivos restringen el acceso a los usuarios que los posean.
+ */
 class RolController extends Controller
 {
     // Controlador del caso de uso: CU3 Administrar Usuarios y Roles

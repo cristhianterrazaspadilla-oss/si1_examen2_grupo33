@@ -12,6 +12,13 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
+/**
+ * Paquete: Gestión de Postulantes y Admisión
+ * Caso de Uso: CU5 (Registrar Postulantes / Inscripción)
+ * 
+ * Gestiona el pre-registro e información demográfica de los postulantes.
+ * Asocia postulantes a carreras de primera y segunda opción para el proceso de selección.
+ */
 class PostulanteController extends Controller
 {
     // Controlador del caso de uso: CU5 Gestionar Inscripción de Postulantes
