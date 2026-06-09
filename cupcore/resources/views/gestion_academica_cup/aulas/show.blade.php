@@ -3,9 +3,9 @@
 @section('title', 'CU11 Gestionar Horarios y Aulas | Detalle aula')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
         <x-page-title title="Detalle del aula" subtitle="Consulta informacion general del aula y los horarios activos actualmente asociados." />
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2 shrink-0">
             <a href="{{ route('gestion-academica-cup.aulas.edit', $aula) }}" class="btn btn-info">Editar</a>
             <a href="{{ route('gestion-academica-cup.aulas.index') }}" class="btn btn-outline">Volver</a>
         </div>
@@ -23,7 +23,7 @@
         </div>
     @endif
 
-    <div class="grid gap-6 xl:grid-cols-[1fr_0.9fr]">
+    <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6">
         <x-card title="Informacion general">
             <div class="detail-grid cols-2">
                 <div class="detail-item"><p class="detail-item-label">Nombre</p><p class="detail-item-value">{{ $aula->nombre }}</p></div>
@@ -56,8 +56,8 @@
 
     <div class="mt-6">
         <x-card title="Horarios activos asociados">
-            <div class="overflow-x-auto">
-                <table class="table">
+            <div class="overflow-x-auto w-full">
+                <table class="table min-w-[750px]">
                     <thead>
                         <tr>
                             <th>Gestion</th>

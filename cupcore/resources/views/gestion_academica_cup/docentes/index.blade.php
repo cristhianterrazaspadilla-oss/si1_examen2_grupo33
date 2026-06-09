@@ -3,9 +3,9 @@
 @section('title', 'CU12 Gestionar Docentes y Asignaciones | CUPCore')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
         <x-page-title title="CU12 Gestionar Docentes y Asignaciones" subtitle="Registra, consulta, modifica y desactiva docentes del Curso Preuniversitario FICCT, junto con sus asignaciones academicas activas." />
-        <a href="{{ route('gestion-academica-cup.docentes.create') }}" class="btn btn-primary">Nuevo docente</a>
+        <a href="{{ route('gestion-academica-cup.docentes.create') }}" class="btn btn-primary shrink-0">Nuevo docente</a>
     </div>
 
     @if (session('success'))
@@ -20,7 +20,7 @@
         </div>
     @endif
 
-    <div class="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <div class="mb-6 grid gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
         <x-card title="Docentes activos">
             <p class="text-3xl font-semibold text-white">{{ $totalDocentesActivos }}</p>
         </x-card>
@@ -36,30 +36,30 @@
     </div>
 
     <x-card title="Busqueda y filtros">
-        <form method="GET" action="{{ route('gestion-academica-cup.docentes.index') }}" class="grid gap-4 md:grid-cols-4">
-            <label class="form-control md:col-span-3">
+        <form method="GET" action="{{ route('gestion-academica-cup.docentes.index') }}" class="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
+            <label class="form-control sm:col-span-2 md:col-span-3">
                 <span class="label-text">Buscar por CI, nombres, apellidos, correo, profesion o especialidad</span>
-                <input type="text" name="search" value="{{ $search }}" class="input input-bordered">
+                <input type="text" name="search" value="{{ $search }}" class="input input-bordered w-full">
             </label>
             <label class="form-control">
                 <span class="label-text">Estado</span>
-                <select name="estado" class="select select-bordered">
+                <select name="estado" class="select select-bordered w-full">
                     <option value="">Todos</option>
                     @foreach (['ACTIVO', 'INACTIVO'] as $estadoOption)
                         <option value="{{ $estadoOption }}" @selected($estado === $estadoOption)>{{ $estadoOption }}</option>
                     @endforeach
                 </select>
             </label>
-            <div class="md:col-span-4 flex gap-2">
-                <button type="submit" class="btn btn-primary">Buscar</button>
-                <a href="{{ route('gestion-academica-cup.docentes.index') }}" class="btn btn-outline">Limpiar</a>
+            <div class="sm:col-span-2 md:col-span-4 flex flex-wrap gap-2">
+                <button type="submit" class="btn btn-primary w-full sm:w-auto">Buscar</button>
+                <a href="{{ route('gestion-academica-cup.docentes.index') }}" class="btn btn-outline w-full sm:w-auto">Limpiar</a>
             </div>
         </form>
     </x-card>
 
     <x-card title="Listado de docentes">
-        <div class="overflow-x-auto">
-            <table class="table">
+        <div class="overflow-x-auto w-full">
+            <table class="table min-w-[1100px]">
                 <thead>
                     <tr>
                         <th>CI</th>
@@ -88,7 +88,7 @@
                                 <span class="badge {{ $docente->estado === 'ACTIVO' ? 'badge-success' : 'badge-error' }}">{{ $docente->estado }}</span>
                             </td>
                             <td>
-                                <div class="flex justify-end gap-2">
+                                <div class="flex flex-wrap justify-end gap-2">
                                     <a href="{{ route('gestion-academica-cup.docentes.show', $docente) }}" class="btn btn-sm btn-outline">Ver</a>
                                     <a href="{{ route('gestion-academica-cup.docentes.edit', $docente) }}" class="btn btn-sm btn-info">Editar</a>
                                     <a href="{{ route('gestion-academica-cup.docentes.asignaciones.create', $docente) }}" class="btn btn-sm btn-primary">Asignar</a>

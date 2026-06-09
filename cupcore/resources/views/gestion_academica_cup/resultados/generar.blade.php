@@ -3,9 +3,9 @@
 @section('title', 'CU15 Gestionar Resultados | Generar resultado')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
         <x-page-title title="Generar resultado de admision" subtitle="Selecciona un postulante inscrito y genera su resultado solo si tiene notas completas en todas las materias activas requeridas." />
-        <a href="{{ route('gestion-academica-cup.resultados.index') }}" class="btn btn-outline">Volver</a>
+        <a href="{{ route('gestion-academica-cup.resultados.index') }}" class="btn btn-outline shrink-0">Volver</a>
     </div>
 
     @if ($errors->any())
@@ -31,7 +31,7 @@
                 <h2 class="app-section-title">Postulante</h2>
                 <label class="form-control">
                     <span class="label-text">Postulante inscrito</span>
-                    <select name="postulante_id" class="select select-bordered" required>
+                    <select name="postulante_id" class="select select-bordered w-full" required>
                         <option value="">Selecciona un postulante</option>
                         @foreach ($postulantes as $postulante)
                             <option value="{{ $postulante->id }}" @selected((string) old('postulante_id') === (string) $postulante->id)>{{ $postulante->apellidos }} {{ $postulante->nombres }} - {{ $postulante->ci }}</option>
@@ -40,9 +40,9 @@
                 </label>
             </section>
 
-            <div class="app-form-actions">
-                <button type="submit" class="btn btn-primary">Calcular / Generar resultado</button>
-                <a href="{{ route('gestion-academica-cup.resultados.index') }}" class="btn btn-outline">Volver</a>
+            <div class="app-form-actions flex flex-wrap gap-2">
+                <button type="submit" class="btn btn-primary w-full sm:w-auto">Calcular / Generar resultado</button>
+                <a href="{{ route('gestion-academica-cup.resultados.index') }}" class="btn btn-outline w-full sm:w-auto">Volver</a>
             </div>
         </form>
     </x-card>

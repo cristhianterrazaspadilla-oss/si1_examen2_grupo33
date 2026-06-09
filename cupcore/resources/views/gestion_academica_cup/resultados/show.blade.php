@@ -3,9 +3,9 @@
 @section('title', 'CU15 Gestionar Resultados | Detalle resultado')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
         <x-page-title title="Detalle de resultado de admision" subtitle="Consulta el calculo final, la asignacion de carrera y el detalle academico utilizado para generar el resultado." />
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2 shrink-0">
             <a href="{{ route('gestion-academica-cup.resultados.edit', $resultado) }}" class="btn btn-info">Editar observacion</a>
             <a href="{{ route('gestion-academica-cup.resultados.index') }}" class="btn btn-outline">Volver</a>
         </div>
@@ -15,7 +15,7 @@
         <div class="mb-6"><x-alert type="success" :message="session('success')" /></div>
     @endif
 
-    <div class="grid gap-6 xl:grid-cols-[1fr_1fr]">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <x-card title="Datos del postulante">
             <div class="detail-grid cols-2">
                 <div class="detail-item"><p class="detail-item-label">Postulante</p><p class="detail-item-value">{{ trim(($resultado->postulante?->nombres ?? '') . ' ' . ($resultado->postulante?->apellidos ?? '')) ?: 'Sin postulante' }}</p></div>
@@ -39,7 +39,7 @@
         </x-card>
     </div>
 
-    <div class="mt-6 grid gap-6 xl:grid-cols-[1fr_1fr]">
+    <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
         <x-card title="Observaciones">
             <div class="detail-grid">
                 <div class="detail-item"><p class="detail-item-label">Observacion</p><p class="detail-item-value">{{ $resultado->observacion ?: 'Sin observacion registrada' }}</p></div>

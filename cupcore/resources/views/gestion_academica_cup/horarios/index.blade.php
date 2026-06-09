@@ -3,9 +3,9 @@
 @section('title', 'CU11 Gestionar Horarios y Aulas | Horarios')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-3">
         <x-page-title title="Gestionar horarios" subtitle="Programa horarios academicos usando asignaciones docentes activas y aulas disponibles, con validacion de cruces de aula, docente y grupo." />
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2 shrink-0">
             <a href="{{ route('gestion-academica-cup.aulas.index') }}" class="btn btn-outline">Aulas</a>
             <a href="{{ route('gestion-academica-cup.horarios.create') }}" class="btn btn-primary">Nuevo horario</a>
         </div>
@@ -24,7 +24,7 @@
     @endif
 
     <x-card title="Filtros">
-        <form method="GET" action="{{ route('gestion-academica-cup.horarios.index') }}" class="grid gap-4 md:grid-cols-3 xl:grid-cols-6">
+        <form method="GET" action="{{ route('gestion-academica-cup.horarios.index') }}" class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
             <label class="form-control">
                 <span class="label-text">Gestion</span>
                 <select name="gestion" class="select select-bordered">
@@ -88,7 +88,7 @@
 
     <x-card title="Listado de horarios">
         <div class="overflow-x-auto">
-            <table class="table">
+            <table class="table min-w-[1100px]">
                 <thead>
                     <tr>
                         <th>Gestion</th>

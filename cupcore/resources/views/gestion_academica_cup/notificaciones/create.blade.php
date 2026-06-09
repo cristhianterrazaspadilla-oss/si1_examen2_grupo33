@@ -3,11 +3,11 @@
 @section('title', 'Crear notificacion interna | CUPCore')
 
 @section('content')
-    <div class="flex flex-wrap items-center justify-between gap-4">
+    <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <x-page-title title="Crear notificacion interna" subtitle="La notificacion se mostrara dentro del sistema al usuario destinatario." />
         <div class="flex flex-wrap gap-2">
-            <a href="{{ route('gestion-academica-cup.notificaciones.index') }}" class="btn btn-outline">Cancelar</a>
-            <a href="{{ route('gestion-academica-cup.notificaciones.enviadas') }}" class="btn btn-info">Ver enviadas</a>
+            <a href="{{ route('gestion-academica-cup.notificaciones.index') }}" class="btn btn-outline w-full sm:w-auto">Cancelar</a>
+            <a href="{{ route('gestion-academica-cup.notificaciones.enviadas') }}" class="btn btn-info w-full sm:w-auto">Ver enviadas</a>
         </div>
     </div>
 
@@ -29,7 +29,7 @@
                 <div class="app-form-grid cols-2">
                     <label class="form-control">
                         <span class="label-text">Destinatario</span>
-                        <select name="usuario_receptor_id" class="select select-bordered" required>
+                        <select name="usuario_receptor_id" class="select select-bordered w-full" required>
                             <option value="">Selecciona un usuario activo</option>
                             @foreach ($usuariosActivos as $usuario)
                                 <option value="{{ $usuario->id }}" @selected((string) old('usuario_receptor_id') === (string) $usuario->id)>
@@ -40,7 +40,7 @@
                     </label>
                     <label class="form-control">
                         <span class="label-text">Tipo</span>
-                        <select name="tipo" class="select select-bordered">
+                        <select name="tipo" class="select select-bordered w-full">
                             @foreach ($tiposNotificacion as $tipo)
                                 <option value="{{ $tipo }}" @selected(old('tipo', 'GENERAL') === $tipo)>{{ $tipo }}</option>
                             @endforeach
@@ -54,11 +54,11 @@
                 <div class="app-form-grid">
                     <label class="form-control">
                         <span class="label-text">Titulo</span>
-                        <input type="text" name="titulo" value="{{ old('titulo') }}" class="input input-bordered" maxlength="150" required>
+                        <input type="text" name="titulo" value="{{ old('titulo') }}" class="input input-bordered w-full" maxlength="150" required>
                     </label>
                     <label class="form-control">
                         <span class="label-text">Mensaje</span>
-                        <textarea name="mensaje" class="textarea textarea-bordered" maxlength="1000" required>{{ old('mensaje') }}</textarea>
+                        <textarea name="mensaje" class="textarea textarea-bordered w-full" maxlength="1000" required>{{ old('mensaje') }}</textarea>
                     </label>
                 </div>
             </section>

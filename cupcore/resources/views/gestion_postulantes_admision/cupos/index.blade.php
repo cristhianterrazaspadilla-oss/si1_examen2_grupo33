@@ -3,9 +3,9 @@
 @section('title', 'CU8 Administrar Carreras y Cupos | Cupos')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-3">
         <x-page-title title="Cupos por Carrera" subtitle="CU8 Administrar Carreras y Cupos" />
-        <a href="{{ route('gestion-postulantes-admision.cupos.create') }}" class="btn btn-primary">Nuevo</a>
+        <a href="{{ route('gestion-postulantes-admision.cupos.create') }}" class="btn btn-primary shrink-0">Nuevo</a>
     </div>
 
     @if (session('success'))
@@ -29,7 +29,7 @@
 
     <x-card title="Listado de cupos">
         <div class="overflow-x-auto">
-            <table class="table">
+            <table class="table min-w-[750px]">
                 <thead>
                     <tr>
                         <th>Carrera</th>

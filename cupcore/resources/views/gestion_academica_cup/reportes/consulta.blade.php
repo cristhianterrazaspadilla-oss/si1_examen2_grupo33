@@ -3,12 +3,12 @@
 @section('title', 'CU16 Reportes Academicos y Administrativos | CUPCore')
 
 @section('content')
-    <div class="flex flex-wrap items-center justify-between gap-4">
+    <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <x-page-title title="CU16 Reportes Academicos y Administrativos" subtitle="Consulta reportes filtrables del proceso de admision." />
         <div class="flex flex-wrap gap-2">
-            <a href="{{ route('gestion-academica-cup.reportes.historial') }}" class="btn btn-outline">Historial de reportes</a>
-            <a href="{{ route('gestion-academica-cup.reportes.dashboard') }}" class="btn btn-primary">KPIs academicos</a>
-            <a href="{{ route('gestion-academica-cup.reportes.consulta') }}" class="btn btn-outline">Limpiar filtros</a>
+            <a href="{{ route('gestion-academica-cup.reportes.historial') }}" class="btn btn-outline w-full sm:w-auto">Historial de reportes</a>
+            <a href="{{ route('gestion-academica-cup.reportes.dashboard') }}" class="btn btn-primary w-full sm:w-auto">KPIs academicos</a>
+            <a href="{{ route('gestion-academica-cup.reportes.consulta') }}" class="btn btn-outline w-full sm:w-auto">Limpiar filtros</a>
         </div>
     </div>
 
@@ -23,16 +23,16 @@
     @endif
 
     <x-card title="Consulta por voz">
-        <div class="grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
+        <div class="grid gap-6 2xl:grid-cols-[0.85fr_1.15fr]">
             <div class="space-y-4">
                 <p class="text-sm text-base-content/80">Usa el reconocimiento de voz del navegador para dictar un comando y reutilizarlo en los filtros existentes del reporte.</p>
                 <div class="flex flex-wrap gap-3">
-                    <button type="button" id="voice-start-button" class="btn btn-primary">Iniciar voz</button>
-                    <button type="button" id="voice-stop-button" class="btn btn-warning">Detener</button>
-                    <button type="button" id="voice-apply-search-button" class="btn btn-outline">Usar comando como busqueda</button>
-                    <button type="button" id="voice-apply-filters-button" class="btn btn-outline">Aplicar comando a filtros</button>
-                    <button type="button" id="voice-ai-button" class="btn btn-secondary">Interpretar con IA</button>
-                    <button type="button" id="voice-ai-generate-button" class="btn btn-info">Generar con IA</button>
+                    <button type="button" id="voice-start-button" class="btn btn-primary w-full sm:w-auto">Iniciar voz</button>
+                    <button type="button" id="voice-stop-button" class="btn btn-warning w-full sm:w-auto">Detener</button>
+                    <button type="button" id="voice-apply-search-button" class="btn btn-outline w-full sm:w-auto">Usar comando como busqueda</button>
+                    <button type="button" id="voice-apply-filters-button" class="btn btn-outline w-full sm:w-auto">Aplicar comando a filtros</button>
+                    <button type="button" id="voice-ai-button" class="btn btn-secondary w-full sm:w-auto">Interpretar con IA</button>
+                    <button type="button" id="voice-ai-generate-button" class="btn btn-info w-full sm:w-auto">Generar con IA</button>
                 </div>
                 <div id="voice-status" class="alert">
                     <span>Listo para escuchar</span>
@@ -43,11 +43,11 @@
             <div class="space-y-4">
                 <label class="form-control">
                     <span class="label-text">Comando detectado</span>
-                    <textarea id="voice-command-text" rows="5" class="textarea textarea-bordered" placeholder="Puedes hablar o escribir manualmente un comando aqui."></textarea>
+                    <textarea id="voice-command-text" rows="5" class="textarea textarea-bordered w-full" placeholder="Puedes hablar o escribir manualmente un comando aqui."></textarea>
                 </label>
                 <div class="rounded-2xl border border-base-300/60 bg-base-200/50 p-4">
                     <p class="text-sm font-semibold text-white">Ejemplos</p>
-                    <ul class="mt-3 space-y-2 text-sm text-base-content/80">
+                    <ul class="mt-3 space-y-2 break-words text-sm text-base-content/80">
                         <li>"mostrar resultados aprobados de la gestion 2-2028"</li>
                         <li>"buscar notas de computacion"</li>
                         <li>"reporte de cupos de la gestion 2-2028"</li>
@@ -60,8 +60,8 @@
     </x-card>
 
     <x-card title="Configuracion del reporte">
-        <form method="GET" action="{{ route('gestion-academica-cup.reportes.consulta') }}" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4" id="form-reportes">
-            <label class="form-control xl:col-span-2">
+        <form method="GET" action="{{ route('gestion-academica-cup.reportes.consulta') }}" class="grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-4" id="form-reportes">
+            <label class="form-control sm:col-span-2">
                 <span class="label-text">Tipo de reporte</span>
                 <select name="tipo_reporte" id="reportes-tipo-reporte" class="select select-bordered">
                     <option value="">Selecciona un reporte</option>
@@ -150,23 +150,23 @@
                 <span class="label-text">Fecha hasta</span>
                 <input type="date" name="fecha_hasta" id="reportes-fecha-hasta" value="{{ $filters['fecha_hasta'] }}" class="input input-bordered">
             </label>
-            <label class="form-control xl:col-span-2">
+            <label class="form-control sm:col-span-2">
                 <span class="label-text">Busqueda</span>
                 <input type="text" name="busqueda" id="reportes-busqueda" value="{{ $filters['busqueda'] }}" class="input input-bordered" placeholder="CI, nombres, apellidos, correo, carrera o codigo segun el reporte">
             </label>
-            <div class="xl:col-span-4">
+            <div class="sm:col-span-2 2xl:col-span-4">
                 <div class="alert">
                     <span>Los filtros se aplican solo cuando tienen relacion con el tipo de reporte seleccionado.</span>
                 </div>
             </div>
-            <div class="xl:col-span-4 flex flex-wrap gap-3">
-                <button type="submit" class="btn btn-primary">Generar reporte</button>
+            <div class="sm:col-span-2 2xl:col-span-4 flex flex-wrap gap-3">
+                <button type="submit" class="btn btn-primary w-full sm:w-auto">Generar reporte</button>
             </div>
         </form>
     </x-card>
 
     @if ($filters['tipo_reporte'] === '')
-        <div class="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+        <div class="grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
             @foreach ($reportTypes as $reportType)
                 <x-card :title="$reportType['label']">
                     <p class="text-sm text-base-content/80">{{ $reportType['description'] }}</p>
@@ -196,9 +196,9 @@
                 </div>
             </div>
             <div class="mt-4 flex flex-wrap gap-3">
-                <a href="{{ route('gestion-academica-cup.reportes.exportar.csv', request()->query()) }}" class="btn btn-primary">Exportar CSV</a>
-                <a href="{{ route('gestion-academica-cup.reportes.exportar.excel', request()->query()) }}" class="btn btn-outline">Exportar Excel</a>
-                <a href="{{ route('gestion-academica-cup.reportes.imprimir', request()->query()) }}" class="btn btn-outline" target="_blank" rel="noopener">Vista imprimible / PDF</a>
+                <a href="{{ route('gestion-academica-cup.reportes.exportar.csv', request()->query()) }}" class="btn btn-primary w-full sm:w-auto">Exportar CSV</a>
+                <a href="{{ route('gestion-academica-cup.reportes.exportar.excel', request()->query()) }}" class="btn btn-outline w-full sm:w-auto">Exportar Excel</a>
+                <a href="{{ route('gestion-academica-cup.reportes.imprimir', request()->query()) }}" class="btn btn-outline w-full sm:w-auto" target="_blank" rel="noopener">Vista imprimible / PDF</a>
             </div>
             <p class="mt-3 text-sm text-base-content/70">Puedes exportar el reporte en CSV, Excel o abrir una vista imprimible para guardar como PDF. Las exportaciones se registran en el historial de reportes.</p>
         </x-card>
@@ -210,7 +210,7 @@
         @else
             <x-card :title="$reportData['label']">
                 <div class="overflow-x-auto">
-                    <table class="table">
+                    <table class="table min-w-[900px] text-sm">
                         <thead>
                             <tr>
                                 @foreach ($reportData['columns'] as $label)

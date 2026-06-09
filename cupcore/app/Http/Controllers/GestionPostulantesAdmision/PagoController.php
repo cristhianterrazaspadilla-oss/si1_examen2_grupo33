@@ -128,7 +128,7 @@ class PagoController extends Controller
             ]);
 
             return back()
-                ->withErrors(['stripe' => 'Stripe rechazo la creacion del enlace: ' . $exception->getMessage()])
+                ->withErrors(['stripe' => 'No se pudo procesar el pago. Verifica la información o inténtalo nuevamente.'])
                 ->withInput();
         }
 
@@ -151,7 +151,7 @@ class PagoController extends Controller
             ]);
 
             return back()
-                ->withErrors(['pago' => 'No se pudo guardar el pago pendiente: ' . $exception->getMessage()])
+                ->withErrors(['pago' => 'No se pudo actualizar la información del pago. Inténtalo nuevamente.'])
                 ->withInput();
         }
 
@@ -169,7 +169,7 @@ class PagoController extends Controller
             $pago->delete();
 
             return back()
-                ->withErrors(['postulante' => 'No se pudo actualizar el estado del postulante: ' . $exception->getMessage()])
+                ->withErrors(['postulante' => 'No se pudo actualizar la información del pago. Inténtalo nuevamente.'])
                 ->withInput();
         }
 
@@ -268,7 +268,7 @@ class PagoController extends Controller
 
             return redirect()
                 ->route('gestion-postulantes-admision.pagos.show', $pago)
-                ->withErrors(['verificacion' => 'Stripe rechazo la verificacion del pago: ' . $exception->getMessage()]);
+                ->withErrors(['verificacion' => 'No se pudo procesar el pago. Verifica la información o inténtalo nuevamente.']);
         }
 
         $paymentStatus = (string) ($session->payment_status ?? '');
@@ -294,7 +294,7 @@ class PagoController extends Controller
 
                 return redirect()
                     ->route('gestion-postulantes-admision.pagos.show', $pago)
-                    ->withErrors(['verificacion' => 'No se pudo actualizar el pago confirmado: ' . $exception->getMessage()]);
+                    ->withErrors(['verificacion' => 'No se pudo actualizar la información del pago. Inténtalo nuevamente.']);
             }
 
             if ($updatedPago !== 1) {
@@ -319,7 +319,7 @@ class PagoController extends Controller
 
                 return redirect()
                     ->route('gestion-postulantes-admision.pagos.show', $pago)
-                    ->withErrors(['verificacion' => 'El pago fue confirmado, pero no se pudo actualizar el estado del postulante: ' . $exception->getMessage()]);
+                    ->withErrors(['verificacion' => 'No se pudo actualizar la información del pago. Inténtalo nuevamente.']);
             }
 
             if ($updatedPostulante !== 1) {

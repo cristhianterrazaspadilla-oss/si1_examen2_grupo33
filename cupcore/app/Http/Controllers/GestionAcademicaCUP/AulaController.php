@@ -152,7 +152,7 @@ class AulaController extends Controller
 
             return redirect()
                 ->route('gestion-academica-cup.aulas.index')
-                ->withErrors(['aula' => 'No se pudo desactivar el aula: ' . $exception->getMessage()]);
+                ->withErrors(['aula' => 'No se pudo desactivar el aula. Inténtalo nuevamente.']);
         }
 
         if ($updated !== 1) {
@@ -189,7 +189,7 @@ class AulaController extends Controller
 
             return redirect()
                 ->route('gestion-academica-cup.aulas.index')
-                ->withErrors(['aula' => 'No se pudo activar el aula: ' . $exception->getMessage()]);
+                ->withErrors(['aula' => 'No se pudo activar el aula. Inténtalo nuevamente.']);
         }
 
         if ($updated !== 1) {

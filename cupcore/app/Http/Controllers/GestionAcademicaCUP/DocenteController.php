@@ -139,7 +139,7 @@ class DocenteController extends Controller
 
             return redirect()
                 ->route('gestion-academica-cup.docentes.index')
-                ->withErrors(['docente' => 'No se pudo desactivar el docente: ' . $exception->getMessage()]);
+                ->withErrors(['docente' => 'No se pudo desactivar el docente. Inténtalo nuevamente.']);
         }
 
         if ($updatedDocente !== 1) {
@@ -168,7 +168,7 @@ class DocenteController extends Controller
 
             return redirect()
                 ->route('gestion-academica-cup.docentes.index')
-                ->withErrors(['docente' => 'El docente fue desactivado, pero no se pudieron desactivar sus asignaciones: ' . $exception->getMessage()]);
+                ->withErrors(['docente' => 'El docente fue desactivado, pero no se pudieron actualizar sus asignaciones relacionadas.']);
         }
 
         BitacoraHelper::registrar(
@@ -199,7 +199,7 @@ class DocenteController extends Controller
 
             return redirect()
                 ->route('gestion-academica-cup.docentes.index')
-                ->withErrors(['docente' => 'No se pudo activar el docente: ' . $exception->getMessage()]);
+                ->withErrors(['docente' => 'No se pudo activar el docente. Inténtalo nuevamente.']);
         }
 
         if ($updatedDocente !== 1) {

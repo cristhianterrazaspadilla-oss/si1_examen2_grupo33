@@ -179,7 +179,7 @@ class HorarioController extends Controller
 
             return redirect()
                 ->route('gestion-academica-cup.horarios.index')
-                ->withErrors(['horario' => 'No se pudo desactivar el horario: ' . $exception->getMessage()]);
+                ->withErrors(['horario' => 'No se pudo desactivar el horario. Inténtalo nuevamente.']);
         }
 
         if ($updated !== 1) {
@@ -231,7 +231,7 @@ class HorarioController extends Controller
 
             return redirect()
                 ->route('gestion-academica-cup.horarios.show', $horario)
-                ->withErrors(['horario' => 'No se pudo activar el horario: ' . $exception->getMessage()]);
+                ->withErrors(['horario' => 'No se pudo activar el horario. Inténtalo nuevamente.']);
         }
 
         if ($updated !== 1) {

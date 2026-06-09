@@ -3,9 +3,9 @@
 @section('title', 'CU15 Gestionar Resultados de Admision | CUPCore')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
         <x-page-title title="CU15 Gestionar Resultados de Admision" subtitle="Calcula, consulta y administra resultados finales de admision a partir de notas completas, opciones de carrera y cupos disponibles." />
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2 shrink-0">
             <a href="{{ route('gestion-academica-cup.resultados.pendientes') }}" class="btn btn-outline">Pendientes</a>
             <form method="POST" action="{{ route('gestion-academica-cup.resultados.masivo') }}">
                 @csrf
@@ -35,7 +35,7 @@
         </div>
     @endif
 
-    <div class="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <div class="mb-6 grid gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
         <x-card title="Total resultados"><p class="text-3xl font-semibold text-white">{{ $totales['total'] }}</p></x-card>
         <x-card title="Aprobados"><p class="text-3xl font-semibold text-white">{{ $totales['aprobados'] }}</p></x-card>
         <x-card title="Reprobados"><p class="text-3xl font-semibold text-white">{{ $totales['reprobados'] }}</p></x-card>
@@ -43,10 +43,10 @@
     </div>
 
     <x-card title="Filtros de resultados">
-        <form method="GET" action="{{ route('gestion-academica-cup.resultados.index') }}" class="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+        <form method="GET" action="{{ route('gestion-academica-cup.resultados.index') }}" class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             <label class="form-control">
                 <span class="label-text">Gestion</span>
-                <select name="gestion" class="select select-bordered">
+                <select name="gestion" class="select select-bordered w-full">
                     <option value="">Todas</option>
                     @foreach ($formOptions['gestiones'] as $gestionOption)
                         <option value="{{ $gestionOption }}" @selected($filters['gestion'] === $gestionOption)>{{ $gestionOption }}</option>
@@ -55,7 +55,7 @@
             </label>
             <label class="form-control">
                 <span class="label-text">Estado resultado</span>
-                <select name="estado_resultado" class="select select-bordered">
+                <select name="estado_resultado" class="select select-bordered w-full">
                     <option value="">Todos</option>
                     @foreach (['PENDIENTE', 'APROBADO', 'REPROBADO'] as $estadoOption)
                         <option value="{{ $estadoOption }}" @selected($filters['estado_resultado'] === $estadoOption)>{{ $estadoOption }}</option>
@@ -64,7 +64,7 @@
             </label>
             <label class="form-control">
                 <span class="label-text">Tipo asignacion</span>
-                <select name="tipo_asignacion" class="select select-bordered">
+                <select name="tipo_asignacion" class="select select-bordered w-full">
                     <option value="">Todos</option>
                     @foreach (['PRIMERA_OPCION', 'SEGUNDA_OPCION', 'SIN_ASIGNACION'] as $tipoOption)
                         <option value="{{ $tipoOption }}" @selected($filters['tipo_asignacion'] === $tipoOption)>{{ $tipoOption }}</option>
@@ -73,7 +73,7 @@
             </label>
             <label class="form-control">
                 <span class="label-text">Carrera asignada</span>
-                <select name="carrera_asignada_id" class="select select-bordered">
+                <select name="carrera_asignada_id" class="select select-bordered w-full">
                     <option value="">Todas</option>
                     @foreach ($formOptions['carreras'] as $carrera)
                         <option value="{{ $carrera->id }}" @selected((string) $filters['carrera_asignada_id'] === (string) $carrera->id)>{{ $carrera->nombre }}</option>
@@ -82,18 +82,18 @@
             </label>
             <label class="form-control">
                 <span class="label-text">Postulante o CI</span>
-                <input type="text" name="search" value="{{ $filters['search'] }}" class="input input-bordered" placeholder="CI, nombres o apellidos">
+                <input type="text" name="search" value="{{ $filters['search'] }}" class="input input-bordered w-full" placeholder="CI, nombres o apellidos">
             </label>
-            <div class="md:col-span-2 xl:col-span-5 flex gap-2">
-                <button type="submit" class="btn btn-primary">Filtrar</button>
-                <a href="{{ route('gestion-academica-cup.resultados.index') }}" class="btn btn-outline">Limpiar</a>
+            <div class="sm:col-span-2 lg:col-span-3 xl:col-span-5 flex flex-wrap gap-2">
+                <button type="submit" class="btn btn-primary w-full sm:w-auto">Filtrar</button>
+                <a href="{{ route('gestion-academica-cup.resultados.index') }}" class="btn btn-outline w-full sm:w-auto">Limpiar</a>
             </div>
         </form>
     </x-card>
 
     <x-card title="Listado de resultados">
-        <div class="overflow-x-auto">
-            <table class="table">
+        <div class="overflow-x-auto w-full">
+            <table class="table min-w-[1200px]">
                 <thead>
                     <tr>
                         <th>Postulante</th>
@@ -124,7 +124,7 @@
                             <td>{{ $resultado->tipo_asignacion }}</td>
                             <td>{{ $resultado->fecha_resultado?->format('Y-m-d H:i') ?: 'Sin fecha' }}</td>
                             <td>
-                                <div class="flex justify-end gap-2">
+                                <div class="flex flex-wrap justify-end gap-2">
                                     <a href="{{ route('gestion-academica-cup.resultados.show', $resultado) }}" class="btn btn-sm btn-outline">Ver</a>
                                     <a href="{{ route('gestion-academica-cup.resultados.edit', $resultado) }}" class="btn btn-sm btn-info">Editar</a>
                                 </div>

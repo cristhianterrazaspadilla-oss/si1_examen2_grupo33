@@ -18,7 +18,7 @@
         </div>
     @endif
 
-    <div class="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+    <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6">
         <x-card title="Formulario de evaluacion">
             <form method="POST" action="{{ route('gestion-academica-cup.evaluaciones.update', $evaluacion) }}" class="app-form">
                 @csrf
@@ -29,15 +29,15 @@
                     <div class="app-form-grid cols-2">
                         <label class="form-control md:col-span-2">
                             <span class="label-text">Materia</span>
-                            <input type="text" value="{{ $materia->nombre }}{{ $materia->codigo ? ' - ' . $materia->codigo : '' }}" class="input input-bordered" readonly>
+                            <input type="text" value="{{ $materia->nombre }}{{ $materia->codigo ? ' - ' . $materia->codigo : '' }}" class="input input-bordered w-full" readonly>
                         </label>
                         <label class="form-control">
                             <span class="label-text">Nombre</span>
-                            <input type="text" name="nombre" value="{{ old('nombre', $evaluacion->nombre) }}" class="input input-bordered" maxlength="100" required>
+                            <input type="text" name="nombre" value="{{ old('nombre', $evaluacion->nombre) }}" class="input input-bordered w-full" maxlength="100" required>
                         </label>
                         <label class="form-control">
                             <span class="label-text">Numero de evaluacion</span>
-                            <select name="numero_evaluacion" class="select select-bordered" required>
+                            <select name="numero_evaluacion" class="select select-bordered w-full" required>
                                 @foreach ([1, 2, 3] as $numero)
                                     <option value="{{ $numero }}" @selected((string) old('numero_evaluacion', $evaluacion->numero_evaluacion) === (string) $numero)>Evaluacion {{ $numero }}</option>
                                 @endforeach
@@ -45,15 +45,15 @@
                         </label>
                         <label class="form-control">
                             <span class="label-text">Porcentaje</span>
-                            <input type="number" name="porcentaje" value="{{ old('porcentaje', $evaluacion->porcentaje) }}" class="input input-bordered" min="0" step="0.01" required>
+                            <input type="number" name="porcentaje" value="{{ old('porcentaje', $evaluacion->porcentaje) }}" class="input input-bordered w-full" min="0" step="0.01" required>
                         </label>
                         <label class="form-control">
                             <span class="label-text">Fecha de evaluacion</span>
-                            <input type="date" name="fecha_evaluacion" value="{{ old('fecha_evaluacion', $evaluacion->fecha_evaluacion?->format('Y-m-d')) }}" class="input input-bordered">
+                            <input type="date" name="fecha_evaluacion" value="{{ old('fecha_evaluacion', $evaluacion->fecha_evaluacion?->format('Y-m-d')) }}" class="input input-bordered w-full">
                         </label>
                         <label class="form-control">
                             <span class="label-text">Estado</span>
-                            <select name="estado" class="select select-bordered" required>
+                            <select name="estado" class="select select-bordered w-full" required>
                                 <option value="ACTIVO" @selected(old('estado', $evaluacion->estado) === 'ACTIVO')>ACTIVO</option>
                                 <option value="INACTIVO" @selected(old('estado', $evaluacion->estado) === 'INACTIVO')>INACTIVO</option>
                             </select>
@@ -61,9 +61,9 @@
                     </div>
                 </section>
 
-                <div class="app-form-actions">
-                    <button type="submit" class="btn btn-primary">Actualizar evaluacion</button>
-                    <a href="{{ route('gestion-academica-cup.materias.show', $materia) }}" class="btn btn-outline">Volver</a>
+                <div class="app-form-actions flex flex-wrap gap-2">
+                    <button type="submit" class="btn btn-primary w-full sm:w-auto">Actualizar evaluacion</button>
+                    <a href="{{ route('gestion-academica-cup.materias.show', $materia) }}" class="btn btn-outline w-full sm:w-auto">Volver</a>
                 </div>
             </form>
         </x-card>

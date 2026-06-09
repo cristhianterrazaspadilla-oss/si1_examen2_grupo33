@@ -3,15 +3,15 @@
 @section('title', 'Detalle de bitacora | CUPCore')
 
 @section('content')
-    <div class="flex flex-wrap items-center justify-between gap-4">
+    <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <x-page-title title="Detalle de bitacora" subtitle="Consulta el detalle completo de una accion registrada en el sistema." />
         <div class="flex flex-wrap gap-2">
-            <a href="{{ route('gestion-academica-cup.bitacoras.index') }}" class="btn btn-outline">Volver al listado</a>
-            <a href="{{ route('dashboard') }}" class="btn btn-primary">Dashboard</a>
+            <a href="{{ route('gestion-academica-cup.bitacoras.index') }}" class="btn btn-outline w-full sm:w-auto">Volver al listado</a>
+            <a href="{{ route('dashboard') }}" class="btn btn-primary w-full sm:w-auto">Dashboard</a>
         </div>
     </div>
 
-    <div class="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+    <div class="grid gap-6 2xl:grid-cols-[1.15fr_0.85fr]">
         <x-card title="Accion registrada">
             <div class="grid gap-4 md:grid-cols-2">
                 <div>
@@ -33,7 +33,7 @@
                 </div>
                 <div class="md:col-span-2">
                     <p class="text-xs uppercase tracking-[0.22em] text-blue-200/75">Descripcion</p>
-                    <div class="mt-2 rounded-2xl border border-base-300/60 bg-base-200/50 p-4 whitespace-pre-line text-sm leading-7 text-slate-100">
+                    <div class="mt-2 overflow-x-auto rounded-2xl border border-base-300/60 bg-base-200/50 p-4 whitespace-pre-line break-words text-sm leading-7 text-slate-100">
                         {{ $bitacora->descripcion ?: 'Sin descripcion registrada.' }}
                     </div>
                 </div>

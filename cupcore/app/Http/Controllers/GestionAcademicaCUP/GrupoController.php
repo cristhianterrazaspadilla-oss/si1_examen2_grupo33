@@ -170,7 +170,7 @@ class GrupoController extends Controller
                 return redirect()
                     ->back()
                     ->withInput()
-                    ->withErrors(['organizacion' => 'No se pudo crear el grupo: ' . $exception->getMessage()]);
+                    ->withErrors(['organizacion' => 'No se pudo crear el grupo. Inténtalo nuevamente.']);
             }
 
             BitacoraHelper::registrar(
@@ -202,7 +202,7 @@ class GrupoController extends Controller
                     return redirect()
                         ->back()
                         ->withInput()
-                        ->withErrors(['organizacion' => 'No se pudo asignar el postulante al grupo: ' . $exception->getMessage()]);
+                        ->withErrors(['organizacion' => 'No se pudo asignar el postulante al grupo. Inténtalo nuevamente.']);
                 }
 
                 BitacoraHelper::registrar(

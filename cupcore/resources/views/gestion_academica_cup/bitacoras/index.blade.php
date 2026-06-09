@@ -3,10 +3,10 @@
 @section('title', 'CU17 Consultar Bitacora del Sistema | CUPCore')
 
 @section('content')
-    <div class="flex flex-wrap items-center justify-between gap-4">
+    <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <x-page-title title="CU17 Consultar Bitacora del Sistema" subtitle="Consulta el historial de acciones realizadas por los usuarios." />
         <div class="flex flex-wrap gap-2">
-            <a href="{{ route('dashboard') }}" class="btn btn-primary">Volver al Dashboard</a>
+            <a href="{{ route('dashboard') }}" class="btn btn-primary w-full sm:w-auto">Volver al Dashboard</a>
         </div>
     </div>
 
@@ -21,7 +21,7 @@
     @endif
 
     <x-card title="Filtros de consulta">
-        <form method="GET" action="{{ route('gestion-academica-cup.bitacoras.index') }}" class="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
+        <form method="GET" action="{{ route('gestion-academica-cup.bitacoras.index') }}" class="grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-6">
             <label class="form-control">
                 <span class="label-text">Usuario</span>
                 <select name="usuario_id" class="select select-bordered">
@@ -69,9 +69,9 @@
                 <input type="text" name="busqueda" value="{{ $filters['busqueda'] }}" class="input input-bordered" placeholder="Accion, descripcion, modulo, IP, usuario, correo o CI">
             </label>
 
-            <div class="md:col-span-2 xl:col-span-6 flex flex-wrap gap-3">
-                <button type="submit" class="btn btn-primary">Filtrar</button>
-                <a href="{{ route('gestion-academica-cup.bitacoras.index') }}" class="btn btn-outline">Limpiar filtros</a>
+            <div class="sm:col-span-2 2xl:col-span-6 flex flex-wrap gap-3">
+                <button type="submit" class="btn btn-primary w-full sm:w-auto">Filtrar</button>
+                <a href="{{ route('gestion-academica-cup.bitacoras.index') }}" class="btn btn-outline w-full sm:w-auto">Limpiar filtros</a>
             </div>
         </form>
     </x-card>
@@ -86,7 +86,7 @@
                 La IP corresponde a la direccion registrada para auditoria en el momento de la accion.
             </div>
             <div class="overflow-x-auto">
-                <table class="table">
+                <table class="table min-w-[1080px] text-sm">
                     <thead>
                         <tr>
                             <th>Fecha</th>
@@ -120,7 +120,7 @@
                                     {{ \Illuminate\Support\Str::limit((string) ($bitacora->descripcion ?? 'Sin descripcion'), 120) }}
                                 </td>
                                 <td>
-                                    <a href="{{ route('gestion-academica-cup.bitacoras.show', $bitacora->id) }}" class="btn btn-sm btn-outline">Ver detalle</a>
+                                    <a href="{{ route('gestion-academica-cup.bitacoras.show', $bitacora->id) }}" class="btn btn-sm btn-outline whitespace-nowrap">Ver detalle</a>
                                 </td>
                             </tr>
                         @endforeach

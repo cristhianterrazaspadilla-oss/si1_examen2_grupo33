@@ -22,38 +22,72 @@
             'title' => 'Principal',
             'roles' => ['administrador', 'coordinador', 'docente', 'postulante', 'autoridad academica'],
             'items' => [
-                ['label' => 'Dashboard', 'route' => 'dashboard'],
+                ['label' => 'Dashboard', 'route' => 'dashboard', 'active' => ['dashboard']],
             ],
         ],
         [
-            'title' => 'Autenticacion y Seguridad',
+            'title' => 'Autenticación, Usuarios y Seguridad',
             'roles' => ['administrador'],
             'items' => [
-                ['label' => 'Usuarios', 'route' => 'autenticacion-usuarios-seguridad.usuarios.index'],
-                ['label' => 'Roles', 'route' => 'autenticacion-usuarios-seguridad.roles.index'],
-                ['label' => 'Importaciones', 'route' => 'autenticacion-usuarios-seguridad.importaciones.index'],
+                ['label' => 'Usuarios', 'route' => 'autenticacion-usuarios-seguridad.usuarios.index', 'active' => ['autenticacion-usuarios-seguridad.usuarios.*']],
+                ['label' => 'Roles', 'route' => 'autenticacion-usuarios-seguridad.roles.index', 'active' => ['autenticacion-usuarios-seguridad.roles.*']],
+                ['label' => 'Importación Excel/CSV', 'route' => 'autenticacion-usuarios-seguridad.importaciones.index', 'active' => ['autenticacion-usuarios-seguridad.importaciones.*']],
             ],
         ],
         [
-            'title' => 'Postulantes y Admision',
+            'title' => 'Gestión de Postulantes y Admisión',
             'roles' => ['administrador', 'coordinador', 'postulante'],
             'items' => [
-                ['label' => 'Postulantes', 'route' => 'gestion-postulantes-admision.postulantes.index'],
-                ['label' => 'Requisitos', 'route' => 'gestion-postulantes-admision.requisitos.index'],
-                ['label' => 'Validar requisitos', 'route' => 'gestion-postulantes-admision.requisitos-postulantes.index'],
-                ['label' => 'Carreras', 'route' => 'gestion-postulantes-admision.carreras.index'],
-                ['label' => 'Cupos', 'route' => 'gestion-postulantes-admision.cupos.index'],
+                ['label' => 'Postulantes / Inscripción', 'route' => 'gestion-postulantes-admision.postulantes.index', 'roles' => ['administrador', 'postulante'], 'active' => ['gestion-postulantes-admision.postulantes.*']],
+                ['label' => 'Requisitos', 'route' => 'gestion-postulantes-admision.requisitos-postulantes.index', 'roles' => ['administrador', 'coordinador'], 'active' => ['gestion-postulantes-admision.requisitos-postulantes.*', 'gestion-postulantes-admision.requisitos.*']],
+                ['label' => 'Pagos', 'route' => 'gestion-postulantes-admision.pagos.index', 'roles' => ['administrador', 'coordinador', 'postulante'], 'active' => ['gestion-postulantes-admision.pagos.*']],
+                ['label' => 'Carreras', 'route' => 'gestion-postulantes-admision.carreras.index', 'roles' => ['administrador', 'coordinador'], 'active' => ['gestion-postulantes-admision.carreras.*']],
+                ['label' => 'Cupos', 'route' => 'gestion-postulantes-admision.cupos.index', 'roles' => ['administrador', 'coordinador'], 'active' => ['gestion-postulantes-admision.cupos.*']],
+                ['label' => 'Resultados de Admisión', 'route' => 'gestion-academica-cup.resultados.index', 'roles' => ['administrador', 'coordinador'], 'active' => ['gestion-academica-cup.resultados.*']],
+            ],
+        ],
+        [
+            'title' => 'Gestión Académica del CUP',
+            'roles' => ['administrador', 'coordinador'],
+            'items' => [
+                ['label' => 'Materias', 'route' => 'gestion-academica-cup.materias.index', 'active' => ['gestion-academica-cup.materias.*']],
+                ['label' => 'Grupos Académicos', 'route' => 'gestion-academica-cup.grupos.index', 'active' => ['gestion-academica-cup.grupos.index', 'gestion-academica-cup.grupos.show', 'gestion-academica-cup.grupos.create', 'gestion-academica-cup.grupos.store', 'gestion-academica-cup.grupos.edit', 'gestion-academica-cup.grupos.update', 'gestion-academica-cup.grupos.destroy']],
+                ['label' => 'Organización de Grupos', 'route' => 'gestion-academica-cup.grupos.organizar', 'active' => ['gestion-academica-cup.grupos.organizar', 'gestion-academica-cup.grupos.organizar.store']],
+                ['label' => 'Horarios', 'route' => 'gestion-academica-cup.horarios.index', 'active' => ['gestion-academica-cup.horarios.*']],
+                ['label' => 'Aulas', 'route' => 'gestion-academica-cup.aulas.index', 'active' => ['gestion-academica-cup.aulas.*']],
+            ],
+        ],
+        [
+            'title' => 'Gestión Docente y Evaluación Académica',
+            'roles' => ['administrador', 'coordinador', 'docente'],
+            'items' => [
+                ['label' => 'Docentes', 'route' => 'gestion-academica-cup.docentes.index', 'roles' => ['administrador', 'coordinador'], 'active' => ['gestion-academica-cup.docentes.index', 'gestion-academica-cup.docentes.show', 'gestion-academica-cup.docentes.create', 'gestion-academica-cup.docentes.store', 'gestion-academica-cup.docentes.edit', 'gestion-academica-cup.docentes.update', 'gestion-academica-cup.docentes.destroy', 'gestion-academica-cup.docentes.activar']],
+                ['label' => 'Asistencia Docente', 'route' => 'gestion-academica-cup.asistencias-docentes.index', 'roles' => ['docente'], 'active' => ['gestion-academica-cup.asistencias-docentes.*']],
+                ['label' => 'Notas Académicas', 'route' => 'gestion-academica-cup.notas.index', 'roles' => ['coordinador', 'docente'], 'active' => ['gestion-academica-cup.notas.index', 'gestion-academica-cup.notas.create', 'gestion-academica-cup.notas.store', 'gestion-academica-cup.notas.show', 'gestion-academica-cup.notas.edit', 'gestion-academica-cup.notas.update']],
+                ['label' => 'Seguimiento Académico', 'route' => 'gestion-academica-cup.notas.seguimiento', 'roles' => ['coordinador', 'docente'], 'active' => ['gestion-academica-cup.notas.seguimiento']],
+            ],
+        ],
+        [
+            'title' => 'Reportes, Dashboard y Comunicación Interna',
+            'roles' => ['administrador', 'coordinador', 'docente', 'postulante', 'autoridad academica'],
+            'items' => [
+                ['label' => 'Reportes', 'route' => 'gestion-academica-cup.reportes.consulta', 'roles' => ['administrador', 'coordinador', 'autoridad academica'], 'active' => ['gestion-academica-cup.reportes.consulta']],
+                ['label' => 'Historial de Reportes', 'route' => 'gestion-academica-cup.reportes.historial', 'roles' => ['administrador', 'coordinador', 'autoridad academica'], 'active' => ['gestion-academica-cup.reportes.historial']],
+                ['label' => 'Dashboard Académico', 'route' => 'gestion-academica-cup.reportes.dashboard', 'roles' => ['administrador', 'coordinador', 'autoridad academica'], 'active' => ['gestion-academica-cup.reportes.dashboard']],
+                ['label' => 'Notificaciones', 'route' => 'gestion-academica-cup.notificaciones.index', 'active' => ['gestion-academica-cup.notificaciones.*']],
+                ['label' => 'Bitácora', 'route' => 'gestion-academica-cup.bitacoras.index', 'roles' => ['administrador', 'autoridad academica'], 'active' => ['gestion-academica-cup.bitacoras.*']],
             ],
         ],
     ];
 
     $visibleSidebarGroups = collect($sidebarGroups)
-        ->filter(function (array $group) use ($normalizedRole) {
-            return in_array($normalizedRole, $group['roles'], true);
-        })
-        ->map(function (array $group) {
+        ->filter(fn (array $group) => in_array($normalizedRole, $group['roles'], true))
+        ->map(function (array $group) use ($normalizedRole): array {
             $group['items'] = collect($group['items'])
-                ->filter(fn (array $item) => Route::has($item['route']))
+                ->filter(function (array $item) use ($normalizedRole): bool {
+                    return Route::has($item['route'])
+                        && (! isset($item['roles']) || in_array($normalizedRole, $item['roles'], true));
+                })
                 ->values()
                 ->all();
 
@@ -76,7 +110,7 @@
         </div>
 
         <div class="relative flex min-h-screen">
-            <aside id="app-sidebar" class="fixed inset-y-0 left-0 z-40 flex w-80 max-w-[86vw] -translate-x-full flex-col border-r border-blue-300/12 bg-slate-950/85 p-5 shadow-[0_25px_80px_rgba(2,6,23,0.85)] backdrop-blur-2xl transition-transform duration-300 lg:translate-x-0">
+            <aside id="app-sidebar" class="fixed inset-y-0 left-0 z-40 flex w-[18.5rem] max-w-[88vw] -translate-x-full flex-col border-r border-blue-300/12 bg-slate-950/85 p-4 shadow-[0_25px_80px_rgba(2,6,23,0.85)] backdrop-blur-2xl transition-transform duration-300 lg:w-72 lg:translate-x-0 xl:w-80 xl:p-5">
                 <div class="mb-6 flex items-center gap-4 rounded-[1.75rem] border border-blue-300/12 bg-white/6 px-4 py-4">
                     <div class="flex h-14 w-14 items-center justify-center rounded-2xl border border-blue-300/15 bg-blue-500/10 text-blue-300 shadow-[0_16px_35px_rgba(30,64,175,0.28)]">
                         <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
@@ -104,12 +138,17 @@
                             <p class="mb-3 px-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-500">{{ $group['title'] }}</p>
                             <div class="space-y-2">
                                 @foreach ($group['items'] as $item)
+                                    @php
+                                        $isActive = collect($item['active'] ?? [$item['route']])->contains(
+                                            fn (string $pattern) => request()->routeIs($pattern)
+                                        );
+                                    @endphp
                                     <a
                                         href="{{ route($item['route']) }}"
-                                        class="group flex items-center justify-between rounded-2xl border px-4 py-3 text-sm transition {{ request()->routeIs($item['route']) ? 'border-blue-300/25 bg-blue-500/15 text-white shadow-[0_14px_35px_rgba(37,99,235,0.2)]' : 'border-white/6 bg-white/4 text-slate-300 hover:border-blue-300/18 hover:bg-white/8 hover:text-white' }}"
+                                        class="group flex items-center justify-between gap-3 rounded-2xl border px-4 py-3 text-sm transition {{ $isActive ? 'border-blue-300/25 bg-blue-500/15 text-white shadow-[0_14px_35px_rgba(37,99,235,0.2)]' : 'border-white/6 bg-white/4 text-slate-300 hover:border-blue-300/18 hover:bg-white/8 hover:text-white' }}"
                                     >
-                                        <span>{{ $item['label'] }}</span>
-                                        <span class="text-[11px] uppercase tracking-[0.22em] text-slate-500 group-hover:text-blue-200">Ir</span>
+                                        <span class="min-w-0 flex-1 break-words">{{ $item['label'] }}</span>
+                                        <span class="shrink-0 text-[11px] uppercase tracking-[0.22em] text-slate-500 group-hover:text-blue-200">Ir</span>
                                     </a>
                                 @endforeach
                             </div>
@@ -127,22 +166,22 @@
 
             <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden bg-slate-950/70 backdrop-blur-sm lg:hidden"></div>
 
-            <div class="flex min-h-screen flex-1 flex-col lg:pl-80">
+            <div class="flex min-h-screen min-w-0 flex-1 flex-col lg:pl-72 xl:pl-80">
                 <header class="sticky top-0 z-20 border-b border-blue-300/10 bg-slate-950/65 backdrop-blur-2xl">
                     <div class="mx-auto flex w-full max-w-[1600px] items-center justify-between gap-4 px-4 py-4 sm:px-6 xl:px-8">
-                        <div class="flex items-center gap-3">
+                        <div class="flex min-w-0 items-center gap-3">
                             <button id="sidebar-toggle" type="button" class="btn btn-ghost btn-circle border border-white/8 bg-white/6 text-slate-200 lg:hidden">
                                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                                 </svg>
                             </button>
-                            <div>
+                            <div class="min-w-0">
                                 <p class="text-xs font-medium uppercase tracking-[0.24em] text-blue-200/75">Campus digital</p>
-                                <h1 class="mt-1 text-xl font-semibold tracking-tight text-white sm:text-2xl">{{ $currentTitle }}</h1>
+                                <h1 class="mt-1 break-words text-lg font-semibold tracking-tight text-white sm:text-2xl">{{ $currentTitle }}</h1>
                             </div>
                         </div>
 
-                        <div class="hidden items-center gap-3 sm:flex">
+                        <div class="hidden flex-wrap items-center justify-end gap-3 lg:flex">
                             <a href="{{ route('dashboard') }}" class="rounded-2xl border border-white/8 bg-white/5 px-4 py-2 text-sm font-medium text-slate-200 transition hover:border-blue-300/18 hover:bg-white/8 hover:text-white">
                                 Dashboard
                             </a>
@@ -160,8 +199,8 @@
                     </div>
                 </header>
 
-                <main class="relative flex-1 px-4 py-6 sm:px-6 xl:px-8">
-                    <div class="mx-auto max-w-[1600px]">
+                <main class="relative min-w-0 flex-1 px-4 py-6 sm:px-6 xl:px-8">
+                    <div class="mx-auto min-w-0 max-w-[1600px]">
                         @yield('content')
                     </div>
                 </main>

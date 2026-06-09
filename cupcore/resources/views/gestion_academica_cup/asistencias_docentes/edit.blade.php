@@ -3,9 +3,9 @@
 @section('title', 'CU13 Registrar Asistencia Docente | Editar asistencia')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
         <x-page-title title="Editar asistencia docente" subtitle="Actualiza el horario, el estado de asistencia, la hora de registro y las observaciones del registro." />
-        <a href="{{ route('gestion-academica-cup.asistencias-docentes.show', $asistencia) }}" class="btn btn-outline">Volver</a>
+        <a href="{{ route('gestion-academica-cup.asistencias-docentes.show', $asistencia) }}" class="btn btn-outline shrink-0">Volver</a>
     </div>
 
     @if ($errors->any())
@@ -25,11 +25,11 @@
                 <div class="app-form-grid cols-2">
                     <label class="form-control">
                         <span class="label-text">Fecha</span>
-                        <input type="date" name="fecha" value="{{ old('fecha', optional($asistencia->fecha)->format('Y-m-d') ?? $asistencia->fecha) }}" class="input input-bordered" required>
+                        <input type="date" name="fecha" value="{{ old('fecha', optional($asistencia->fecha)->format('Y-m-d') ?? $asistencia->fecha) }}" class="input input-bordered w-full" required>
                     </label>
                     <label class="form-control md:col-span-2">
                         <span class="label-text">Horario</span>
-                        <select name="horario_id" class="select select-bordered" required>
+                        <select name="horario_id" class="select select-bordered w-full" required>
                             <option value="">Selecciona un horario</option>
                             @foreach ($horarios as $horario)
                                 <option value="{{ $horario->id }}" @selected((string) old('horario_id', $asistencia->horario_id) === (string) $horario->id)>
@@ -46,7 +46,7 @@
                 <div class="app-form-grid cols-2">
                     <label class="form-control">
                         <span class="label-text">Estado asistencia</span>
-                        <select name="estado_asistencia" class="select select-bordered" required>
+                        <select name="estado_asistencia" class="select select-bordered w-full" required>
                             @foreach ($estadosAsistencia as $estadoOption)
                                 <option value="{{ $estadoOption }}" @selected(old('estado_asistencia', $asistencia->estado_asistencia) === $estadoOption)>{{ $estadoOption }}</option>
                             @endforeach
@@ -54,7 +54,7 @@
                     </label>
                     <label class="form-control">
                         <span class="label-text">Hora de registro</span>
-                        <input type="time" name="hora_registro" value="{{ old('hora_registro', $asistencia->hora_registro ? substr((string) $asistencia->hora_registro, 0, 5) : '') }}" class="input input-bordered">
+                        <input type="time" name="hora_registro" value="{{ old('hora_registro', $asistencia->hora_registro ? substr((string) $asistencia->hora_registro, 0, 5) : '') }}" class="input input-bordered w-full">
                     </label>
                 </div>
             </section>
@@ -63,13 +63,13 @@
                 <h2 class="app-section-title">Observacion</h2>
                 <label class="form-control">
                     <span class="label-text">Observacion</span>
-                    <textarea name="observacion" class="textarea textarea-bordered">{{ old('observacion', $asistencia->observacion) }}</textarea>
+                    <textarea name="observacion" class="textarea textarea-bordered w-full">{{ old('observacion', $asistencia->observacion) }}</textarea>
                 </label>
             </section>
 
-            <div class="app-form-actions">
-                <button type="submit" class="btn btn-primary">Actualizar</button>
-                <a href="{{ route('gestion-academica-cup.asistencias-docentes.show', $asistencia) }}" class="btn btn-outline">Volver</a>
+            <div class="app-form-actions flex flex-wrap gap-2">
+                <button type="submit" class="btn btn-primary w-full sm:w-auto">Actualizar</button>
+                <a href="{{ route('gestion-academica-cup.asistencias-docentes.show', $asistencia) }}" class="btn btn-outline w-full sm:w-auto">Volver</a>
             </div>
         </form>
     </x-card>

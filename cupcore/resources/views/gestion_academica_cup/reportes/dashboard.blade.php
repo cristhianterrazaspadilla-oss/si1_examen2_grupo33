@@ -3,16 +3,16 @@
 @section('title', 'CU16 KPIs Academicos | CUPCore')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <x-page-title title="CU16 KPIs Academicos" subtitle="Indicadores academicos y administrativos del proceso de admision." />
         <div class="flex flex-wrap gap-2">
-            <a href="{{ route('gestion-academica-cup.reportes.consulta') }}" class="btn btn-outline">Reportes</a>
-            <a href="{{ route('gestion-academica-cup.reportes.historial') }}" class="btn btn-primary">Historial de reportes</a>
+            <a href="{{ route('gestion-academica-cup.reportes.consulta') }}" class="btn btn-outline w-full sm:w-auto">Reportes</a>
+            <a href="{{ route('gestion-academica-cup.reportes.historial') }}" class="btn btn-primary w-full sm:w-auto">Historial de reportes</a>
         </div>
     </div>
 
     <x-card title="Filtros del dashboard">
-        <form method="GET" action="{{ route('gestion-academica-cup.reportes.dashboard') }}" class="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
+        <form method="GET" action="{{ route('gestion-academica-cup.reportes.dashboard') }}" class="grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-6">
             <label class="form-control">
                 <span class="label-text">Gestion</span>
                 <select name="gestion" class="select select-bordered">
@@ -67,14 +67,14 @@
                     @endforeach
                 </select>
             </label>
-            <div class="md:col-span-2 xl:col-span-6 flex gap-2">
-                <button type="submit" class="btn btn-primary">Aplicar filtros</button>
-                <a href="{{ route('gestion-academica-cup.reportes.dashboard') }}" class="btn btn-outline">Limpiar filtros</a>
+            <div class="sm:col-span-2 2xl:col-span-6 flex flex-wrap gap-2">
+                <button type="submit" class="btn btn-primary w-full sm:w-auto">Aplicar filtros</button>
+                <a href="{{ route('gestion-academica-cup.reportes.dashboard') }}" class="btn btn-outline w-full sm:w-auto">Limpiar filtros</a>
             </div>
         </form>
     </x-card>
 
-    <div class="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-7">
+    <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-7">
         <x-card title="Postulantes registrados"><p class="text-3xl font-semibold text-white">{{ $summary['total_postulantes'] }}</p></x-card>
         <x-card title="Postulantes inscritos"><p class="text-3xl font-semibold text-white">{{ $summary['total_inscritos'] }}</p></x-card>
         <x-card title="Pagos confirmados"><p class="text-3xl font-semibold text-white">{{ $summary['total_pagos_confirmados'] }}</p></x-card>
@@ -84,7 +84,7 @@
         <x-card title="Evaluaciones activas"><p class="text-3xl font-semibold text-white">{{ $summary['total_evaluaciones_activas'] }}</p></x-card>
     </div>
 
-    <div class="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-7">
+    <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-7">
         <x-card title="Resultados generados"><p class="text-3xl font-semibold text-white">{{ $summary['total_resultados'] }}</p></x-card>
         <x-card title="Aprobados"><p class="text-3xl font-semibold text-white">{{ $summary['total_aprobados'] }}</p></x-card>
         <x-card title="Reprobados"><p class="text-3xl font-semibold text-white">{{ $summary['total_reprobados'] }}</p></x-card>
@@ -94,10 +94,10 @@
         <x-card title="Cupos disponibles"><p class="text-3xl font-semibold text-white">{{ $summary['cupos_disponibles'] }}</p></x-card>
     </div>
 
-    <div class="grid gap-6 xl:grid-cols-[1fr_1fr]">
+    <div class="grid gap-6 2xl:grid-cols-[1fr_1fr]">
         <x-card title="1. Resumen de admision">
             <div class="overflow-x-auto">
-                <table class="table">
+                <table class="table min-w-[420px] text-sm">
                     <thead>
                         <tr>
                             <th>Carrera asignada</th>
@@ -124,7 +124,7 @@
 
         <x-card title="2. Resultados academicos">
             <div class="overflow-x-auto">
-                <table class="table">
+                <table class="table min-w-[460px] text-sm">
                     <thead>
                         <tr>
                             <th>Materia</th>
@@ -149,7 +149,7 @@
 
         <x-card title="3. Cupos por carrera">
             <div class="overflow-x-auto">
-                <table class="table">
+                <table class="table min-w-[420px] text-sm">
                     <thead>
                         <tr>
                             <th>Carrera</th>
@@ -175,7 +175,7 @@
         <x-card title="4. Grupos academicos">
             <div class="space-y-5">
                 <div class="overflow-x-auto">
-                    <table class="table">
+                    <table class="table min-w-[360px] text-sm">
                         <thead>
                             <tr>
                                 <th>Gestion</th>
@@ -195,7 +195,7 @@
                     </table>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="table">
+                    <table class="table min-w-[480px] text-sm">
                         <thead>
                             <tr>
                                 <th>Grupo</th>
@@ -221,7 +221,7 @@
 
         <x-card title="5. Docentes y asignaciones">
             <div class="overflow-x-auto">
-                <table class="table">
+                <table class="table min-w-[380px] text-sm">
                     <thead>
                         <tr>
                             <th>Docente</th>
@@ -244,7 +244,7 @@
 
         <x-card title="6. Asistencia docente">
             <div class="overflow-x-auto">
-                <table class="table">
+                <table class="table min-w-[360px] text-sm">
                     <thead>
                         <tr>
                             <th>Estado asistencia</th>
@@ -267,7 +267,7 @@
 
         <x-card title="7. Notas por materia">
             <div class="overflow-x-auto">
-                <table class="table">
+                <table class="table min-w-[360px] text-sm">
                     <thead>
                         <tr>
                             <th>Materia</th>

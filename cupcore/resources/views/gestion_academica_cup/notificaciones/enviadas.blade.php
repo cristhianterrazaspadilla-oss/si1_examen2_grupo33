@@ -3,12 +3,12 @@
 @section('title', 'Notificaciones enviadas | CUPCore')
 
 @section('content')
-    <div class="flex flex-wrap items-center justify-between gap-4">
+    <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <x-page-title title="Notificaciones enviadas" subtitle="Consulta el historial de notificaciones internas enviadas desde tu cuenta." />
         <div class="flex flex-wrap gap-2">
-            <a href="{{ route('gestion-academica-cup.notificaciones.index') }}" class="btn btn-outline">Volver a recibidas</a>
-            <a href="{{ route('gestion-academica-cup.notificaciones.create') }}" class="btn btn-primary">Crear notificacion</a>
-            <a href="{{ route('dashboard') }}" class="btn btn-outline">Dashboard</a>
+            <a href="{{ route('gestion-academica-cup.notificaciones.index') }}" class="btn btn-outline w-full sm:w-auto">Volver a recibidas</a>
+            <a href="{{ route('gestion-academica-cup.notificaciones.create') }}" class="btn btn-primary w-full sm:w-auto">Crear notificacion</a>
+            <a href="{{ route('dashboard') }}" class="btn btn-outline w-full sm:w-auto">Dashboard</a>
         </div>
     </div>
 
@@ -28,14 +28,14 @@
         </div>
     @endif
 
-    <div class="mb-6 grid gap-4 md:grid-cols-3">
+    <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <x-card title="Total enviadas"><p class="text-3xl font-semibold text-white">{{ $totalEnviadas }}</p></x-card>
         <x-card title="Leidas"><p class="text-3xl font-semibold text-emerald-300">{{ $leidas }}</p></x-card>
         <x-card title="No leidas"><p class="text-3xl font-semibold text-blue-200">{{ $noLeidas }}</p></x-card>
     </div>
 
     <x-card title="Filtros">
-        <form method="GET" action="{{ route('gestion-academica-cup.notificaciones.enviadas') }}" class="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
+        <form method="GET" action="{{ route('gestion-academica-cup.notificaciones.enviadas') }}" class="grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-6">
             <label class="form-control">
                 <span class="label-text">Receptor</span>
                 <select name="usuario_receptor_id" class="select select-bordered">
@@ -76,9 +76,9 @@
                 <span class="label-text">Busqueda</span>
                 <input type="text" name="busqueda" value="{{ $filters['busqueda'] }}" class="input input-bordered" placeholder="Titulo, mensaje, tipo o receptor">
             </label>
-            <div class="md:col-span-2 xl:col-span-6 flex flex-wrap gap-3">
-                <button type="submit" class="btn btn-primary">Filtrar</button>
-                <a href="{{ route('gestion-academica-cup.notificaciones.enviadas') }}" class="btn btn-outline">Limpiar filtros</a>
+            <div class="sm:col-span-2 2xl:col-span-6 flex flex-wrap gap-3">
+                <button type="submit" class="btn btn-primary w-full sm:w-auto">Filtrar</button>
+                <a href="{{ route('gestion-academica-cup.notificaciones.enviadas') }}" class="btn btn-outline w-full sm:w-auto">Limpiar filtros</a>
             </div>
         </form>
     </x-card>
@@ -90,7 +90,7 @@
             </div>
         @else
             <div class="overflow-x-auto">
-                <table class="table">
+                <table class="table min-w-[980px] text-sm">
                     <thead>
                         <tr>
                             <th>Fecha</th>
@@ -107,7 +107,7 @@
                             <tr>
                                 <td>{{ \Illuminate\Support\Carbon::parse($notificacion->created_at)->format('Y-m-d H:i') }}</td>
                                 <td><span class="badge border border-blue-300/25 bg-slate-800/80 text-slate-100">{{ $notificacion->tipo ?: 'GENERAL' }}</span></td>
-                                <td class="font-semibold text-white">{{ $notificacion->titulo }}</td>
+                                <td class="max-w-[15rem] break-words font-semibold text-white">{{ $notificacion->titulo }}</td>
                                 <td>
                                     <div class="text-slate-100">{{ trim(($notificacion->receptor_nombre ?? '') . ' ' . ($notificacion->receptor_apellido ?? '')) }}</div>
                                     <div class="text-xs text-slate-400">{{ $notificacion->receptor_correo ?: 'Sin correo' }}</div>

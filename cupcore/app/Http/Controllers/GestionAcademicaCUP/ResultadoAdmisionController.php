@@ -77,9 +77,13 @@ class ResultadoAdmisionController extends Controller
         } catch (ValidationException $exception) {
             throw $exception;
         } catch (Throwable $exception) {
+            Log::error('Error al generar resultado de admisión: ' . $exception->getMessage(), [
+                'postulante_id' => $postulante->id,
+            ]);
+
             return back()
                 ->withInput()
-                ->withErrors(['resultado' => 'No se pudo generar el resultado: ' . $exception->getMessage()]);
+                ->withErrors(['resultado' => 'No se pudo generar el resultado de admisión. Inténtalo nuevamente.']);
         }
 
         BitacoraHelper::registrar(
@@ -160,9 +164,13 @@ class ResultadoAdmisionController extends Controller
             } catch (ValidationException $exception) {
                 throw $exception;
             } catch (Throwable $exception) {
+                Log::error('Error al recalcular resultado de admisión: ' . $exception->getMessage(), [
+                    'resultado_id' => $resultado->id,
+                ]);
+
                 return back()
                     ->withInput()
-                    ->withErrors(['resultado' => 'No se pudo recalcular el resultado: ' . $exception->getMessage()]);
+                    ->withErrors(['resultado' => 'No se pudo recalcular el resultado de admisión. Inténtalo nuevamente.']);
             }
 
             BitacoraHelper::registrar(
@@ -253,7 +261,11 @@ class ResultadoAdmisionController extends Controller
                     $errores[] = trim($postulante->nombres . ' ' . $postulante->apellidos) . ': ' . $messages;
                 }
             } catch (Throwable $exception) {
-                $errores[] = trim($postulante->nombres . ' ' . $postulante->apellidos) . ': ' . $exception->getMessage();
+                Log::error('Error en generacion masiva para postulante: ' . $exception->getMessage(), [
+                    'postulante_id' => $postulante->id,
+                ]);
+
+                $errores[] = trim($postulante->nombres . ' ' . $postulante->apellidos) . ': No se pudo generar el resultado para este postulante.';
             }
         }
 

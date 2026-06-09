@@ -3,11 +3,11 @@
 @section('title', 'Historial de reportes generados | CUPCore')
 
 @section('content')
-    <div class="flex flex-wrap items-center justify-between gap-4">
+    <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <x-page-title title="Historial de reportes generados" subtitle="Exportaciones CSV y vistas imprimibles generadas desde CU16." />
         <div class="flex flex-wrap gap-2">
-            <a href="{{ route('gestion-academica-cup.reportes.consulta') }}" class="btn btn-outline">Reportes</a>
-            <a href="{{ route('gestion-academica-cup.reportes.dashboard') }}" class="btn btn-primary">KPIs academicos</a>
+            <a href="{{ route('gestion-academica-cup.reportes.consulta') }}" class="btn btn-outline w-full sm:w-auto">Reportes</a>
+            <a href="{{ route('gestion-academica-cup.reportes.dashboard') }}" class="btn btn-primary w-full sm:w-auto">KPIs academicos</a>
         </div>
     </div>
 
@@ -26,7 +26,7 @@
     </div>
 
     <x-card title="Filtros del historial">
-        <form method="GET" action="{{ route('gestion-academica-cup.reportes.historial') }}" class="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+        <form method="GET" action="{{ route('gestion-academica-cup.reportes.historial') }}" class="grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-5">
             <label class="form-control">
                 <span class="label-text">Tipo de reporte</span>
                 <select name="tipo_reporte" class="select select-bordered">
@@ -57,9 +57,9 @@
                 <span class="label-text">Busqueda</span>
                 <input type="text" name="busqueda" value="{{ $filters['busqueda'] }}" class="input input-bordered" placeholder="Usuario, correo, ruta o tipo">
             </label>
-            <div class="xl:col-span-5 flex flex-wrap gap-3">
-                <button type="submit" class="btn btn-primary">Aplicar filtros</button>
-                <a href="{{ route('gestion-academica-cup.reportes.historial') }}" class="btn btn-outline">Limpiar</a>
+            <div class="sm:col-span-2 2xl:col-span-5 flex flex-wrap gap-3">
+                <button type="submit" class="btn btn-primary w-full sm:w-auto">Aplicar filtros</button>
+                <a href="{{ route('gestion-academica-cup.reportes.historial') }}" class="btn btn-outline w-full sm:w-auto">Limpiar</a>
             </div>
         </form>
     </x-card>
@@ -71,7 +71,7 @@
     @else
         <x-card title="Registros del historial">
             <div class="overflow-x-auto">
-                <table class="table">
+                <table class="table min-w-[980px] text-sm">
                     <thead>
                         <tr>
                             <th>Fecha</th>

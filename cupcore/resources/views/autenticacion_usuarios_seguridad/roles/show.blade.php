@@ -3,11 +3,11 @@
 @section('title', 'CU3 Administrar Usuarios y Roles | Detalle de Rol')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <x-page-title title="Detalle de Rol" subtitle="CU3 Administrar Usuarios y Roles" />
-        <div class="flex gap-2">
-            <a href="{{ route('autenticacion-usuarios-seguridad.roles.edit', $rol) }}" class="btn btn-info">Editar</a>
-            <a href="{{ route('autenticacion-usuarios-seguridad.roles.index') }}" class="btn btn-outline">Volver</a>
+        <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+            <a href="{{ route('autenticacion-usuarios-seguridad.roles.edit', $rol) }}" class="btn btn-info w-full sm:w-auto">Editar</a>
+            <a href="{{ route('autenticacion-usuarios-seguridad.roles.index') }}" class="btn btn-outline w-full sm:w-auto">Volver</a>
         </div>
     </div>
 
@@ -44,7 +44,7 @@
 
     <x-card title="Usuarios asociados">
         <div class="overflow-x-auto">
-            <table class="table">
+            <table class="table min-w-[800px]">
                 <thead>
                     <tr>
                         <th>Nombre</th>

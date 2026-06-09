@@ -3,9 +3,9 @@
 @section('title', 'CU15 Gestionar Resultados | Editar resultado')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
         <x-page-title title="Editar resultado de admision" subtitle="Actualiza observaciones del resultado y, si es necesario, recalcula con una justificacion obligatoria." />
-        <a href="{{ route('gestion-academica-cup.resultados.show', $resultado) }}" class="btn btn-outline">Volver</a>
+        <a href="{{ route('gestion-academica-cup.resultados.show', $resultado) }}" class="btn btn-outline shrink-0">Volver</a>
     </div>
 
     @if ($errors->any())
@@ -36,19 +36,19 @@
                 <div class="app-form-grid cols-2">
                     <label class="form-control md:col-span-2">
                         <span class="label-text">Observacion</span>
-                        <textarea name="observacion" class="textarea textarea-bordered">{{ old('observacion', $resultado->observacion) }}</textarea>
+                        <textarea name="observacion" class="textarea textarea-bordered w-full">{{ old('observacion', $resultado->observacion) }}</textarea>
                     </label>
                     <label class="form-control md:col-span-2">
                         <span class="label-text">Justificacion de modificacion</span>
-                        <textarea name="justificacion_modificacion" class="textarea textarea-bordered">{{ old('justificacion_modificacion', $resultado->justificacion_modificacion) }}</textarea>
+                        <textarea name="justificacion_modificacion" class="textarea textarea-bordered w-full">{{ old('justificacion_modificacion', $resultado->justificacion_modificacion) }}</textarea>
                     </label>
                 </div>
             </section>
 
-            <div class="app-form-actions">
-                <button type="submit" name="accion" value="actualizar" class="btn btn-primary">Actualizar</button>
-                <button type="submit" name="accion" value="recalcular" class="btn btn-info">Recalcular resultado</button>
-                <a href="{{ route('gestion-academica-cup.resultados.show', $resultado) }}" class="btn btn-outline">Volver</a>
+            <div class="app-form-actions flex flex-wrap gap-2">
+                <button type="submit" name="accion" value="actualizar" class="btn btn-primary w-full sm:w-auto">Actualizar</button>
+                <button type="submit" name="accion" value="recalcular" class="btn btn-info w-full sm:w-auto">Recalcular resultado</button>
+                <a href="{{ route('gestion-academica-cup.resultados.show', $resultado) }}" class="btn btn-outline w-full sm:w-auto">Volver</a>
             </div>
         </form>
     </x-card>

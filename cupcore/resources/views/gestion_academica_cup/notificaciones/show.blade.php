@@ -3,14 +3,14 @@
 @section('title', 'Detalle de notificacion | CUPCore')
 
 @section('content')
-    <div class="flex flex-wrap items-center justify-between gap-4">
+    <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <x-page-title title="Detalle de notificacion" subtitle="Consulta el contenido completo de la notificacion interna y su estado de lectura." />
         <div class="flex flex-wrap gap-2">
-            <a href="{{ route('gestion-academica-cup.notificaciones.index') }}" class="btn btn-outline">Volver a recibidas</a>
+            <a href="{{ route('gestion-academica-cup.notificaciones.index') }}" class="btn btn-outline w-full sm:w-auto">Volver a recibidas</a>
             @if ($canSendNotifications)
-                <a href="{{ route('gestion-academica-cup.notificaciones.enviadas') }}" class="btn btn-info">Volver a enviadas</a>
+                <a href="{{ route('gestion-academica-cup.notificaciones.enviadas') }}" class="btn btn-info w-full sm:w-auto">Volver a enviadas</a>
             @endif
-            <a href="{{ route('dashboard') }}" class="btn btn-outline">Dashboard</a>
+            <a href="{{ route('dashboard') }}" class="btn btn-outline w-full sm:w-auto">Dashboard</a>
         </div>
     </div>
 
@@ -30,7 +30,7 @@
         </div>
     @endif
 
-    <div class="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+    <div class="grid gap-6 2xl:grid-cols-[1.2fr_0.8fr]">
         <x-card title="Notificacion">
             <div class="detail-grid">
                 <div class="detail-item">
@@ -57,7 +57,7 @@
                 </div>
                 <div class="detail-item">
                     <p class="detail-item-label">Mensaje completo</p>
-                    <div class="detail-item-value">{!! nl2br(e($notificacion->mensaje)) !!}</div>
+                    <div class="detail-item-value break-words">{!! nl2br(e($notificacion->mensaje)) !!}</div>
                 </div>
             </div>
 
@@ -65,7 +65,7 @@
                 <form method="POST" action="{{ route('gestion-academica-cup.notificaciones.marcar-leida', $notificacion) }}" class="mt-6">
                     @csrf
                     @method('PATCH')
-                    <button type="submit" class="btn btn-primary">Marcar como leida</button>
+                    <button type="submit" class="btn btn-primary w-full sm:w-auto">Marcar como leida</button>
                 </form>
             @endif
         </x-card>

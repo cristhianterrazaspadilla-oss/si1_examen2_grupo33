@@ -41,9 +41,11 @@ class ImportacionController extends Controller
                 ->with('imported_count', $import->getImportedCount())
                 ->with('import_errors', $import->getErrors());
         } catch (\Throwable $exception) {
+            Log::error('Error al procesar importación de usuarios: ' . $exception->getMessage());
+
             return redirect()
                 ->route('autenticacion-usuarios-seguridad.importaciones.index')
-                ->with('import_errors', ['No se pudo procesar el archivo: '.$exception->getMessage()])
+                ->with('import_errors', ['No se pudo procesar el archivo. Verifica que sea un Excel o CSV válido e inténtalo nuevamente.'])
                 ->withErrors([
                     'archivo' => 'Error al procesar el archivo. Revisa el formato e inténtalo nuevamente.',
                 ]);

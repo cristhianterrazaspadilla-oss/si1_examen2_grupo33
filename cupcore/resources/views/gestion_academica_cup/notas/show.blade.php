@@ -3,9 +3,9 @@
 @section('title', 'CU14 Gestionar Notas | Detalle de nota')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
         <x-page-title title="Detalle de nota academica" subtitle="Consulta el contexto del postulante, la evaluacion aplicada y la calificacion registrada." />
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2 shrink-0">
             <a href="{{ route('gestion-academica-cup.notas.edit', $nota) }}" class="btn btn-info">Editar</a>
             <a href="{{ route('gestion-academica-cup.notas.index') }}" class="btn btn-outline">Volver</a>
         </div>
@@ -15,7 +15,7 @@
         <div class="mb-6"><x-alert type="success" :message="session('success')" /></div>
     @endif
 
-    <div class="grid gap-6 xl:grid-cols-[1fr_1fr]">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <x-card title="Informacion del postulante">
             <div class="detail-grid cols-2">
                 <div class="detail-item"><p class="detail-item-label">Postulante</p><p class="detail-item-value">{{ trim(($nota->postulante?->nombres ?? '') . ' ' . ($nota->postulante?->apellidos ?? '')) ?: 'Sin postulante' }}</p></div>
@@ -35,7 +35,7 @@
         </x-card>
     </div>
 
-    <div class="mt-6 grid gap-6 xl:grid-cols-[1fr_1fr]">
+    <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
         <x-card title="Calificacion">
             <div class="detail-grid cols-2">
                 <div class="detail-item"><p class="detail-item-label">Nota</p><p class="detail-item-value"><span class="badge badge-info">{{ rtrim(rtrim(number_format((float) $nota->nota, 2, '.', ''), '0'), '.') }}</span></p></div>

@@ -3,9 +3,9 @@
 @section('title', 'CU11 Gestionar Horarios y Aulas | Aulas')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
         <x-page-title title="Gestionar aulas" subtitle="Administra aulas activas e inactivas del Curso Preuniversitario FICCT. Las aulas inactivas no podran recibir nuevas asignaciones horarias." />
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2 shrink-0">
             <a href="{{ route('gestion-academica-cup.horarios.index') }}" class="btn btn-outline">Horarios</a>
             <a href="{{ route('gestion-academica-cup.aulas.create') }}" class="btn btn-primary">Nueva aula</a>
         </div>
@@ -24,30 +24,30 @@
     @endif
 
     <x-card title="Busqueda y filtros">
-        <form method="GET" action="{{ route('gestion-academica-cup.aulas.index') }}" class="grid gap-4 md:grid-cols-4">
-            <label class="form-control md:col-span-3">
+        <form method="GET" action="{{ route('gestion-academica-cup.aulas.index') }}" class="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
+            <label class="form-control sm:col-span-2 md:col-span-3">
                 <span class="label-text">Buscar por nombre, codigo o ubicacion</span>
-                <input type="text" name="search" value="{{ $search }}" class="input input-bordered">
+                <input type="text" name="search" value="{{ $search }}" class="input input-bordered w-full">
             </label>
             <label class="form-control">
                 <span class="label-text">Estado</span>
-                <select name="estado" class="select select-bordered">
+                <select name="estado" class="select select-bordered w-full">
                     <option value="">Todos</option>
                     @foreach (['ACTIVO', 'INACTIVO'] as $estadoOption)
                         <option value="{{ $estadoOption }}" @selected($estado === $estadoOption)>{{ $estadoOption }}</option>
                     @endforeach
                 </select>
             </label>
-            <div class="md:col-span-4 flex gap-2">
-                <button type="submit" class="btn btn-primary">Buscar</button>
-                <a href="{{ route('gestion-academica-cup.aulas.index') }}" class="btn btn-outline">Limpiar</a>
+            <div class="sm:col-span-2 md:col-span-4 flex flex-wrap gap-2">
+                <button type="submit" class="btn btn-primary w-full sm:w-auto">Buscar</button>
+                <a href="{{ route('gestion-academica-cup.aulas.index') }}" class="btn btn-outline w-full sm:w-auto">Limpiar</a>
             </div>
         </form>
     </x-card>
 
     <x-card title="Listado de aulas">
-        <div class="overflow-x-auto">
-            <table class="table">
+        <div class="overflow-x-auto w-full">
+            <table class="table min-w-[850px]">
                 <thead>
                     <tr>
                         <th>Codigo</th>
@@ -69,7 +69,7 @@
                             <td>{{ $aula->horarios_activos_count }}</td>
                             <td><span class="badge {{ $aula->estado === 'ACTIVO' ? 'badge-success' : 'badge-error' }}">{{ $aula->estado }}</span></td>
                             <td>
-                                <div class="flex justify-end gap-2">
+                                <div class="flex flex-wrap justify-end gap-2">
                                     <a href="{{ route('gestion-academica-cup.aulas.show', $aula) }}" class="btn btn-sm btn-outline">Ver</a>
                                     <a href="{{ route('gestion-academica-cup.aulas.edit', $aula) }}" class="btn btn-sm btn-info">Editar</a>
                                     @if ($aula->estado === 'ACTIVO')

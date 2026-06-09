@@ -154,7 +154,7 @@ class DocenteAsignacionController extends Controller
 
             return redirect()
                 ->route('gestion-academica-cup.docentes.show', $docente)
-                ->withErrors(['asignacion' => 'No se pudo activar la asignacion docente: ' . $exception->getMessage()]);
+                ->withErrors(['asignacion' => 'No se pudo activar la asignación docente. Inténtalo nuevamente.']);
         }
 
         if ($updated !== 1) {

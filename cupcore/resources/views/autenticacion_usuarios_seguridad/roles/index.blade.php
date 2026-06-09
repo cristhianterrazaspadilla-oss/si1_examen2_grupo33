@@ -3,9 +3,9 @@
 @section('title', 'CU3 Administrar Usuarios y Roles | Roles')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <x-page-title title="Roles" subtitle="CU3 Administrar Usuarios y Roles" />
-        <a href="{{ route('autenticacion-usuarios-seguridad.roles.create') }}" class="btn btn-primary">
+        <a href="{{ route('autenticacion-usuarios-seguridad.roles.create') }}" class="btn btn-primary w-full sm:w-auto">
             Nuevo
         </a>
     </div>
@@ -31,7 +31,7 @@
 
     <x-card title="Listado de roles">
         <div class="overflow-x-auto">
-            <table class="table">
+            <table class="table min-w-[800px]">
                 <thead>
                     <tr>
                         <th>Nombre</th>

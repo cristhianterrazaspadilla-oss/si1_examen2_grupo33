@@ -3,9 +3,9 @@
 @section('title', 'CU7 Gestionar Pagos | CUPCore')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <x-page-title title="Gestionar Pagos" subtitle="CU7 Fase 1 y 2. Genera enlaces de Stripe Checkout y permite verificar el estado real del pago en Stripe." />
-        <a href="{{ route('gestion-postulantes-admision.pagos.create') }}" class="btn btn-primary">Nuevo pago</a>
+        <a href="{{ route('gestion-postulantes-admision.pagos.create') }}" class="btn btn-primary w-full sm:w-auto">Nuevo pago</a>
     </div>
 
     @if (session('success'))
@@ -44,8 +44,8 @@
     </div>
 
     <x-card title="Busqueda y filtros">
-        <form method="GET" action="{{ route('gestion-postulantes-admision.pagos.index') }}" class="grid gap-4 md:grid-cols-4">
-            <label class="form-control md:col-span-3">
+        <form method="GET" action="{{ route('gestion-postulantes-admision.pagos.index') }}" class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <label class="form-control sm:col-span-2 md:col-span-3">
                 <span class="label-text">Buscar por CI, nombres, apellidos o correo del postulante</span>
                 <input type="text" name="search" value="{{ $search }}" class="input input-bordered">
             </label>
@@ -60,7 +60,7 @@
                 </select>
             </label>
 
-            <div class="md:col-span-4 flex gap-2">
+            <div class="sm:col-span-3 md:col-span-4 flex gap-2">
                 <button type="submit" class="btn btn-primary">Buscar</button>
                 <a href="{{ route('gestion-postulantes-admision.pagos.index') }}" class="btn btn-outline">Limpiar</a>
             </div>
@@ -69,7 +69,7 @@
 
     <x-card title="Listado de pagos">
         <div class="overflow-x-auto">
-            <table class="table">
+            <table class="table min-w-[1100px]">
                 <thead>
                     <tr>
                         <th>Postulante</th>

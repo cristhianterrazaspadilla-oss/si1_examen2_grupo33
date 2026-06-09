@@ -3,18 +3,18 @@
 @section('title', 'CU19 Notificaciones Internas | CUPCore')
 
 @section('content')
-    <div class="flex flex-wrap items-center justify-between gap-4">
+    <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <x-page-title title="CU19 Notificaciones Internas" subtitle="Bandeja de notificaciones recibidas." />
         <div class="flex flex-wrap gap-2">
-            <a href="{{ route('dashboard') }}" class="btn btn-outline">Volver al Dashboard</a>
+            <a href="{{ route('dashboard') }}" class="btn btn-outline w-full sm:w-auto">Volver al Dashboard</a>
             @if ($canSendNotifications)
-                <a href="{{ route('gestion-academica-cup.notificaciones.create') }}" class="btn btn-primary">Crear notificacion</a>
-                <a href="{{ route('gestion-academica-cup.notificaciones.enviadas') }}" class="btn btn-info">Ver enviadas</a>
+                <a href="{{ route('gestion-academica-cup.notificaciones.create') }}" class="btn btn-primary w-full sm:w-auto">Crear notificacion</a>
+                <a href="{{ route('gestion-academica-cup.notificaciones.enviadas') }}" class="btn btn-info w-full sm:w-auto">Ver enviadas</a>
             @endif
             <form method="POST" action="{{ route('gestion-academica-cup.notificaciones.marcar-todas-leidas') }}">
                 @csrf
                 @method('PATCH')
-                <button type="submit" class="btn btn-outline">Marcar todas como leidas</button>
+                <button type="submit" class="btn btn-outline w-full sm:w-auto">Marcar todas como leidas</button>
             </form>
         </div>
     </div>
@@ -35,7 +35,7 @@
         </div>
     @endif
 
-    <div class="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <x-card title="Total recibidas"><p class="text-3xl font-semibold text-white">{{ $totalRecibidas }}</p></x-card>
         <x-card title="No leidas"><p class="text-3xl font-semibold text-blue-200">{{ $noLeidas }}</p></x-card>
         <x-card title="Leidas"><p class="text-3xl font-semibold text-emerald-300">{{ $leidas }}</p></x-card>
@@ -43,7 +43,7 @@
     </div>
 
     <x-card title="Filtros de consulta">
-        <form method="GET" action="{{ route('gestion-academica-cup.notificaciones.index') }}" class="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+        <form method="GET" action="{{ route('gestion-academica-cup.notificaciones.index') }}" class="grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-5">
             <label class="form-control">
                 <span class="label-text">Tipo</span>
                 <select name="tipo" class="select select-bordered">
@@ -73,9 +73,9 @@
                 <span class="label-text">Busqueda</span>
                 <input type="text" name="busqueda" value="{{ $filters['busqueda'] }}" class="input input-bordered" placeholder="Titulo, mensaje, tipo o emisor">
             </label>
-            <div class="md:col-span-2 xl:col-span-5 flex flex-wrap gap-3">
-                <button type="submit" class="btn btn-primary">Filtrar</button>
-                <a href="{{ route('gestion-academica-cup.notificaciones.index') }}" class="btn btn-outline">Limpiar filtros</a>
+            <div class="sm:col-span-2 2xl:col-span-5 flex flex-wrap gap-3">
+                <button type="submit" class="btn btn-primary w-full sm:w-auto">Filtrar</button>
+                <a href="{{ route('gestion-academica-cup.notificaciones.index') }}" class="btn btn-outline w-full sm:w-auto">Limpiar filtros</a>
             </div>
         </form>
     </x-card>
@@ -87,7 +87,7 @@
             </div>
         @else
             <div class="overflow-x-auto">
-                <table class="table">
+                <table class="table min-w-[1040px] text-sm">
                     <thead>
                         <tr>
                             <th>Estado</th>
@@ -109,7 +109,7 @@
                                 </td>
                                 <td>{{ \Illuminate\Support\Carbon::parse($notificacion->created_at)->format('Y-m-d H:i') }}</td>
                                 <td><span class="badge border border-blue-300/25 bg-slate-800/80 text-slate-100">{{ $notificacion->tipo ?: 'GENERAL' }}</span></td>
-                                <td class="font-semibold text-white">{{ $notificacion->titulo }}</td>
+                                <td class="max-w-[15rem] break-words font-semibold text-white">{{ $notificacion->titulo }}</td>
                                 <td>
                                     <div class="text-slate-100">
                                         {{ trim(($notificacion->emisor_nombre ?? '') . ' ' . ($notificacion->emisor_apellido ?? '')) !== '' ? trim(($notificacion->emisor_nombre ?? '') . ' ' . ($notificacion->emisor_apellido ?? '')) : 'Sistema' }}

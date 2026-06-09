@@ -3,9 +3,9 @@
 @section('title', 'CU15 Resultados Pendientes | CUPCore')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
         <x-page-title title="Postulantes pendientes de resultado" subtitle="Consulta postulantes inscritos sin resultado generado y revisa si tienen notas completas antes de calcular su admision final." />
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2 shrink-0">
             <a href="{{ route('gestion-academica-cup.resultados.index') }}" class="btn btn-outline">Volver a resultados</a>
             <a href="{{ route('gestion-academica-cup.resultados.generar') }}" class="btn btn-primary">Generar resultado</a>
         </div>
@@ -16,8 +16,8 @@
     </div>
 
     <x-card title="Pendientes">
-        <div class="overflow-x-auto">
-            <table class="table">
+        <div class="overflow-x-auto w-full">
+            <table class="table min-w-[950px]">
                 <thead>
                     <tr>
                         <th>Postulante</th>

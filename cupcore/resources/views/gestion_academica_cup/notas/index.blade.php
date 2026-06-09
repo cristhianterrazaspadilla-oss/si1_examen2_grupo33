@@ -3,9 +3,9 @@
 @section('title', 'CU14 Gestionar Notas y Seguimiento Academico | CUPCore')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
         <x-page-title title="CU14 Gestionar Notas y Seguimiento Academico" subtitle="Registra, consulta y edita notas academicas usando evaluaciones activas, grupos organizados y asignaciones docentes vigentes." />
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2 shrink-0">
             <a href="{{ route('gestion-academica-cup.notas.seguimiento', request()->query()) }}" class="btn btn-outline">Seguimiento academico</a>
             <a href="{{ route('gestion-academica-cup.notas.create') }}" class="btn btn-primary">Nueva nota</a>
         </div>
@@ -27,7 +27,7 @@
         <div class="mb-6"><x-alert type="info" :message="$scopeMessage" /></div>
     @endif
 
-    <div class="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <div class="mb-6 grid gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
         <x-card title="Total notas registradas"><p class="text-3xl font-semibold text-white">{{ $totalNotasRegistradas }}</p></x-card>
         <x-card title="Postulantes evaluados"><p class="text-3xl font-semibold text-white">{{ $postulantesEvaluados }}</p></x-card>
         <x-card title="Materias con notas"><p class="text-3xl font-semibold text-white">{{ $materiasConNotas }}</p></x-card>
@@ -35,10 +35,10 @@
     </div>
 
     <x-card title="Filtros academicos">
-        <form method="GET" action="{{ route('gestion-academica-cup.notas.index') }}" class="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+        <form method="GET" action="{{ route('gestion-academica-cup.notas.index') }}" class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             <label class="form-control">
                 <span class="label-text">Gestion</span>
-                <select name="gestion" class="select select-bordered">
+                <select name="gestion" class="select select-bordered w-full">
                     <option value="">Todas</option>
                     @foreach ($formOptions['grupos']->pluck('gestion')->unique() as $gestionOption)
                         <option value="{{ $gestionOption }}" @selected($filters['gestion'] === $gestionOption)>{{ $gestionOption }}</option>
@@ -47,7 +47,7 @@
             </label>
             <label class="form-control">
                 <span class="label-text">Grupo</span>
-                <select name="grupo_id" class="select select-bordered">
+                <select name="grupo_id" class="select select-bordered w-full">
                     <option value="">Todos</option>
                     @foreach ($formOptions['grupos'] as $grupo)
                         <option value="{{ $grupo->id }}" @selected((string) $filters['grupo_id'] === (string) $grupo->id)>{{ $grupo->nombre }} - {{ $grupo->gestion }}</option>
@@ -56,7 +56,7 @@
             </label>
             <label class="form-control">
                 <span class="label-text">Materia</span>
-                <select name="materia_id" class="select select-bordered">
+                <select name="materia_id" class="select select-bordered w-full">
                     <option value="">Todas</option>
                     @foreach ($formOptions['materias'] as $materia)
                         <option value="{{ $materia->id }}" @selected((string) $filters['materia_id'] === (string) $materia->id)>{{ $materia->nombre }}</option>
@@ -65,7 +65,7 @@
             </label>
             <label class="form-control">
                 <span class="label-text">Evaluacion</span>
-                <select name="evaluacion_id" class="select select-bordered">
+                <select name="evaluacion_id" class="select select-bordered w-full">
                     <option value="">Todas</option>
                     @foreach ($formOptions['evaluaciones'] as $evaluacion)
                         <option value="{{ $evaluacion->id }}" @selected((string) $filters['evaluacion_id'] === (string) $evaluacion->id)>{{ $evaluacion->materia?->nombre }} - Evaluacion {{ $evaluacion->numero_evaluacion }}</option>
@@ -74,7 +74,7 @@
             </label>
             <label class="form-control">
                 <span class="label-text">Postulante</span>
-                <select name="postulante_id" class="select select-bordered">
+                <select name="postulante_id" class="select select-bordered w-full">
                     <option value="">Todos</option>
                     @foreach ($formOptions['postulantes'] as $postulante)
                         <option value="{{ $postulante->id }}" @selected((string) $filters['postulante_id'] === (string) $postulante->id)>{{ $postulante->apellidos }} {{ $postulante->nombres }}</option>
@@ -83,23 +83,23 @@
             </label>
             <label class="form-control">
                 <span class="label-text">Docente</span>
-                <select name="docente_id" class="select select-bordered">
+                <select name="docente_id" class="select select-bordered w-full">
                     <option value="">Todos</option>
                     @foreach ($formOptions['docentes'] as $docente)
                         <option value="{{ $docente->id }}" @selected((string) $filters['docente_id'] === (string) $docente->id)>{{ $docente->apellidos }} {{ $docente->nombres }}</option>
                     @endforeach
                 </select>
             </label>
-            <div class="md:col-span-2 xl:col-span-5 flex gap-2">
-                <button type="submit" class="btn btn-primary">Filtrar</button>
-                <a href="{{ route('gestion-academica-cup.notas.index') }}" class="btn btn-outline">Limpiar</a>
+            <div class="sm:col-span-2 lg:col-span-3 xl:col-span-5 flex flex-wrap gap-2">
+                <button type="submit" class="btn btn-primary w-full sm:w-auto">Filtrar</button>
+                <a href="{{ route('gestion-academica-cup.notas.index') }}" class="btn btn-outline w-full sm:w-auto">Limpiar</a>
             </div>
         </form>
     </x-card>
 
     <x-card title="Listado de notas">
-        <div class="overflow-x-auto">
-            <table class="table">
+        <div class="overflow-x-auto w-full">
+            <table class="table min-w-[1300px]">
                 <thead>
                     <tr>
                         <th>Postulante</th>
@@ -132,7 +132,7 @@
                             <td>{{ $nota->observacion ?: 'Sin observacion' }}</td>
                             <td>{{ $nota->registradoPor ? trim($nota->registradoPor->nombre . ' ' . $nota->registradoPor->apellido) : 'Sin usuario' }}</td>
                             <td>
-                                <div class="flex justify-end gap-2">
+                                <div class="flex flex-wrap justify-end gap-2">
                                     <a href="{{ route('gestion-academica-cup.notas.show', $nota) }}" class="btn btn-sm btn-outline">Ver</a>
                                     <a href="{{ route('gestion-academica-cup.notas.edit', $nota) }}" class="btn btn-sm btn-info">Editar</a>
                                 </div>

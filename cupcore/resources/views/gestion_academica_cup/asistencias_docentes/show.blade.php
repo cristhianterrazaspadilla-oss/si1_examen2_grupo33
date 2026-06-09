@@ -3,9 +3,9 @@
 @section('title', 'CU13 Registrar Asistencia Docente | Detalle asistencia')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
         <x-page-title title="Detalle de asistencia docente" subtitle="Consulta el contexto academico y el registro de asistencia asociado al horario seleccionado." />
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2 shrink-0">
             <a href="{{ route('gestion-academica-cup.asistencias-docentes.edit', $asistencia) }}" class="btn btn-info">Editar</a>
             <a href="{{ route('gestion-academica-cup.asistencias-docentes.index') }}" class="btn btn-outline">Volver</a>
         </div>
@@ -23,7 +23,7 @@
         </div>
     @endif
 
-    <div class="grid gap-6 xl:grid-cols-[1fr_1fr]">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <x-card title="Informacion academica">
             <div class="detail-grid cols-2">
                 <div class="detail-item"><p class="detail-item-label">Fecha</p><p class="detail-item-value">{{ optional($asistencia->fecha)->format('Y-m-d') ?? $asistencia->fecha }}</p></div>
