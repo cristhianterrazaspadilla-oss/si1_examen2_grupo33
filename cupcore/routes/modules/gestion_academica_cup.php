@@ -11,6 +11,10 @@ use App\Http\Controllers\GestionAcademicaCUP\DocenteController;
 use App\Http\Controllers\GestionAcademicaCUP\DocenteAsignacionController;
 use App\Http\Controllers\GestionAcademicaCUP\AsistenciaDocenteController;
 use App\Http\Controllers\GestionAcademicaCUP\NotaController;
+use App\Http\Controllers\GestionAcademicaCUP\ResultadoAdmisionController;
+use App\Http\Controllers\GestionAcademicaCUP\ReporteAcademicoController;
+use App\Http\Controllers\GestionAcademicaCUP\BitacoraController;
+use App\Http\Controllers\GestionAcademicaCUP\NotificacionController;
 
 Route::prefix('gestion-academica-cup')->name('gestion-academica-cup.')->group(function (): void {
     Route::middleware('auth')->group(function (): void {
@@ -58,6 +62,50 @@ Route::prefix('gestion-academica-cup')->name('gestion-academica-cup.')->group(fu
             ->name('notas.seguimiento');
         Route::resource('notas', NotaController::class)
             ->except(['destroy']);
+        Route::get('resultados/generar', [ResultadoAdmisionController::class, 'create'])
+            ->name('resultados.generar');
+        Route::post('resultados/masivo', [ResultadoAdmisionController::class, 'generacionMasiva'])
+            ->name('resultados.masivo');
+        Route::get('resultados/pendientes', [ResultadoAdmisionController::class, 'pendientes'])
+            ->name('resultados.pendientes');
+        Route::post('resultados', [ResultadoAdmisionController::class, 'store'])
+            ->name('resultados.store');
+        Route::resource('resultados', ResultadoAdmisionController::class)
+            ->only(['index', 'show', 'edit', 'update']);
+        Route::get('reportes', [ReporteAcademicoController::class, 'index'])
+            ->name('reportes.index');
+        Route::get('reportes/consulta', [ReporteAcademicoController::class, 'consulta'])
+            ->name('reportes.consulta');
+        Route::post('reportes/interpretar-comando', [ReporteAcademicoController::class, 'interpretarComando'])
+            ->name('reportes.interpretar-comando');
+        Route::get('reportes/exportar/csv', [ReporteAcademicoController::class, 'exportarCsv'])
+            ->name('reportes.exportar.csv');
+        Route::get('reportes/exportar/excel', [ReporteAcademicoController::class, 'exportarExcel'])
+            ->name('reportes.exportar.excel');
+        Route::get('reportes/historial', [ReporteAcademicoController::class, 'historial'])
+            ->name('reportes.historial');
+        Route::get('reportes/imprimir', [ReporteAcademicoController::class, 'imprimir'])
+            ->name('reportes.imprimir');
+        Route::get('reportes/dashboard', [ReporteAcademicoController::class, 'dashboard'])
+            ->name('reportes.dashboard');
+        Route::get('bitacoras', [BitacoraController::class, 'index'])
+            ->name('bitacoras.index');
+        Route::get('bitacoras/{bitacora}', [BitacoraController::class, 'show'])
+            ->name('bitacoras.show');
+        Route::get('notificaciones', [NotificacionController::class, 'index'])
+            ->name('notificaciones.index');
+        Route::get('notificaciones/create', [NotificacionController::class, 'create'])
+            ->name('notificaciones.create');
+        Route::post('notificaciones', [NotificacionController::class, 'store'])
+            ->name('notificaciones.store');
+        Route::get('notificaciones/enviadas', [NotificacionController::class, 'enviadas'])
+            ->name('notificaciones.enviadas');
+        Route::patch('notificaciones/marcar-todas-leidas', [NotificacionController::class, 'marcarTodasLeidas'])
+            ->name('notificaciones.marcar-todas-leidas');
+        Route::patch('notificaciones/{notificacion}/marcar-leida', [NotificacionController::class, 'marcarLeida'])
+            ->name('notificaciones.marcar-leida');
+        Route::get('notificaciones/{notificacion}', [NotificacionController::class, 'show'])
+            ->name('notificaciones.show');
     });
     Route::resource('grupo-postulantes', GrupoPostulanteController::class);
 });

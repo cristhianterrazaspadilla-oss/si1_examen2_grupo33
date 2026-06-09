@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Postulante;
 use App\Models\PostulanteRequisito;
 use App\Models\Requisito;
+use App\Support\BitacoraHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -84,6 +85,8 @@ class PostulanteRequisitoController extends Controller
                 ->where('postulante_id', $postulante->id)
                 ->findOrFail($item['id']);
 
+            $estadoAnterior = $registro->estado;
+
             $payload = [
                 'estado' => $item['estado'],
                 'observacion' => $item['observacion'] ?? null,
@@ -98,6 +101,14 @@ class PostulanteRequisitoController extends Controller
             }
 
             $registro->update($payload);
+
+            if ($estadoAnterior !== $item['estado']) {
+                BitacoraHelper::registrar(
+                    $item['estado'] === 'OBSERVADO' ? 'OBSERVAR_REQUISITO' : 'VALIDAR_REQUISITO',
+                    'Requisitos',
+                    'Se actualizo el requisito ' . (string) $registro->requisito?->nombre . ' del postulante CI ' . $postulante->ci . ' a estado ' . $item['estado'] . '.'
+                );
+            }
         }
 
         $this->actualizarEstadoInscripcion($postulante->fresh());

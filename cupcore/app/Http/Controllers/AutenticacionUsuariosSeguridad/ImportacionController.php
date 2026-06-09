@@ -4,6 +4,7 @@ namespace App\Http\Controllers\AutenticacionUsuariosSeguridad;
 
 use App\Http\Controllers\Controller;
 use App\Imports\UsuariosImport;
+use App\Support\BitacoraHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -27,6 +28,12 @@ class ImportacionController extends Controller
             $import = new UsuariosImport();
 
             Excel::import($import, $validated['archivo']);
+
+            BitacoraHelper::registrar(
+                'IMPORTAR_USUARIOS',
+                'Usuarios',
+                'Se importaron ' . $import->getImportedCount() . ' usuarios. Errores detectados: ' . count($import->getErrors()) . '.'
+            );
 
             return redirect()
                 ->route('autenticacion-usuarios-seguridad.importaciones.index')

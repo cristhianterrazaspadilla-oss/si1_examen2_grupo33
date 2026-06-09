@@ -5,6 +5,7 @@ namespace App\Http\Controllers\GestionPostulantesAdmision;
 use App\Http\Controllers\Controller;
 use App\Models\Pago;
 use App\Models\Postulante;
+use App\Support\BitacoraHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -172,6 +173,18 @@ class PagoController extends Controller
                 ->withInput();
         }
 
+        BitacoraHelper::registrar(
+            'GENERAR_ENLACE_PAGO',
+            'Pagos',
+            'Se genero un enlace de pago para el postulante CI ' . $postulante->ci . '.'
+        );
+
+        BitacoraHelper::registrar(
+            'REGISTRAR_PAGO',
+            'Pagos',
+            'Se registro un pago pendiente para el postulante CI ' . $postulante->ci . '.'
+        );
+
         return redirect()
             ->route('gestion-postulantes-admision.pagos.show', $pago)
             ->with('success', 'Enlace de pago generado correctamente en modo prueba.');
@@ -321,6 +334,12 @@ class PagoController extends Controller
                     ->withErrors(['verificacion' => 'El pago fue confirmado, pero no se pudo actualizar el estado del postulante. Revisar manualmente.']);
             }
 
+            BitacoraHelper::registrar(
+                'CONFIRMAR_PAGO',
+                'Pagos',
+                'Se confirmo el pago del postulante CI ' . (string) $pago->postulante?->ci . '.'
+            );
+
             return redirect()
                 ->route('gestion-postulantes-admision.pagos.show', $pago)
                 ->with('success', 'Pago confirmado correctamente. El postulante fue inscrito.');
@@ -345,6 +364,8 @@ class PagoController extends Controller
 
     public function destroy(Pago $pago): RedirectResponse
     {
+        $pago->loadMissing('postulante');
+
         DB::transaction(function () use ($pago): void {
             $pago->update([
                 'estado_pago' => 'ANULADO',
@@ -358,6 +379,12 @@ class PagoController extends Controller
                 ]);
             }
         });
+
+        BitacoraHelper::registrar(
+            'RECHAZAR_PAGO',
+            'Pagos',
+            'Se anulo el pago del postulante CI ' . (string) $pago->postulante?->ci . '.'
+        );
 
         return redirect()
             ->route('gestion-postulantes-admision.pagos.index')

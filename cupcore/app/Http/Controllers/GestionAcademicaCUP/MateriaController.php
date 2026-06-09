@@ -4,6 +4,7 @@ namespace App\Http\Controllers\GestionAcademicaCUP;
 
 use App\Http\Controllers\Controller;
 use App\Models\Materia;
+use App\Support\BitacoraHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -63,6 +64,11 @@ class MateriaController extends Controller
             'descripcion' => $validated['descripcion'] ?? null,
             'estado' => $validated['estado'] ?? 'ACTIVO',
         ]);
+        BitacoraHelper::registrar(
+            'CREAR_MATERIA',
+            'Materias',
+            'Se creo la materia ' . $materia->nombre . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.materias.show', $materia)
@@ -100,6 +106,11 @@ class MateriaController extends Controller
         ]);
 
         $materia->update($validated);
+        BitacoraHelper::registrar(
+            'ACTUALIZAR_MATERIA',
+            'Materias',
+            'Se actualizo la materia ' . $materia->nombre . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.materias.show', $materia)
@@ -109,6 +120,11 @@ class MateriaController extends Controller
     public function destroy(Materia $materia): RedirectResponse
     {
         $materia->update(['estado' => 'INACTIVO']);
+        BitacoraHelper::registrar(
+            'DESACTIVAR_MATERIA',
+            'Materias',
+            'Se desactivo la materia ' . $materia->nombre . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.materias.index')

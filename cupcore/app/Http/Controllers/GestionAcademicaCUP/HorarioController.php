@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Aula;
 use App\Models\DocenteAsignacion;
 use App\Models\Horario;
+use App\Support\BitacoraHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -91,6 +92,11 @@ class HorarioController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+        BitacoraHelper::registrar(
+            'CREAR_HORARIO',
+            'Horarios',
+            'Se creo horario para ' . ($asignacion->materia?->nombre ?? 'N/D') . ' en ' . ($asignacion->grupo?->nombre ?? 'N/D') . ', dia ' . $payload['dia_semana'] . ' de ' . $horaInicio . ' a ' . $horaFin . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.horarios.show', $horarioId)
@@ -145,6 +151,11 @@ class HorarioController extends Controller
                 ...$this->persistableHorarioPayload($payload),
                 'updated_at' => now(),
             ]);
+        BitacoraHelper::registrar(
+            'ACTUALIZAR_HORARIO',
+            'Horarios',
+            'Se actualizo horario para ' . ($asignacion->materia?->nombre ?? 'N/D') . ' en ' . ($asignacion->grupo?->nombre ?? 'N/D') . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.horarios.show', $horario)
@@ -176,6 +187,12 @@ class HorarioController extends Controller
                 ->route('gestion-academica-cup.horarios.index')
                 ->withErrors(['horario' => 'No se pudo desactivar el horario seleccionado.']);
         }
+
+        BitacoraHelper::registrar(
+            'DESACTIVAR_HORARIO',
+            'Horarios',
+            'Se desactivo horario ID ' . $horario->id . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.horarios.index')
@@ -222,6 +239,12 @@ class HorarioController extends Controller
                 ->route('gestion-academica-cup.horarios.show', $horario)
                 ->withErrors(['horario' => 'No se pudo activar el horario seleccionado.']);
         }
+
+        BitacoraHelper::registrar(
+            'ACTIVAR_HORARIO',
+            'Horarios',
+            'Se activo horario ID ' . $horario->id . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.horarios.show', $horario)

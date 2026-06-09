@@ -5,6 +5,7 @@ namespace App\Http\Controllers\GestionAcademicaCUP;
 use App\Http\Controllers\Controller;
 use App\Models\AsistenciaDocente;
 use App\Models\Horario;
+use App\Support\BitacoraHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -91,6 +92,12 @@ class AsistenciaDocenteController extends Controller
             'updated_at' => now(),
         ]);
 
+        BitacoraHelper::registrar(
+            'REGISTRAR_ASISTENCIA',
+            'Asistencia Docente',
+            'Se registro asistencia para el docente ' . trim((string) ($horario->docente?->nombres . ' ' . $horario->docente?->apellidos)) . ' en fecha ' . $validated['fecha'] . '.'
+        );
+
         return redirect()
             ->route('gestion-academica-cup.asistencias-docentes.show', $asistenciaId)
             ->with('success', 'Asistencia registrada correctamente.');
@@ -133,6 +140,12 @@ class AsistenciaDocenteController extends Controller
                 'observacion' => $validated['observacion'] ?? null,
                 'updated_at' => now(),
             ]);
+
+        BitacoraHelper::registrar(
+            'ACTUALIZAR_ASISTENCIA',
+            'Asistencia Docente',
+            'Se actualizo asistencia del docente ' . trim((string) ($horario->docente?->nombres . ' ' . $horario->docente?->apellidos)) . ' para la fecha ' . $validated['fecha'] . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.asistencias-docentes.show', $asistenciaDocente)

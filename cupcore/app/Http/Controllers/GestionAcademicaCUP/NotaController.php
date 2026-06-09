@@ -10,6 +10,7 @@ use App\Models\GrupoPostulante;
 use App\Models\Materia;
 use App\Models\Nota;
 use App\Models\Postulante;
+use App\Support\BitacoraHelper;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -71,6 +72,12 @@ class NotaController extends Controller
             'registrado_por' => auth()->id(),
         ]);
 
+        BitacoraHelper::registrar(
+            'REGISTRAR_NOTA',
+            'Notas',
+            'Se registro nota para el postulante CI ' . $resolved['postulante']->ci . ' en ' . $resolved['materia']->nombre . '.'
+        );
+
         return redirect()
             ->route('gestion-academica-cup.notas.show', $nota)
             ->with('success', 'Nota registrada correctamente.');
@@ -113,6 +120,12 @@ class NotaController extends Controller
             'observacion' => $validated['observacion'] ?? null,
             'registrado_por' => auth()->id() ?? $nota->registrado_por,
         ]);
+
+        BitacoraHelper::registrar(
+            'ACTUALIZAR_NOTA',
+            'Notas',
+            'Se actualizo nota para el postulante CI ' . $resolved['postulante']->ci . ' en ' . $resolved['materia']->nombre . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.notas.show', $nota)

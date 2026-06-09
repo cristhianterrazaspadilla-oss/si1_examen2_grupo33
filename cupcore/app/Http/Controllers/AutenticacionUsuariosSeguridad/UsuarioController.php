@@ -5,6 +5,7 @@ namespace App\Http\Controllers\AutenticacionUsuariosSeguridad;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
+use App\Support\BitacoraHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -51,6 +52,12 @@ class UsuarioController extends Controller
 
         $usuario = User::create($validated);
 
+        BitacoraHelper::registrar(
+            'CREAR_USUARIO',
+            'Usuarios',
+            'Se creo el usuario ' . $usuario->correo . '.'
+        );
+
         return redirect()
             ->route('autenticacion-usuarios-seguridad.usuarios.show', $usuario)
             ->with('success', 'Usuario creado correctamente.');
@@ -78,6 +85,10 @@ class UsuarioController extends Controller
 
     public function update(Request $request, User $usuario): RedirectResponse
     {
+        $estadoAnterior = $usuario->estado;
+        $rolAnterior = $usuario->rol_id;
+        $correoAnterior = $usuario->correo;
+
         $validated = $request->validate([
             'rol_id' => ['required', 'exists:roles,id'],
             'nombre' => ['required', 'string', 'max:100'],
@@ -97,6 +108,40 @@ class UsuarioController extends Controller
 
         $usuario->update($validated);
 
+        BitacoraHelper::registrar(
+            'ACTUALIZAR_USUARIO',
+            'Usuarios',
+            'Se actualizo el usuario ' . $usuario->correo . '.'
+        );
+
+        if ((int) $rolAnterior !== (int) $usuario->rol_id) {
+            BitacoraHelper::registrar(
+                'ASIGNAR_ROL',
+                'Usuarios',
+                'Se cambio el rol del usuario ' . $usuario->correo . '.'
+            );
+        }
+
+        if ($estadoAnterior === 'INACTIVO' && $usuario->estado === 'ACTIVO') {
+            BitacoraHelper::registrar(
+                'ACTIVAR_USUARIO',
+                'Usuarios',
+                'Se activo el usuario ' . $usuario->correo . '.'
+            );
+        } elseif ($estadoAnterior === 'ACTIVO' && $usuario->estado === 'INACTIVO') {
+            BitacoraHelper::registrar(
+                'DESACTIVAR_USUARIO',
+                'Usuarios',
+                'Se desactivo el usuario ' . $usuario->correo . '.'
+            );
+        } elseif ($correoAnterior !== $usuario->correo) {
+            BitacoraHelper::registrar(
+                'ACTUALIZAR_USUARIO',
+                'Usuarios',
+                'El usuario actualizo su identificacion de correo a ' . $usuario->correo . '.'
+            );
+        }
+
         return redirect()
             ->route('autenticacion-usuarios-seguridad.usuarios.show', $usuario)
             ->with('success', 'Usuario actualizado correctamente.');
@@ -105,6 +150,12 @@ class UsuarioController extends Controller
     public function destroy(User $usuario): RedirectResponse
     {
         $usuario->update(['estado' => 'INACTIVO']);
+
+        BitacoraHelper::registrar(
+            'DESACTIVAR_USUARIO',
+            'Usuarios',
+            'Se desactivo el usuario ' . $usuario->correo . '.'
+        );
 
         return redirect()
             ->route('autenticacion-usuarios-seguridad.usuarios.index')

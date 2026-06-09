@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Docente;
 use App\Models\DocenteAsignacion;
 use App\Models\User;
+use App\Support\BitacoraHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -69,6 +70,11 @@ class DocenteController extends Controller
         $validated = $this->validateDocente($request);
 
         $docente = Docente::create($this->payloadDocente($request, $validated));
+        BitacoraHelper::registrar(
+            'CREAR_DOCENTE',
+            'Docentes',
+            'Se creo el docente CI ' . $docente->ci . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.docentes.show', $docente)
@@ -105,6 +111,11 @@ class DocenteController extends Controller
         $validated = $this->validateDocente($request, $docente);
 
         $docente->update($this->payloadDocente($request, $validated, $docente));
+        BitacoraHelper::registrar(
+            'ACTUALIZAR_DOCENTE',
+            'Docentes',
+            'Se actualizo el docente CI ' . $docente->ci . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.docentes.show', $docente)
@@ -160,6 +171,12 @@ class DocenteController extends Controller
                 ->withErrors(['docente' => 'El docente fue desactivado, pero no se pudieron desactivar sus asignaciones: ' . $exception->getMessage()]);
         }
 
+        BitacoraHelper::registrar(
+            'DESACTIVAR_DOCENTE',
+            'Docentes',
+            'Se desactivo el docente CI ' . $docente->ci . '.'
+        );
+
         return redirect()
             ->route('gestion-academica-cup.docentes.index')
             ->with('success', 'Docente desactivado correctamente.');
@@ -194,6 +211,12 @@ class DocenteController extends Controller
                 ->route('gestion-academica-cup.docentes.index')
                 ->withErrors(['docente' => 'No se pudo activar el docente seleccionado.']);
         }
+
+        BitacoraHelper::registrar(
+            'ACTIVAR_DOCENTE',
+            'Docentes',
+            'Se activo el docente CI ' . $docente->ci . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.docentes.show', $docente)

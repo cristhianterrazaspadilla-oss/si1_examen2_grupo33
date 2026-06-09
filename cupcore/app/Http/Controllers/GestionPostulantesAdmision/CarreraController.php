@@ -4,6 +4,7 @@ namespace App\Http\Controllers\GestionPostulantesAdmision;
 
 use App\Http\Controllers\Controller;
 use App\Models\Carrera;
+use App\Support\BitacoraHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -37,6 +38,11 @@ class CarreraController extends Controller
         ]);
 
         $carrera = Carrera::create($validated);
+        BitacoraHelper::registrar(
+            'CREAR_CARRERA',
+            'Carreras',
+            'Se creo la carrera ' . $carrera->nombre . '.'
+        );
 
         return redirect()
             ->route('gestion-postulantes-admision.carreras.show', $carrera)
@@ -68,6 +74,11 @@ class CarreraController extends Controller
         ]);
 
         $carrera->update($validated);
+        BitacoraHelper::registrar(
+            'ACTUALIZAR_CARRERA',
+            'Carreras',
+            'Se actualizo la carrera ' . $carrera->nombre . '.'
+        );
 
         return redirect()
             ->route('gestion-postulantes-admision.carreras.show', $carrera)
@@ -77,6 +88,11 @@ class CarreraController extends Controller
     public function destroy(Carrera $carrera): RedirectResponse
     {
         $carrera->update(['estado' => 'INACTIVO']);
+        BitacoraHelper::registrar(
+            'DESACTIVAR_CARRERA',
+            'Carreras',
+            'Se desactivo la carrera ' . $carrera->nombre . '.'
+        );
 
         return redirect()
             ->route('gestion-postulantes-admision.carreras.index')
