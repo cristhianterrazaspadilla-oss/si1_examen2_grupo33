@@ -3,6 +3,11 @@
 @section('title', 'Crear notificacion interna | CUPCore')
 
 @section('content')
+    {{-- CU19 Crear notificación interna:
+        - Formulario para enviar notificaciones dentro del sistema a usuarios activos.
+        - Campos: destinatario (usuario), tipo, título y mensaje. Respeta names/actions y métodos HTTP.
+        - Las notificaciones enviadas se registran y aparecen en "Enviadas" para seguimiento.
+    --}}
     <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <x-page-title title="Crear notificacion interna" subtitle="La notificacion se mostrara dentro del sistema al usuario destinatario." />
         <div class="flex flex-wrap gap-2">

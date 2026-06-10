@@ -3,6 +3,11 @@
 @section('title', 'Dashboard | CUPCore')
 
 @section('content')
+    {{-- Dashboard: resumen central del sistema para usuarios autenticados.
+        - Muestra indicadores adaptados al rol autenticado (administrador, coordinador, docente, postulante, autoridad).
+        - NO reemplaza el menú de casos de uso: la navegación principal está en el sidebar institucional.
+        - Diseñado para presentar KPIs y accesos rápidos, no para ejecutar procesos.
+    --}}
     <section class="space-y-6">
         <div class="overflow-hidden rounded-[2rem] border border-blue-300/12 bg-white/6 p-6 shadow-[0_25px_80px_rgba(2,6,23,0.55)] backdrop-blur-2xl sm:p-8">
             <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">

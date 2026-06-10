@@ -3,6 +3,10 @@
 @section('title', 'Notificaciones enviadas | CUPCore')
 
 @section('content')
+    {{-- CU19 Notificaciones enviadas: historial de notificaciones creadas por el usuario.
+        - Permite filtrar por receptor, tipo, estado de lectura y rango de fechas.
+        - Diferencia clara entre "enviadas" (emisor) y "recibidas" (destinatario).
+    --}}
     <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <x-page-title title="Notificaciones enviadas" subtitle="Consulta el historial de notificaciones internas enviadas desde tu cuenta." />
         <div class="flex flex-wrap gap-2">

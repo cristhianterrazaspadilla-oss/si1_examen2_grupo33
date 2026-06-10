@@ -3,6 +3,11 @@
 @section('title', 'CU16 KPIs Academicos | CUPCore')
 
 @section('content')
+    {{-- CU16 Dashboard académico: KPIs resumidos y tablas de apoyo.
+        - Muestra indicadores agregados (postulantes, pagos, cupos, docentes, materias) y tablas resumidas.
+        - Permite filtrar el dashboard para centrar análisis en una gestión/carrera/grupo/materia.
+        - Es complemento visual de la pantalla de Consulta; no reemplaza la exportación de reportes.
+    --}}
     <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <x-page-title title="CU16 KPIs Academicos" subtitle="Indicadores academicos y administrativos del proceso de admision." />
         <div class="flex flex-wrap gap-2">

@@ -1,3 +1,9 @@
+{{-- Componente de Alertas reutilizable:
+    - Centraliza la presentación de mensajes (success, error, warning, info).
+    - Permite evitar repetición de estilos y asegura consistencia visual.
+    - Uso: <x-alert type="success" :message="$msg" />
+    - No contiene lógica de negocio; sólo marca visual y mensaje.
+--}}
 @props([
     'type' => 'info',
     'message',

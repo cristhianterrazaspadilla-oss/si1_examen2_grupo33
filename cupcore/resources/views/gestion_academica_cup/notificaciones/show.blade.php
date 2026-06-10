@@ -3,6 +3,10 @@
 @section('title', 'Detalle de notificacion | CUPCore')
 
 @section('content')
+    {{-- CU19 Detalle de notificación:
+        - Visualiza el contenido completo, estado y metadatos (emisor, receptor, fechas de creación/lectura).
+        - Permite marcar como leída mediante PATCH; la acción está protegida por permisos en el backend.
+    --}}
     <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <x-page-title title="Detalle de notificacion" subtitle="Consulta el contenido completo de la notificacion interna y su estado de lectura." />
         <div class="flex flex-wrap gap-2">

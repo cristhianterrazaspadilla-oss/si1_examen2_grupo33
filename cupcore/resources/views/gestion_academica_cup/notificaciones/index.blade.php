@@ -3,6 +3,11 @@
 @section('title', 'CU19 Notificaciones Internas | CUPCore')
 
 @section('content')
+    {{-- CU19 Notificaciones internas - Bandeja recibidas:
+        - Muestra notificaciones dirigidas al usuario autenticado con estado de lectura.
+        - Las acciones de creación/visualización/marcado como leído se gestionan vía rutas protegidas.
+        - Diferencia entre "recibidas" (bandeja de entrada) y "enviadas" (historial del emisor).
+    --}}
     <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <x-page-title title="CU19 Notificaciones Internas" subtitle="Bandeja de notificaciones recibidas." />
         <div class="flex flex-wrap gap-2">

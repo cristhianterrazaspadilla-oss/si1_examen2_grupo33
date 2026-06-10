@@ -3,6 +3,11 @@
 @section('title', 'CU16 Reportes Academicos y Administrativos | CUPCore')
 
 @section('content')
+    {{-- CU16 - Reportes: pantalla principal para consulta y exportación de reportes académicos.
+        - Incluye: sección de filtros estructurados, controles de consulta por voz, interpretación con IA y exportación (CSV/Excel/PDF).
+        - Caso de uso: generar reportes filtrados por gestión, carrera, materia, estado, etc., y exportarlos para análisis o impresión.
+        - Nota: la lógica de voz/IA en el frontend sólo aplica filtros y solicita interpretación al backend; NO expone claves de API en el navegador.
+    --}}
     <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <x-page-title title="CU16 Reportes Academicos y Administrativos" subtitle="Consulta reportes filtrables del proceso de admision." />
         <div class="flex flex-wrap gap-2">
@@ -22,6 +27,12 @@
         </div>
     @endif
 
+    {{-- Consulta por voz: usa Web Speech API del navegador para dictar comandos.
+        - El audio NO se almacena; la transcripción local se transforma en filtros o búsqueda.
+        - Botones: iniciar/detener/usar como búsqueda/aplicar a filtros/interpretar con IA/generar con IA.
+        - "Interpretar con IA": envía texto al backend para recibir filtros sugeridos (no genera reportes automáticamente).
+        - "Generar con IA": intenta interpretar Y ejecutar la generación automática del reporte (envía filtros y puede enviar formulario).
+    --}}
     <x-card title="Consulta por voz">
         <div class="grid gap-6 2xl:grid-cols-[0.85fr_1.15fr]">
             <div class="space-y-4">
@@ -59,6 +70,12 @@
         </div>
     </x-card>
 
+    {{-- Sección de filtros estructurados:
+        - Permite construir consultas precisas que luego pueden exportarse a CSV/Excel o abrir una vista imprimible.
+        - Los filtros aplican sólo si son compatibles con el tipo de reporte seleccionado.
+        - Exportaciones: CSV, Excel y vista imprimible/PDF; las rutas de exportación generan los archivos en el servidor y se registran en el historial.
+        - Seguridad: el JS de voz/IA sólo envía texto al backend; las API keys (si existen) quedan en el servidor. El frontend no las contiene.
+    --}}
     <x-card title="Configuracion del reporte">
         <form method="GET" action="{{ route('gestion-academica-cup.reportes.consulta') }}" class="grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-4" id="form-reportes">
             <label class="form-control sm:col-span-2">
@@ -165,6 +182,7 @@
         </form>
     </x-card>
 
+    {{-- Resultado de CU16: resume la consulta, conserva los filtros aplicados y ofrece las mismas opciones de exportación para el conjunto obtenido. --}}
     @if ($filters['tipo_reporte'] === '')
         <div class="grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
             @foreach ($reportTypes as $reportType)
@@ -203,6 +221,7 @@
             <p class="mt-3 text-sm text-base-content/70">Puedes exportar el reporte en CSV, Excel o abrir una vista imprimible para guardar como PDF. Las exportaciones se registran en el historial de reportes.</p>
         </x-card>
 
+        {{-- Tabla de resultados: sus columnas cambian según el tipo de reporte y la paginación evita cargar todos los registros en una sola vista. --}}
         @if ($reportData['results']->count() === 0)
             <div class="alert alert-info">
                 <span>No existen datos para los filtros seleccionados.</span>
@@ -239,6 +258,7 @@
         @endif
     @endif
 
+    {{-- Integración de voz e IA: el navegador transcribe o recibe el texto, mientras el backend interpreta con Groq y devuelve filtros; la API key nunca llega al frontend. --}}
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;

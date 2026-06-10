@@ -3,6 +3,11 @@
 @section('title', 'CU17 Consultar Bitacora del Sistema | CUPCore')
 
 @section('content')
+    {{-- CU17 Bitácora (auditoría): listado cronológico de acciones del sistema.
+        - Incluye filtros por usuario, acción, módulo, rango de fechas y búsqueda libre.
+        - Muestra IP registrada como parte del registro de auditoría institucional.
+        - Usar para investigar acciones de usuarios y generar reportes de cumplimiento.
+    --}}
     <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <x-page-title title="CU17 Consultar Bitacora del Sistema" subtitle="Consulta el historial de acciones realizadas por los usuarios." />
         <div class="flex flex-wrap gap-2">

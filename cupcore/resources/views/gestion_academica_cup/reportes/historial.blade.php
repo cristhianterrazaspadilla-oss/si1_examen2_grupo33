@@ -3,6 +3,11 @@
 @section('title', 'Historial de reportes generados | CUPCore')
 
 @section('content')
+    {{-- CU16 Historial de reportes:
+        - Lista de exportaciones realizadas (CSV, Excel, PDF) con filtros por tipo, formato y fecha.
+        - Registra ruta y filtros usados al generar cada exportación; útil para auditoría y reproducibilidad.
+        - No muestra el contenido del archivo, sólo metadatos y acceso a la ruta guardada.
+    --}}
     <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <x-page-title title="Historial de reportes generados" subtitle="Exportaciones CSV y vistas imprimibles generadas desde CU16." />
         <div class="flex flex-wrap gap-2">

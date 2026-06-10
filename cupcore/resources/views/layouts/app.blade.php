@@ -97,6 +97,7 @@
         ->values();
 @endphp
 <body class="{{ $isLoginScreen ? 'min-h-screen bg-slate-950 text-slate-100' : 'app-shell min-h-screen bg-slate-950 text-slate-100' }}">
+    {{-- Layout base del sistema autenticado: comparte navegación, encabezado y contenedor; el dashboard sólo resume indicadores y los casos de uso se abren desde el sidebar. --}}
     @if ($isLoginScreen)
         <main class="min-h-screen">
             @yield('content')
@@ -110,6 +111,7 @@
         </div>
 
         <div class="relative flex min-h-screen">
+            {{-- Sidebar institucional: panel de navegación con módulos agrupados por paquetes funcionales del documento y filtrados según el rol del usuario autenticado. --}}
             <aside id="app-sidebar" class="fixed inset-y-0 left-0 z-40 flex w-[18.5rem] max-w-[88vw] -translate-x-full flex-col border-r border-blue-300/12 bg-slate-950/85 p-4 shadow-[0_25px_80px_rgba(2,6,23,0.85)] backdrop-blur-2xl transition-transform duration-300 lg:w-72 lg:translate-x-0 xl:w-80 xl:p-5">
                 <div class="mb-6 flex items-center gap-4 rounded-[1.75rem] border border-blue-300/12 bg-white/6 px-4 py-4">
                     <div class="flex h-14 w-14 items-center justify-center rounded-2xl border border-blue-300/15 bg-blue-500/10 text-blue-300 shadow-[0_16px_35px_rgba(30,64,175,0.28)]">
@@ -167,6 +169,7 @@
             <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden bg-slate-950/70 backdrop-blur-sm lg:hidden"></div>
 
             <div class="flex min-h-screen min-w-0 flex-1 flex-col lg:pl-72 xl:pl-80">
+                {{-- Contenedor principal: aquí se renderiza la sección específica de cada vista mediante @yield('content'). El layout se encarga sólo de la presentación y navegación. --}}
                 <header class="sticky top-0 z-20 border-b border-blue-300/10 bg-slate-950/65 backdrop-blur-2xl">
                     <div class="mx-auto flex w-full max-w-[1600px] items-center justify-between gap-4 px-4 py-4 sm:px-6 xl:px-8">
                         <div class="flex min-w-0 items-center gap-3">

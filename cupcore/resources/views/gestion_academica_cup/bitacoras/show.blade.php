@@ -3,6 +3,11 @@
 @section('title', 'Detalle de bitacora | CUPCore')
 
 @section('content')
+    {{-- CU17 Detalle de bitácora:
+        - Muestra la información completa de una acción registrada: acción, módulo, fecha, IP, descripción y usuario relacionado.
+        - La sección de "Datos técnicos" presenta metadatos útiles para auditoría (ID, created_at, updated_at).
+        - La IP mostrada es la registrada en el momento de la acción y forma parte del rastro de auditoría.
+    --}}
     <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <x-page-title title="Detalle de bitacora" subtitle="Consulta el detalle completo de una accion registrada en el sistema." />
         <div class="flex flex-wrap gap-2">
