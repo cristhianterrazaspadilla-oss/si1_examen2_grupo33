@@ -3,9 +3,9 @@
 @section('title', 'CU5 Gestionar Inscripción de Postulantes | Pre-registros')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <x-page-title title="Pre-registro de Postulantes" subtitle="CU5 Gestionar Inscripción de Postulantes. Este módulo no confirma la inscripción oficial." />
-        <a href="{{ route('gestion-postulantes-admision.postulantes.create') }}" class="btn btn-primary">Nuevo</a>
+        <a href="{{ route('gestion-postulantes-admision.postulantes.create') }}" class="btn btn-primary w-full sm:w-auto">Nuevo</a>
     </div>
 
     @if (session('success'))
@@ -19,8 +19,8 @@
     </div>
 
     <x-card title="Búsqueda y filtros">
-        <form method="GET" action="{{ route('gestion-postulantes-admision.postulantes.index') }}" class="grid gap-4 md:grid-cols-4">
-            <label class="form-control md:col-span-2">
+        <form method="GET" action="{{ route('gestion-postulantes-admision.postulantes.index') }}" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <label class="form-control sm:col-span-2">
                 <span class="label-text">Buscar por CI, nombres, apellidos o correo</span>
                 <input type="text" name="search" value="{{ $search }}" class="input input-bordered">
             </label>
@@ -45,7 +45,7 @@
                 </select>
             </label>
 
-            <div class="md:col-span-4 flex gap-2">
+            <div class="sm:col-span-2 md:col-span-4 flex gap-2">
                 <button type="submit" class="btn btn-primary">Buscar</button>
                 <a href="{{ route('gestion-postulantes-admision.postulantes.index') }}" class="btn btn-outline">Limpiar</a>
             </div>
@@ -54,7 +54,7 @@
 
     <x-card title="Listado de postulantes">
         <div class="overflow-x-auto">
-            <table class="table">
+            <table class="table min-w-[1200px]">
                 <thead>
                     <tr>
                         <th>CI</th>

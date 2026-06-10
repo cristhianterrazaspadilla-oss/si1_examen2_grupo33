@@ -5,12 +5,19 @@ namespace App\Http\Controllers\GestionAcademicaCUP;
 use App\Http\Controllers\Controller;
 use App\Models\Evaluacion;
 use App\Models\Materia;
+use App\Support\BitacoraHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
+/**
+ * Paquete: Gestión Académica del CUP
+ * Caso de Uso: CU9 (Administrar Materias y Evaluaciones - Sección Evaluaciones)
+ * 
+ * Gestiona la ponderación y calendarios de exámenes (máximo 3 por materia: 1er Parcial 30%, 2do Parcial 30%, Examen Final 40%).
+ */
 class EvaluacionController extends Controller
 {
     // Controlador del caso de uso: CU9 Administrar Materias y Evaluaciones
@@ -56,7 +63,7 @@ class EvaluacionController extends Controller
             estado: $validated['estado'] ?? 'ACTIVO',
         );
 
-        Evaluacion::create([
+        $evaluacion = Evaluacion::create([
             'materia_id' => $materia->id,
             'nombre' => $validated['nombre'],
             'numero_evaluacion' => $validated['numero_evaluacion'],
@@ -64,6 +71,11 @@ class EvaluacionController extends Controller
             'fecha_evaluacion' => $validated['fecha_evaluacion'] ?? null,
             'estado' => $validated['estado'] ?? 'ACTIVO',
         ]);
+        BitacoraHelper::registrar(
+            'CREAR_EVALUACION',
+            'Evaluaciones',
+            'Se creo la evaluacion ' . $evaluacion->nombre . ' para la materia ' . $materia->nombre . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.materias.show', $materia)
@@ -102,6 +114,11 @@ class EvaluacionController extends Controller
         );
 
         $evaluacion->update($validated);
+        BitacoraHelper::registrar(
+            'ACTUALIZAR_EVALUACION',
+            'Evaluaciones',
+            'Se actualizo la evaluacion ' . $evaluacion->nombre . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.materias.show', $evaluacion->materia)
@@ -112,6 +129,11 @@ class EvaluacionController extends Controller
     {
         $evaluacion->load('materia');
         $evaluacion->update(['estado' => 'INACTIVO']);
+        BitacoraHelper::registrar(
+            'DESACTIVAR_EVALUACION',
+            'Evaluaciones',
+            'Se desactivo la evaluacion ' . $evaluacion->nombre . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.materias.show', $evaluacion->materia)

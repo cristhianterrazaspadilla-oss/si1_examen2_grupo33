@@ -3,9 +3,9 @@
 @section('title', 'CU8 Administrar Carreras y Cupos | Detalle de Cupo')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-3">
         <x-page-title title="Detalle de Cupo" subtitle="CU8 Administrar Carreras y Cupos" />
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2 shrink-0">
             <a href="{{ route('gestion-postulantes-admision.cupos.edit', $cupo) }}" class="btn btn-info">Editar</a>
             <a href="{{ route('gestion-postulantes-admision.cupos.index') }}" class="btn btn-outline">Volver</a>
         </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\GestionAcademicaCUP;
 
 use App\Http\Controllers\Controller;
 use App\Models\Aula;
+use App\Support\BitacoraHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +13,12 @@ use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Throwable;
 
+/**
+ * Paquete: Gestión Académica del CUP
+ * Caso de Uso: CU11 (Administrar Horarios y Aulas - Sección Aulas)
+ * 
+ * Configura los salones físicos (ubicación y capacidad máxima) disponibles para los horarios de clases.
+ */
 class AulaController extends Controller
 {
     public function index(Request $request): View
@@ -64,6 +71,11 @@ class AulaController extends Controller
             'ubicacion' => $validated['ubicacion'] ?? null,
             'estado' => $validated['estado'] ?? 'ACTIVO',
         ]);
+        BitacoraHelper::registrar(
+            'CREAR_AULA',
+            'Aulas',
+            'Se creo el aula ' . ($aula->codigo ?: $aula->nombre) . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.aulas.show', $aula)
@@ -118,6 +130,11 @@ class AulaController extends Controller
         ]);
 
         $aula->update($validated);
+        BitacoraHelper::registrar(
+            'ACTUALIZAR_AULA',
+            'Aulas',
+            'Se actualizo el aula ' . ($aula->codigo ?: $aula->nombre) . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.aulas.show', $aula)
@@ -141,7 +158,7 @@ class AulaController extends Controller
 
             return redirect()
                 ->route('gestion-academica-cup.aulas.index')
-                ->withErrors(['aula' => 'No se pudo desactivar el aula: ' . $exception->getMessage()]);
+                ->withErrors(['aula' => 'No se pudo desactivar el aula. Inténtalo nuevamente.']);
         }
 
         if ($updated !== 1) {
@@ -149,6 +166,12 @@ class AulaController extends Controller
                 ->route('gestion-academica-cup.aulas.index')
                 ->withErrors(['aula' => 'No se pudo desactivar el aula seleccionada.']);
         }
+
+        BitacoraHelper::registrar(
+            'DESACTIVAR_AULA',
+            'Aulas',
+            'Se desactivo el aula ' . ($aula->codigo ?: $aula->nombre) . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.aulas.index')
@@ -172,7 +195,7 @@ class AulaController extends Controller
 
             return redirect()
                 ->route('gestion-academica-cup.aulas.index')
-                ->withErrors(['aula' => 'No se pudo activar el aula: ' . $exception->getMessage()]);
+                ->withErrors(['aula' => 'No se pudo activar el aula. Inténtalo nuevamente.']);
         }
 
         if ($updated !== 1) {
@@ -180,6 +203,12 @@ class AulaController extends Controller
                 ->route('gestion-academica-cup.aulas.index')
                 ->withErrors(['aula' => 'No se pudo activar el aula seleccionada.']);
         }
+
+        BitacoraHelper::registrar(
+            'ACTIVAR_AULA',
+            'Aulas',
+            'Se activo el aula ' . ($aula->codigo ?: $aula->nombre) . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.aulas.show', $aula)

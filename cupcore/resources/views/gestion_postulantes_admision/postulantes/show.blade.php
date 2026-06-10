@@ -3,16 +3,16 @@
 @section('title', 'CU5 Gestionar Inscripcion de Postulantes | Detalle')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <x-page-title title="Detalle de Postulante" subtitle="CU5 Gestionar Inscripcion de Postulantes" />
-        <div class="flex gap-2">
-            <a href="{{ route('gestion-postulantes-admision.postulantes.edit', $postulante) }}" class="btn btn-info">Editar</a>
-            <form method="POST" action="{{ route('gestion-postulantes-admision.postulantes.destroy', $postulante) }}">
+        <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+            <a href="{{ route('gestion-postulantes-admision.postulantes.edit', $postulante) }}" class="btn btn-info w-full sm:w-auto">Editar</a>
+            <form method="POST" action="{{ route('gestion-postulantes-admision.postulantes.destroy', $postulante) }}" class="w-full sm:w-auto">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn btn-warning" onclick="return confirm('Deseas marcar este pre-registro como OBSERVADO?')">Observar</button>
+                <button type="submit" class="btn btn-warning w-full" onclick="return confirm('Deseas marcar este pre-registro como OBSERVADO?')">Observar</button>
             </form>
-            <a href="{{ route('gestion-postulantes-admision.postulantes.index') }}" class="btn btn-outline">Volver</a>
+            <a href="{{ route('gestion-postulantes-admision.postulantes.index') }}" class="btn btn-outline w-full sm:w-auto">Volver</a>
         </div>
     </div>
 

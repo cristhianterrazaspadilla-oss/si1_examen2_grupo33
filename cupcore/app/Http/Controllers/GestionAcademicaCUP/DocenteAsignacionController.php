@@ -7,6 +7,7 @@ use App\Models\Docente;
 use App\Models\DocenteAsignacion;
 use App\Models\Grupo;
 use App\Models\Materia;
+use App\Support\BitacoraHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,14 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Throwable;
 
+/**
+ * Paquete: Gestión Docente y Evaluación Académica
+ * Caso de Uso: CU12 (Gestionar Docentes y Asignaciones - Sección Asignaciones)
+ * 
+ * NOTA DE ARQUITECTURA: Por motivos de alta cohesión del dominio, este controlador reside en el 
+ * namespace de Gestión Académica, favoreciendo las consultas y cruces con el calendario de horarios.
+ * Modela la relación N:M entre docentes, materias, grupos y gestiones.
+ */
 class DocenteAsignacionController extends Controller
 {
     public function create(Docente $docente): View
@@ -32,13 +41,19 @@ class DocenteAsignacionController extends Controller
     {
         $validated = $this->validateAsignacion($request, $docente);
 
-        DocenteAsignacion::create([
+        $asignacion = DocenteAsignacion::create([
             'docente_id' => $docente->id,
             'grupo_id' => $validated['grupo_id'],
             'materia_id' => $validated['materia_id'],
             'gestion' => $validated['gestion'],
             'estado' => $validated['estado'] ?? 'ACTIVO',
         ]);
+        $asignacion->load(['grupo', 'materia']);
+        BitacoraHelper::registrar(
+            'ASIGNAR_DOCENTE',
+            'Asignaciones Docentes',
+            'Se asigno docente ' . $docente->nombres . ' ' . $docente->apellidos . ' a ' . ($asignacion->materia?->nombre ?? 'N/D') . ' en ' . ($asignacion->grupo?->nombre ?? 'N/D') . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.docentes.show', $docente)
@@ -68,6 +83,12 @@ class DocenteAsignacionController extends Controller
             'gestion' => $validated['gestion'],
             'estado' => $validated['estado'] ?? 'ACTIVO',
         ]);
+        $asignacion->load(['grupo', 'materia']);
+        BitacoraHelper::registrar(
+            'ACTUALIZAR_ASIGNACION_DOCENTE',
+            'Asignaciones Docentes',
+            'Se actualizo la asignacion docente ' . $asignacion->id . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.docentes.show', $asignacion->docente)
@@ -79,6 +100,11 @@ class DocenteAsignacionController extends Controller
         $docente = $asignacion->docente;
 
         $asignacion->update(['estado' => 'INACTIVO']);
+        BitacoraHelper::registrar(
+            'DESACTIVAR_ASIGNACION_DOCENTE',
+            'Asignaciones Docentes',
+            'Se desactivo la asignacion docente ' . $asignacion->id . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.docentes.show', $docente)
@@ -136,7 +162,7 @@ class DocenteAsignacionController extends Controller
 
             return redirect()
                 ->route('gestion-academica-cup.docentes.show', $docente)
-                ->withErrors(['asignacion' => 'No se pudo activar la asignacion docente: ' . $exception->getMessage()]);
+                ->withErrors(['asignacion' => 'No se pudo activar la asignación docente. Inténtalo nuevamente.']);
         }
 
         if ($updated !== 1) {
@@ -144,6 +170,12 @@ class DocenteAsignacionController extends Controller
                 ->route('gestion-academica-cup.docentes.show', $docente)
                 ->withErrors(['asignacion' => 'No se pudo activar la asignacion seleccionada.']);
         }
+
+        BitacoraHelper::registrar(
+            'ACTIVAR_ASIGNACION_DOCENTE',
+            'Asignaciones Docentes',
+            'Se activo la asignacion docente ' . $asignacion->id . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.docentes.show', $docente)

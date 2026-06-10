@@ -3,9 +3,9 @@
 @section('title', 'CU10 Organizar Grupos Academicos | Detalle de grupo')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-3">
         <x-page-title title="Detalle de grupo" subtitle="Consulta la informacion general del grupo y los postulantes asignados en la gestion academica." />
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2 shrink-0">
             <a href="{{ route('gestion-academica-cup.grupos.edit', $grupo) }}" class="btn btn-info">Editar</a>
             <a href="{{ route('gestion-academica-cup.grupos.index') }}" class="btn btn-outline">Volver</a>
         </div>
@@ -17,7 +17,7 @@
         </div>
     @endif
 
-    <div class="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+    <div class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
         <x-card title="Informacion general">
             <div class="grid gap-5 md:grid-cols-2">
                 <div>
@@ -62,7 +62,7 @@
 
     <x-card title="Postulantes asignados">
         <div class="overflow-x-auto">
-            <table class="table">
+            <table class="table min-w-[600px]">
                 <thead>
                     <tr>
                         <th>CI</th>

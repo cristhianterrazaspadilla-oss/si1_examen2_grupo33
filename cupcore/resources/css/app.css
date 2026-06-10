@@ -180,6 +180,7 @@
         border-radius: 1rem;
         min-height: 3.4rem;
         padding-inline: 1rem;
+        width: 100%;
         -webkit-text-fill-color: #f8fafc;
         transition:
             border-color 180ms ease,

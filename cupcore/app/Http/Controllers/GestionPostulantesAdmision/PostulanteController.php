@@ -6,11 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Models\Carrera;
 use App\Models\Postulante;
 use App\Models\User;
+use App\Support\BitacoraHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
+/**
+ * Paquete: Gestión de Postulantes y Admisión
+ * Caso de Uso: CU5 (Registrar Postulantes / Inscripción)
+ * 
+ * Gestiona el pre-registro e información demográfica de los postulantes.
+ * Asocia postulantes a carreras de primera y segunda opción para el proceso de selección.
+ */
 class PostulanteController extends Controller
 {
     // Controlador del caso de uso: CU5 Gestionar Inscripción de Postulantes
@@ -60,6 +68,11 @@ class PostulanteController extends Controller
         $validated['estado_admision'] = 'PENDIENTE';
 
         $postulante = Postulante::create($validated);
+        BitacoraHelper::registrar(
+            'REGISTRAR_POSTULANTE',
+            'Postulantes',
+            'Se registro el postulante CI ' . $postulante->ci . '.'
+        );
 
         return redirect()
             ->route('gestion-postulantes-admision.postulantes.show', $postulante)
@@ -86,6 +99,11 @@ class PostulanteController extends Controller
     {
         $validated = $this->validatePostulante($request, $postulante);
         $postulante->update($validated);
+        BitacoraHelper::registrar(
+            'ACTUALIZAR_POSTULANTE',
+            'Postulantes',
+            'Se actualizo el postulante CI ' . $postulante->ci . '.'
+        );
 
         return redirect()
             ->route('gestion-postulantes-admision.postulantes.show', $postulante)
@@ -95,6 +113,11 @@ class PostulanteController extends Controller
     public function destroy(Postulante $postulante): RedirectResponse
     {
         $postulante->update(['estado_inscripcion' => 'OBSERVADO']);
+        BitacoraHelper::registrar(
+            'DESACTIVAR_POSTULANTE',
+            'Postulantes',
+            'Se desactivo el postulante CI ' . $postulante->ci . '.'
+        );
 
         return redirect()
             ->route('gestion-postulantes-admision.postulantes.index')

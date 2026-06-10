@@ -3,9 +3,9 @@
 @section('title', 'CU9 Administrar Materias y Evaluaciones | CUPCore')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-3">
         <x-page-title title="Administrar Materias y Evaluaciones" subtitle="CU9 del paquete Gestion Academica del CUP. Cada materia debe quedar configurada con tres evaluaciones activas 30/30/40." />
-        <a href="{{ route('gestion-academica-cup.materias.create') }}" class="btn btn-primary">Nueva materia</a>
+        <a href="{{ route('gestion-academica-cup.materias.create') }}" class="btn btn-primary shrink-0">Nueva materia</a>
     </div>
 
     @if (session('success'))
@@ -15,7 +15,7 @@
     @endif
 
     <x-card title="Busqueda y filtros">
-        <form method="GET" action="{{ route('gestion-academica-cup.materias.index') }}" class="grid gap-4 md:grid-cols-4">
+        <form method="GET" action="{{ route('gestion-academica-cup.materias.index') }}" class="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
             <label class="form-control md:col-span-3">
                 <span class="label-text">Buscar por nombre, codigo o descripcion</span>
                 <input type="text" name="search" value="{{ $search }}" class="input input-bordered">
@@ -38,7 +38,7 @@
 
     <x-card title="Listado de materias">
         <div class="overflow-x-auto">
-            <table class="table">
+            <table class="table min-w-[900px]">
                 <thead>
                     <tr>
                         <th>Codigo</th>
@@ -73,7 +73,7 @@
                                 <div class="mt-2 text-xs text-base-content/70">Suma activa: {{ rtrim(rtrim(number_format($porcentajeTotal, 2, '.', ''), '0'), '.') }}%</div>
                             </td>
                             <td>
-                                <div class="flex justify-end gap-2">
+                                <div class="flex flex-wrap justify-end gap-2">
                                     <a href="{{ route('gestion-academica-cup.materias.show', $materia) }}" class="btn btn-sm btn-outline">Ver</a>
                                     <a href="{{ route('gestion-academica-cup.materias.edit', $materia) }}" class="btn btn-sm btn-info">Editar</a>
                                     <a href="{{ route('gestion-academica-cup.materias.evaluaciones.create', $materia) }}" class="btn btn-sm btn-primary">Evaluaciones</a>

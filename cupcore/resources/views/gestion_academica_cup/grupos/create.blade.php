@@ -24,7 +24,7 @@
         </div>
     @endif
 
-    <div class="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+    <div class="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
         <x-card title="Configuracion de organizacion">
             <form method="GET" action="{{ route('gestion-academica-cup.grupos.organizar') }}" class="app-form">
                 <section class="app-form-section">
@@ -32,7 +32,7 @@
                     <div class="app-form-grid cols-2">
                         <label class="form-control">
                             <span class="label-text">Gestion</span>
-                            <select name="gestion" class="select select-bordered" required>
+                            <select name="gestion" class="select select-bordered w-full" required>
                                 @foreach ($gestionesAcademicas as $gestionOption)
                                     <option value="{{ $gestionOption }}" @selected($gestion === $gestionOption)>{{ $gestionOption }}</option>
                                 @endforeach
@@ -40,14 +40,14 @@
                         </label>
                         <label class="form-control">
                             <span class="label-text">Capacidad maxima</span>
-                            <input type="number" name="capacidad_maxima" value="{{ $capacidadMaxima }}" class="input input-bordered" min="1" max="70" required>
+                            <input type="number" name="capacidad_maxima" value="{{ $capacidadMaxima }}" class="input input-bordered w-full" min="1" max="70" required>
                         </label>
                     </div>
                 </section>
 
-                <div class="app-form-actions">
-                    <button type="submit" class="btn btn-primary">Actualizar calculo</button>
-                    <a href="{{ route('gestion-academica-cup.grupos.index') }}" class="btn btn-outline">Volver</a>
+                <div class="app-form-actions flex flex-wrap gap-2">
+                    <button type="submit" class="btn btn-primary w-full sm:w-auto">Actualizar calculo</button>
+                    <a href="{{ route('gestion-academica-cup.grupos.index') }}" class="btn btn-outline w-full sm:w-auto">Volver</a>
                 </div>
             </form>
 
@@ -62,7 +62,7 @@
                 </div>
 
                 <div class="mt-4">
-                    <button type="submit" class="btn btn-primary" @disabled($resumen['disponibles'] === 0 || $resumen['grupos_activos_gestion'] > 0)>
+                    <button type="submit" class="btn btn-primary w-full sm:w-auto" @disabled($resumen['disponibles'] === 0 || $resumen['grupos_activos_gestion'] > 0)>
                         Generar grupos
                     </button>
                 </div>

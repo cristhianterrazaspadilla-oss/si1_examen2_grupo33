@@ -3,9 +3,9 @@
 @section('title', 'CU6 Gestionar Requisitos de Admisión | Validación de Postulantes')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <x-page-title title="Validación de Requisitos por Postulante" subtitle="CU6 Gestionar Requisitos de Admisión" />
-        <a href="{{ route('gestion-postulantes-admision.requisitos.index') }}" class="btn btn-outline">Volver al catálogo</a>
+        <a href="{{ route('gestion-postulantes-admision.requisitos.index') }}" class="btn btn-outline w-full sm:w-auto">Volver al catálogo</a>
     </div>
 
     @if (session('success'))
@@ -15,8 +15,8 @@
     @endif
 
     <x-card title="Búsqueda de postulantes">
-        <form method="GET" action="{{ route('gestion-postulantes-admision.requisitos-postulantes.index') }}" class="grid gap-4 md:grid-cols-4">
-            <label class="form-control md:col-span-2">
+        <form method="GET" action="{{ route('gestion-postulantes-admision.requisitos-postulantes.index') }}" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <label class="form-control sm:col-span-2">
                 <span class="label-text">Buscar por CI, nombres, apellidos o correo</span>
                 <input type="text" name="search" value="{{ $search }}" class="input input-bordered">
             </label>
@@ -29,16 +29,16 @@
                     @endforeach
                 </select>
             </label>
-            <div class="flex items-end gap-2">
-                <button type="submit" class="btn btn-primary">Buscar</button>
-                <a href="{{ route('gestion-postulantes-admision.requisitos-postulantes.index') }}" class="btn btn-outline">Limpiar</a>
+            <div class="flex items-end gap-2 w-full">
+                <button type="submit" class="btn btn-primary flex-1">Buscar</button>
+                <a href="{{ route('gestion-postulantes-admision.requisitos-postulantes.index') }}" class="btn btn-outline flex-1">Limpiar</a>
             </div>
         </form>
     </x-card>
 
     <x-card title="Postulantes para validación">
         <div class="overflow-x-auto">
-            <table class="table">
+            <table class="table min-w-[1000px]">
                 <thead>
                     <tr>
                         <th>CI</th>

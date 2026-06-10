@@ -3,9 +3,9 @@
 @section('title', 'CU12 Gestionar Docentes y Asignaciones | Detalle docente')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
         <x-page-title title="Detalle del docente" subtitle="Consulta datos personales, datos profesionales, usuario asociado y la carga academica del docente." />
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2 shrink-0">
             <a href="{{ route('gestion-academica-cup.docentes.edit', $docente) }}" class="btn btn-info">Editar</a>
             <a href="{{ route('gestion-academica-cup.docentes.asignaciones.create', $docente) }}" class="btn btn-primary">Nueva asignacion</a>
             <a href="{{ route('gestion-academica-cup.docentes.index') }}" class="btn btn-outline">Volver</a>
@@ -26,7 +26,7 @@
         </div>
     @endif
 
-    <div class="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+    <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6">
         <x-card title="Datos personales">
             <div class="detail-grid cols-2">
                 <div class="detail-item">
@@ -92,7 +92,7 @@
         </x-card>
     </div>
 
-    <div class="mt-6 grid gap-6 xl:grid-cols-[1fr_1fr]">
+    <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
         <x-card title="Datos profesionales">
             <div class="detail-grid cols-2">
                 <div class="detail-item">
@@ -130,8 +130,8 @@
 
     <div class="mt-6">
         <x-card title="Asignaciones del docente">
-            <div class="overflow-x-auto">
-                <table class="table">
+            <div class="overflow-x-auto w-full">
+                <table class="table min-w-[700px]">
                     <thead>
                         <tr>
                             <th>Grupo</th>
@@ -157,7 +157,7 @@
                                     <span class="badge {{ $asignacion->estado === 'ACTIVO' ? 'badge-success' : 'badge-error' }}">{{ $asignacion->estado }}</span>
                                 </td>
                                 <td>
-                                    <div class="flex justify-end gap-2">
+                                    <div class="flex flex-wrap justify-end gap-2">
                                         <a href="{{ route('gestion-academica-cup.docente-asignaciones.edit', $asignacion) }}" class="btn btn-sm btn-info">Editar</a>
                                         @if ($asignacion->estado === 'ACTIVO')
                                             <form method="POST" action="{{ route('gestion-academica-cup.docente-asignaciones.destroy', $asignacion) }}">

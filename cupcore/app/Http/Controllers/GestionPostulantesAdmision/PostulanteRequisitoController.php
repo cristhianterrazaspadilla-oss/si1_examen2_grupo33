@@ -6,12 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Models\Postulante;
 use App\Models\PostulanteRequisito;
 use App\Models\Requisito;
+use App\Support\BitacoraHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
+/**
+ * Paquete: Gestión de Postulantes y Admisión
+ * Casos de Uso: CU6 (Cargar Requisitos de Inscripción) y CU7 (Validar Requisitos de Inscripción)
+ * 
+ * Modela la relación N:M entre postulantes y requisitos de inscripción.
+ * Permite a los coordinadores validar, observar o marcar requisitos como aprobados, 
+ * actualizando el estado de inscripción del postulante de forma automática.
+ */
 class PostulanteRequisitoController extends Controller
 {
     // Controlador del caso de uso: CU6 Gestionar Requisitos de Admisión
@@ -84,6 +93,8 @@ class PostulanteRequisitoController extends Controller
                 ->where('postulante_id', $postulante->id)
                 ->findOrFail($item['id']);
 
+            $estadoAnterior = $registro->estado;
+
             $payload = [
                 'estado' => $item['estado'],
                 'observacion' => $item['observacion'] ?? null,
@@ -98,6 +109,14 @@ class PostulanteRequisitoController extends Controller
             }
 
             $registro->update($payload);
+
+            if ($estadoAnterior !== $item['estado']) {
+                BitacoraHelper::registrar(
+                    $item['estado'] === 'OBSERVADO' ? 'OBSERVAR_REQUISITO' : 'VALIDAR_REQUISITO',
+                    'Requisitos',
+                    'Se actualizo el requisito ' . (string) $registro->requisito?->nombre . ' del postulante CI ' . $postulante->ci . ' a estado ' . $item['estado'] . '.'
+                );
+            }
         }
 
         $this->actualizarEstadoInscripcion($postulante->fresh());

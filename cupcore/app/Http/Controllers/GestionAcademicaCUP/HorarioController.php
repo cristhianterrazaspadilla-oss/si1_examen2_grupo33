@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Aula;
 use App\Models\DocenteAsignacion;
 use App\Models\Horario;
+use App\Support\BitacoraHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,13 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Throwable;
 
+/**
+ * Paquete: Gestión Académica del CUP
+ * Caso de Uso: CU11 (Administrar Horarios y Aulas - Sección Horarios)
+ * 
+ * Planifica los bloques horarios de clases.
+ * Valida la no colisión de recursos críticos (mismo docente, aula o grupo no pueden tener cruces horarios).
+ */
 class HorarioController extends Controller
 {
     public function index(Request $request): View
@@ -91,6 +99,11 @@ class HorarioController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+        BitacoraHelper::registrar(
+            'CREAR_HORARIO',
+            'Horarios',
+            'Se creo horario para ' . ($asignacion->materia?->nombre ?? 'N/D') . ' en ' . ($asignacion->grupo?->nombre ?? 'N/D') . ', dia ' . $payload['dia_semana'] . ' de ' . $horaInicio . ' a ' . $horaFin . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.horarios.show', $horarioId)
@@ -145,6 +158,11 @@ class HorarioController extends Controller
                 ...$this->persistableHorarioPayload($payload),
                 'updated_at' => now(),
             ]);
+        BitacoraHelper::registrar(
+            'ACTUALIZAR_HORARIO',
+            'Horarios',
+            'Se actualizo horario para ' . ($asignacion->materia?->nombre ?? 'N/D') . ' en ' . ($asignacion->grupo?->nombre ?? 'N/D') . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.horarios.show', $horario)
@@ -168,7 +186,7 @@ class HorarioController extends Controller
 
             return redirect()
                 ->route('gestion-academica-cup.horarios.index')
-                ->withErrors(['horario' => 'No se pudo desactivar el horario: ' . $exception->getMessage()]);
+                ->withErrors(['horario' => 'No se pudo desactivar el horario. Inténtalo nuevamente.']);
         }
 
         if ($updated !== 1) {
@@ -176,6 +194,12 @@ class HorarioController extends Controller
                 ->route('gestion-academica-cup.horarios.index')
                 ->withErrors(['horario' => 'No se pudo desactivar el horario seleccionado.']);
         }
+
+        BitacoraHelper::registrar(
+            'DESACTIVAR_HORARIO',
+            'Horarios',
+            'Se desactivo horario ID ' . $horario->id . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.horarios.index')
@@ -214,7 +238,7 @@ class HorarioController extends Controller
 
             return redirect()
                 ->route('gestion-academica-cup.horarios.show', $horario)
-                ->withErrors(['horario' => 'No se pudo activar el horario: ' . $exception->getMessage()]);
+                ->withErrors(['horario' => 'No se pudo activar el horario. Inténtalo nuevamente.']);
         }
 
         if ($updated !== 1) {
@@ -222,6 +246,12 @@ class HorarioController extends Controller
                 ->route('gestion-academica-cup.horarios.show', $horario)
                 ->withErrors(['horario' => 'No se pudo activar el horario seleccionado.']);
         }
+
+        BitacoraHelper::registrar(
+            'ACTIVAR_HORARIO',
+            'Horarios',
+            'Se activo horario ID ' . $horario->id . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.horarios.show', $horario)

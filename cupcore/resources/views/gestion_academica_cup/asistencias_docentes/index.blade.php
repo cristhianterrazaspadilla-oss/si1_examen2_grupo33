@@ -3,9 +3,9 @@
 @section('title', 'CU13 Registrar Asistencia Docente | CUPCore')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
         <x-page-title title="CU13 Registrar Asistencia Docente" subtitle="Registra y controla la asistencia de docentes en base a los horarios academicos activos del CUP." />
-        <a href="{{ route('gestion-academica-cup.asistencias-docentes.create') }}" class="btn btn-primary">Registrar asistencia</a>
+        <a href="{{ route('gestion-academica-cup.asistencias-docentes.create') }}" class="btn btn-primary shrink-0">Registrar asistencia</a>
     </div>
 
     @if (session('success'))
@@ -20,7 +20,7 @@
         </div>
     @endif
 
-    <div class="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+    <div class="mb-6 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <x-card title="Total registradas"><p class="text-3xl font-semibold text-white">{{ $totalAsistencias }}</p></x-card>
         <x-card title="Presentes"><p class="text-3xl font-semibold text-white">{{ $presentesCount }}</p></x-card>
         <x-card title="Ausentes"><p class="text-3xl font-semibold text-white">{{ $ausentesCount }}</p></x-card>
@@ -29,14 +29,14 @@
     </div>
 
     <x-card title="Filtros">
-        <form method="GET" action="{{ route('gestion-academica-cup.asistencias-docentes.index') }}" class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <form method="GET" action="{{ route('gestion-academica-cup.asistencias-docentes.index') }}" class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <label class="form-control">
                 <span class="label-text">Fecha</span>
-                <input type="date" name="fecha" value="{{ $fecha }}" class="input input-bordered">
+                <input type="date" name="fecha" value="{{ $fecha }}" class="input input-bordered w-full">
             </label>
             <label class="form-control">
                 <span class="label-text">Docente</span>
-                <select name="docente_id" class="select select-bordered">
+                <select name="docente_id" class="select select-bordered w-full">
                     <option value="">Todos</option>
                     @foreach ($docentes as $docente)
                         <option value="{{ $docente->id }}" @selected((string) $docenteId === (string) $docente->id)>{{ trim($docente->nombres . ' ' . $docente->apellidos) }}</option>
@@ -45,7 +45,7 @@
             </label>
             <label class="form-control">
                 <span class="label-text">Estado asistencia</span>
-                <select name="estado_asistencia" class="select select-bordered">
+                <select name="estado_asistencia" class="select select-bordered w-full">
                     <option value="">Todos</option>
                     @foreach ($estadosAsistencia as $estadoOption)
                         <option value="{{ $estadoOption }}" @selected($estadoAsistencia === $estadoOption)>{{ $estadoOption }}</option>
@@ -54,7 +54,7 @@
             </label>
             <label class="form-control">
                 <span class="label-text">Grupo</span>
-                <select name="grupo_id" class="select select-bordered">
+                <select name="grupo_id" class="select select-bordered w-full">
                     <option value="">Todos</option>
                     @foreach ($grupos as $grupo)
                         <option value="{{ $grupo->id }}" @selected((string) $grupoId === (string) $grupo->id)>{{ $grupo->nombre }} - {{ $grupo->gestion }}</option>
@@ -63,7 +63,7 @@
             </label>
             <label class="form-control">
                 <span class="label-text">Materia</span>
-                <select name="materia_id" class="select select-bordered">
+                <select name="materia_id" class="select select-bordered w-full">
                     <option value="">Todas</option>
                     @foreach ($materias as $materia)
                         <option value="{{ $materia->id }}" @selected((string) $materiaId === (string) $materia->id)>{{ $materia->nombre }}</option>
@@ -72,7 +72,7 @@
             </label>
             <label class="form-control">
                 <span class="label-text">Aula</span>
-                <select name="aula_id" class="select select-bordered">
+                <select name="aula_id" class="select select-bordered w-full">
                     <option value="">Todas</option>
                     @foreach ($aulas as $aula)
                         <option value="{{ $aula->id }}" @selected((string) $aulaId === (string) $aula->id)>{{ $aula->nombre }}</option>
@@ -81,23 +81,23 @@
             </label>
             <label class="form-control">
                 <span class="label-text">Gestion academica</span>
-                <select name="gestion" class="select select-bordered">
+                <select name="gestion" class="select select-bordered w-full">
                     <option value="">Todas</option>
                     @foreach ($gestionesAcademicas as $gestionOption)
                         <option value="{{ $gestionOption }}" @selected($gestion === $gestionOption)>{{ $gestionOption }}</option>
                     @endforeach
                 </select>
             </label>
-            <div class="md:col-span-2 xl:col-span-4 flex gap-2">
-                <button type="submit" class="btn btn-primary">Filtrar</button>
-                <a href="{{ route('gestion-academica-cup.asistencias-docentes.index') }}" class="btn btn-outline">Limpiar</a>
+            <div class="sm:col-span-2 lg:col-span-3 xl:col-span-4 flex flex-wrap gap-2">
+                <button type="submit" class="btn btn-primary w-full sm:w-auto">Filtrar</button>
+                <a href="{{ route('gestion-academica-cup.asistencias-docentes.index') }}" class="btn btn-outline w-full sm:w-auto">Limpiar</a>
             </div>
         </form>
     </x-card>
 
     <x-card title="Listado de asistencias">
-        <div class="overflow-x-auto">
-            <table class="table">
+        <div class="overflow-x-auto w-full">
+            <table class="table min-w-[1100px]">
                 <thead>
                     <tr>
                         <th>Fecha</th>
@@ -125,7 +125,7 @@
                             <td><span class="badge badge-info">{{ $asistencia->estado_asistencia }}</span></td>
                             <td>{{ $asistencia->hora_registro ?: 'Sin registro' }}</td>
                             <td>
-                                <div class="flex justify-end gap-2">
+                                <div class="flex flex-wrap justify-end gap-2">
                                     <a href="{{ route('gestion-academica-cup.asistencias-docentes.show', $asistencia) }}" class="btn btn-sm btn-outline">Ver</a>
                                     <a href="{{ route('gestion-academica-cup.asistencias-docentes.edit', $asistencia) }}" class="btn btn-sm btn-info">Editar</a>
                                 </div>

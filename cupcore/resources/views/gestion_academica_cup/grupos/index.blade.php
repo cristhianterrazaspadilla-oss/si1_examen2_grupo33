@@ -3,9 +3,9 @@
 @section('title', 'CU10 Organizar Grupos Academicos | CUPCore')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-3">
         <x-page-title title="Organizar Grupos Academicos" subtitle="CU10 del paquete Gestion Academica del CUP. Distribuye automaticamente postulantes INSCRITOS en grupos con capacidad maxima controlada." />
-        <a href="{{ route('gestion-academica-cup.grupos.organizar') }}" class="btn btn-primary">Organizar grupos</a>
+        <a href="{{ route('gestion-academica-cup.grupos.organizar') }}" class="btn btn-primary shrink-0">Organizar grupos</a>
     </div>
 
     @if (session('success'))
@@ -53,7 +53,7 @@
     </div>
 
     <x-card title="Busqueda y filtros">
-        <form method="GET" action="{{ route('gestion-academica-cup.grupos.index') }}" class="grid gap-4 md:grid-cols-4">
+        <form method="GET" action="{{ route('gestion-academica-cup.grupos.index') }}" class="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
             <label class="form-control md:col-span-2">
                 <span class="label-text">Buscar por nombre, codigo o gestion</span>
                 <input type="text" name="search" value="{{ $search }}" class="input input-bordered">
@@ -85,7 +85,7 @@
 
     <x-card title="Listado de grupos">
         <div class="overflow-x-auto">
-            <table class="table">
+            <table class="table min-w-[850px]">
                 <thead>
                     <tr>
                         <th>Codigo</th>

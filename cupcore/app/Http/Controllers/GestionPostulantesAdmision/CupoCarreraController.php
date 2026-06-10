@@ -5,11 +5,19 @@ namespace App\Http\Controllers\GestionPostulantesAdmision;
 use App\Http\Controllers\Controller;
 use App\Models\Carrera;
 use App\Models\CupoCarrera;
+use App\Support\BitacoraHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
+/**
+ * Paquete: Gestión de Postulantes y Admisión
+ * Caso de Uso: CU8 (Administrar Carreras y Cupos - Sección Cupos)
+ * 
+ * Configura la disponibilidad de vacantes (cupo máximo, ocupados y disponibles) por carrera y gestión académica.
+ * Estos cupos se reducen atómicamente al confirmarse resultados de admisión aprobatorios.
+ */
 class CupoCarreraController extends Controller
 {
     // Controlador del caso de uso: CU8 Administrar Carreras y Cupos
@@ -72,6 +80,12 @@ class CupoCarreraController extends Controller
             'cupos_ocupados' => max(0, $validated['cupo_total'] - $validated['cupo_disponible']),
             'estado' => $validated['estado'],
         ]);
+        $cupo->load('carrera');
+        BitacoraHelper::registrar(
+            'CREAR_CUPO',
+            'Cupos',
+            'Se creo cupo para carrera ' . ($cupo->carrera?->nombre ?? 'N/D') . ' en gestion ' . $cupo->gestion . '.'
+        );
 
         return redirect()
             ->route('gestion-postulantes-admision.cupos.show', $cupo)
@@ -127,6 +141,12 @@ class CupoCarreraController extends Controller
             'cupos_ocupados' => max(0, $validated['cupo_total'] - $validated['cupo_disponible']),
             'estado' => $validated['estado'],
         ]);
+        $cupo->load('carrera');
+        BitacoraHelper::registrar(
+            'ACTUALIZAR_CUPO',
+            'Cupos',
+            'Se actualizo cupo para carrera ' . ($cupo->carrera?->nombre ?? 'N/D') . ' en gestion ' . $cupo->gestion . '.'
+        );
 
         return redirect()
             ->route('gestion-postulantes-admision.cupos.show', $cupo)
@@ -136,6 +156,12 @@ class CupoCarreraController extends Controller
     public function destroy(CupoCarrera $cupo): RedirectResponse
     {
         $cupo->update(['estado' => 'INACTIVO']);
+        $cupo->load('carrera');
+        BitacoraHelper::registrar(
+            'DESACTIVAR_CUPO',
+            'Cupos',
+            'Se desactivo cupo para carrera ' . ($cupo->carrera?->nombre ?? 'N/D') . ' en gestion ' . $cupo->gestion . '.'
+        );
 
         return redirect()
             ->route('gestion-postulantes-admision.cupos.index')

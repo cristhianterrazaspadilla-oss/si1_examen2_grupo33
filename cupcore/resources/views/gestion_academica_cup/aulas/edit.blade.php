@@ -3,9 +3,9 @@
 @section('title', 'CU11 Gestionar Horarios y Aulas | Editar aula')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
         <x-page-title title="Editar aula" subtitle="Actualiza nombre, codigo, capacidad, ubicacion y estado del aula." />
-        <a href="{{ route('gestion-academica-cup.aulas.show', $aula) }}" class="btn btn-outline">Volver</a>
+        <a href="{{ route('gestion-academica-cup.aulas.show', $aula) }}" class="btn btn-outline shrink-0">Volver</a>
     </div>
 
     @if ($errors->any())
@@ -25,19 +25,19 @@
                 <div class="app-form-grid cols-2">
                     <label class="form-control">
                         <span class="label-text">Nombre</span>
-                        <input type="text" name="nombre" value="{{ old('nombre', $aula->nombre) }}" class="input input-bordered" required>
+                        <input type="text" name="nombre" value="{{ old('nombre', $aula->nombre) }}" class="input input-bordered w-full" required>
                     </label>
                     <label class="form-control">
                         <span class="label-text">Codigo</span>
-                        <input type="text" name="codigo" value="{{ old('codigo', $aula->codigo) }}" class="input input-bordered">
+                        <input type="text" name="codigo" value="{{ old('codigo', $aula->codigo) }}" class="input input-bordered w-full">
                     </label>
                     <label class="form-control">
                         <span class="label-text">Capacidad</span>
-                        <input type="number" min="1" name="capacidad" value="{{ old('capacidad', $aula->capacidad) }}" class="input input-bordered" required>
+                        <input type="number" min="1" name="capacidad" value="{{ old('capacidad', $aula->capacidad) }}" class="input input-bordered w-full" required>
                     </label>
                     <label class="form-control">
                         <span class="label-text">Estado</span>
-                        <select name="estado" class="select select-bordered">
+                        <select name="estado" class="select select-bordered w-full">
                             @foreach (['ACTIVO', 'INACTIVO'] as $estadoOption)
                                 <option value="{{ $estadoOption }}" @selected(old('estado', $aula->estado) === $estadoOption)>{{ $estadoOption }}</option>
                             @endforeach
@@ -45,13 +45,13 @@
                     </label>
                     <label class="form-control md:col-span-2">
                         <span class="label-text">Ubicacion</span>
-                        <input type="text" name="ubicacion" value="{{ old('ubicacion', $aula->ubicacion) }}" class="input input-bordered">
+                        <input type="text" name="ubicacion" value="{{ old('ubicacion', $aula->ubicacion) }}" class="input input-bordered w-full">
                     </label>
                 </div>
             </section>
-            <div class="app-form-actions">
-                <button type="submit" class="btn btn-primary">Actualizar</button>
-                <a href="{{ route('gestion-academica-cup.aulas.show', $aula) }}" class="btn btn-outline">Volver</a>
+            <div class="app-form-actions flex flex-wrap gap-2">
+                <button type="submit" class="btn btn-primary w-full sm:w-auto">Actualizar</button>
+                <a href="{{ route('gestion-academica-cup.aulas.show', $aula) }}" class="btn btn-outline w-full sm:w-auto">Volver</a>
             </div>
         </form>
     </x-card>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\GestionPostulantesAdmision;
 use App\Http\Controllers\Controller;
 use App\Models\Pago;
 use App\Models\Postulante;
+use App\Support\BitacoraHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,14 @@ use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
 use Throwable;
 
+/**
+ * Paquete: Gestión de Postulantes y Admisión
+ * Caso de Uso: CU8 (Registrar Pagos / Integración Pasarela Stripe)
+ * 
+ * Gestiona el registro de pagos de inscripción de postulantes.
+ * Se integra con Stripe SDK para la creación y verificación de sesiones de pago (Checkout Sessions).
+ * Tras confirmar el pago (Paid), inscribe formalmente al postulante en el preuniversitario.
+ */
 class PagoController extends Controller
 {
     // Controlador del caso de uso: CU7 Gestionar Pagos
@@ -127,7 +136,7 @@ class PagoController extends Controller
             ]);
 
             return back()
-                ->withErrors(['stripe' => 'Stripe rechazo la creacion del enlace: ' . $exception->getMessage()])
+                ->withErrors(['stripe' => 'No se pudo procesar el pago. Verifica la información o inténtalo nuevamente.'])
                 ->withInput();
         }
 
@@ -150,7 +159,7 @@ class PagoController extends Controller
             ]);
 
             return back()
-                ->withErrors(['pago' => 'No se pudo guardar el pago pendiente: ' . $exception->getMessage()])
+                ->withErrors(['pago' => 'No se pudo actualizar la información del pago. Inténtalo nuevamente.'])
                 ->withInput();
         }
 
@@ -168,9 +177,21 @@ class PagoController extends Controller
             $pago->delete();
 
             return back()
-                ->withErrors(['postulante' => 'No se pudo actualizar el estado del postulante: ' . $exception->getMessage()])
+                ->withErrors(['postulante' => 'No se pudo actualizar la información del pago. Inténtalo nuevamente.'])
                 ->withInput();
         }
+
+        BitacoraHelper::registrar(
+            'GENERAR_ENLACE_PAGO',
+            'Pagos',
+            'Se genero un enlace de pago para el postulante CI ' . $postulante->ci . '.'
+        );
+
+        BitacoraHelper::registrar(
+            'REGISTRAR_PAGO',
+            'Pagos',
+            'Se registro un pago pendiente para el postulante CI ' . $postulante->ci . '.'
+        );
 
         return redirect()
             ->route('gestion-postulantes-admision.pagos.show', $pago)
@@ -255,7 +276,7 @@ class PagoController extends Controller
 
             return redirect()
                 ->route('gestion-postulantes-admision.pagos.show', $pago)
-                ->withErrors(['verificacion' => 'Stripe rechazo la verificacion del pago: ' . $exception->getMessage()]);
+                ->withErrors(['verificacion' => 'No se pudo procesar el pago. Verifica la información o inténtalo nuevamente.']);
         }
 
         $paymentStatus = (string) ($session->payment_status ?? '');
@@ -281,7 +302,7 @@ class PagoController extends Controller
 
                 return redirect()
                     ->route('gestion-postulantes-admision.pagos.show', $pago)
-                    ->withErrors(['verificacion' => 'No se pudo actualizar el pago confirmado: ' . $exception->getMessage()]);
+                    ->withErrors(['verificacion' => 'No se pudo actualizar la información del pago. Inténtalo nuevamente.']);
             }
 
             if ($updatedPago !== 1) {
@@ -306,7 +327,7 @@ class PagoController extends Controller
 
                 return redirect()
                     ->route('gestion-postulantes-admision.pagos.show', $pago)
-                    ->withErrors(['verificacion' => 'El pago fue confirmado, pero no se pudo actualizar el estado del postulante: ' . $exception->getMessage()]);
+                    ->withErrors(['verificacion' => 'No se pudo actualizar la información del pago. Inténtalo nuevamente.']);
             }
 
             if ($updatedPostulante !== 1) {
@@ -320,6 +341,12 @@ class PagoController extends Controller
                     ->route('gestion-postulantes-admision.pagos.show', $pago)
                     ->withErrors(['verificacion' => 'El pago fue confirmado, pero no se pudo actualizar el estado del postulante. Revisar manualmente.']);
             }
+
+            BitacoraHelper::registrar(
+                'CONFIRMAR_PAGO',
+                'Pagos',
+                'Se confirmo el pago del postulante CI ' . (string) $pago->postulante?->ci . '.'
+            );
 
             return redirect()
                 ->route('gestion-postulantes-admision.pagos.show', $pago)
@@ -345,6 +372,8 @@ class PagoController extends Controller
 
     public function destroy(Pago $pago): RedirectResponse
     {
+        $pago->loadMissing('postulante');
+
         DB::transaction(function () use ($pago): void {
             $pago->update([
                 'estado_pago' => 'ANULADO',
@@ -358,6 +387,12 @@ class PagoController extends Controller
                 ]);
             }
         });
+
+        BitacoraHelper::registrar(
+            'RECHAZAR_PAGO',
+            'Pagos',
+            'Se anulo el pago del postulante CI ' . (string) $pago->postulante?->ci . '.'
+        );
 
         return redirect()
             ->route('gestion-postulantes-admision.pagos.index')

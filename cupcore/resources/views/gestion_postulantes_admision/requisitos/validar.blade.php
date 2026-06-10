@@ -3,9 +3,9 @@
 @section('title', 'CU6 Gestionar Requisitos de Admisión | Validar Requisitos')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <x-page-title title="Validar Requisitos del Postulante" subtitle="CU6 Gestionar Requisitos de Admisión" />
-        <a href="{{ route('gestion-postulantes-admision.requisitos-postulantes.index') }}" class="btn btn-outline">Volver</a>
+        <a href="{{ route('gestion-postulantes-admision.requisitos-postulantes.index') }}" class="btn btn-outline w-full sm:w-auto">Volver</a>
     </div>
 
     @if (session('success'))
@@ -47,7 +47,7 @@
             @csrf
             @method('PUT')
             <div class="overflow-x-auto">
-                <table class="table">
+                <table class="table min-w-[1100px]">
                     <thead>
                         <tr>
                             <th>Requisito</th>

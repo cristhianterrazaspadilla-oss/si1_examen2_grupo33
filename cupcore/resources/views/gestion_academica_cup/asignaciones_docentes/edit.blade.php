@@ -3,9 +3,9 @@
 @section('title', 'CU12 Gestionar Docentes y Asignaciones | Editar asignacion')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
         <x-page-title title="Editar asignacion docente" subtitle="Actualiza el grupo, la materia, la gestion y el estado de una asignacion academica existente." />
-        <a href="{{ route('gestion-academica-cup.docentes.show', $docente) }}" class="btn btn-outline">Volver</a>
+        <a href="{{ route('gestion-academica-cup.docentes.show', $docente) }}" class="btn btn-outline shrink-0">Volver</a>
     </div>
 
     @if ($errors->any())
@@ -16,7 +16,7 @@
         </div>
     @endif
 
-    <div class="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
+    <div class="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-6">
         <x-card title="Docente y asignacion actual">
             <div class="detail-grid cols-2">
                 <div class="detail-item">
@@ -49,7 +49,7 @@
                 <div class="app-form-grid cols-2">
                     <label class="form-control">
                         <span class="label-text">Grupo</span>
-                        <select name="grupo_id" class="select select-bordered" required>
+                        <select name="grupo_id" class="select select-bordered w-full" required>
                             <option value="">Selecciona un grupo</option>
                             @foreach ($grupos as $grupo)
                                 <option value="{{ $grupo->id }}" @selected((string) old('grupo_id', $asignacion->grupo_id) === (string) $grupo->id)>
@@ -61,7 +61,7 @@
                     </label>
                     <label class="form-control">
                         <span class="label-text">Materia</span>
-                        <select name="materia_id" class="select select-bordered" required>
+                        <select name="materia_id" class="select select-bordered w-full" required>
                             <option value="">Selecciona una materia</option>
                             @foreach ($materias as $materia)
                                 <option value="{{ $materia->id }}" @selected((string) old('materia_id', $asignacion->materia_id) === (string) $materia->id)>
@@ -72,7 +72,7 @@
                     </label>
                     <label class="form-control">
                         <span class="label-text">Gestion</span>
-                        <select name="gestion" class="select select-bordered" required>
+                        <select name="gestion" class="select select-bordered w-full" required>
                             @foreach ($gestionesAcademicas as $gestionOption)
                                 <option value="{{ $gestionOption }}" @selected(old('gestion', $asignacion->gestion) === $gestionOption)>{{ $gestionOption }}</option>
                             @endforeach
@@ -80,7 +80,7 @@
                     </label>
                     <label class="form-control">
                         <span class="label-text">Estado</span>
-                        <select name="estado" class="select select-bordered">
+                        <select name="estado" class="select select-bordered w-full">
                             @foreach (['ACTIVO', 'INACTIVO'] as $estadoOption)
                                 <option value="{{ $estadoOption }}" @selected(old('estado', $asignacion->estado) === $estadoOption)>{{ $estadoOption }}</option>
                             @endforeach
@@ -88,9 +88,9 @@
                     </label>
                 </div>
 
-                <div class="app-form-actions">
-                    <button type="submit" class="btn btn-primary">Actualizar</button>
-                    <a href="{{ route('gestion-academica-cup.docentes.show', $docente) }}" class="btn btn-outline">Volver</a>
+                <div class="app-form-actions flex flex-wrap gap-2">
+                    <button type="submit" class="btn btn-primary w-full sm:w-auto">Actualizar</button>
+                    <a href="{{ route('gestion-academica-cup.docentes.show', $docente) }}" class="btn btn-outline w-full sm:w-auto">Volver</a>
                 </div>
             </form>
         </x-card>

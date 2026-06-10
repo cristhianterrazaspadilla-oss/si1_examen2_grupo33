@@ -40,7 +40,7 @@
         </div>
     @endif
 
-    <div class="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
+    <div class="grid grid-cols-1 xl:grid-cols-[1.08fr_0.92fr] gap-6">
         <x-card title="Cargar archivo" class="h-full">
             <form method="POST" action="{{ route('autenticacion-usuarios-seguridad.importaciones.store') }}" enctype="multipart/form-data" class="space-y-6">
                 @csrf
@@ -63,9 +63,9 @@
                 <div class="rounded-[1.4rem] border border-blue-300/12 bg-slate-950/35 p-5">
                     <p class="text-sm font-semibold uppercase tracking-[0.16em] text-blue-200/75">Recomendaciones</p>
                     <ul class="mt-4 list-disc space-y-2 pl-5 text-sm leading-7 text-slate-300">
-                        <li>Verifica que la primera fila contenga los encabezados exactos.</li>
-                        <li>Usa roles existentes en la tabla `roles` para evitar observaciones.</li>
-                        <li>Si una fila falla, el resto del archivo seguira procesandose.</li>
+                         <li>Verifica que la primera fila contenga los encabezados exactos.</li>
+                         <li>Usa roles existentes en la tabla `roles` para evitar observaciones.</li>
+                         <li>Si una fila falla, el resto del archivo seguira procesandose.</li>
                     </ul>
                 </div>
 
@@ -82,7 +82,7 @@
                 </p>
 
                 <div class="overflow-x-auto rounded-[1.4rem] border border-blue-300/12 bg-slate-950/35">
-                    <table class="table">
+                    <table class="table min-w-[650px]">
                         <thead>
                             <tr>
                                 <th>rol</th>

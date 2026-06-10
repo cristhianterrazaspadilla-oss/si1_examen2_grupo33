@@ -3,9 +3,9 @@
 @section('title', 'CU14 Gestionar Notas | Nueva nota')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
         <x-page-title title="Registrar nota academica" subtitle="Registra una nota por postulante y evaluacion. La materia se valida automaticamente contra la evaluacion seleccionada." />
-        <a href="{{ route('gestion-academica-cup.notas.index') }}" class="btn btn-outline">Volver</a>
+        <a href="{{ route('gestion-academica-cup.notas.index') }}" class="btn btn-outline shrink-0">Volver</a>
     </div>
 
     @if ($errors->any())
@@ -30,7 +30,7 @@
                 <div class="app-form-grid cols-2">
                     <label class="form-control">
                         <span class="label-text">Grupo</span>
-                        <select name="grupo_id" class="select select-bordered" required>
+                        <select name="grupo_id" class="select select-bordered w-full" required>
                             <option value="">Selecciona un grupo</option>
                             @foreach ($formOptions['grupos'] as $grupo)
                                 <option value="{{ $grupo->id }}" @selected((string) old('grupo_id') === (string) $grupo->id)>{{ $grupo->nombre }} - {{ $grupo->gestion }}</option>
@@ -39,7 +39,7 @@
                     </label>
                     <label class="form-control">
                         <span class="label-text">Materia</span>
-                        <select name="materia_id" class="select select-bordered" required>
+                        <select name="materia_id" class="select select-bordered w-full" required>
                             <option value="">Selecciona una materia</option>
                             @foreach ($formOptions['materias'] as $materia)
                                 <option value="{{ $materia->id }}" @selected((string) old('materia_id') === (string) $materia->id)>{{ $materia->nombre }}</option>
@@ -54,7 +54,7 @@
                 <div class="app-form-grid cols-2">
                     <label class="form-control">
                         <span class="label-text">Postulante</span>
-                        <select name="postulante_id" class="select select-bordered" required>
+                        <select name="postulante_id" class="select select-bordered w-full" required>
                             <option value="">Selecciona un postulante</option>
                             @foreach ($formOptions['postulantes'] as $postulante)
                                 <option value="{{ $postulante->id }}" @selected((string) old('postulante_id') === (string) $postulante->id)>{{ $postulante->apellidos }} {{ $postulante->nombres }} - {{ $postulante->ci }}</option>
@@ -63,7 +63,7 @@
                     </label>
                     <label class="form-control">
                         <span class="label-text">Evaluacion</span>
-                        <select name="evaluacion_id" class="select select-bordered" required>
+                        <select name="evaluacion_id" class="select select-bordered w-full" required>
                             <option value="">Selecciona una evaluacion</option>
                             @foreach ($formOptions['evaluaciones'] as $evaluacion)
                                 <option value="{{ $evaluacion->id }}" @selected((string) old('evaluacion_id') === (string) $evaluacion->id)>{{ $evaluacion->materia?->nombre }} - Evaluacion {{ $evaluacion->numero_evaluacion }} ({{ rtrim(rtrim(number_format((float) $evaluacion->porcentaje, 2, '.', ''), '0'), '.') }}%)</option>
@@ -81,18 +81,18 @@
                 <div class="app-form-grid cols-2">
                     <label class="form-control">
                         <span class="label-text">Nota</span>
-                        <input type="number" name="nota" value="{{ old('nota') }}" min="0" max="100" step="0.01" class="input input-bordered" required>
+                        <input type="number" name="nota" value="{{ old('nota') }}" min="0" max="100" step="0.01" class="input input-bordered w-full" required>
                     </label>
                     <label class="form-control md:col-span-2">
                         <span class="label-text">Observacion</span>
-                        <textarea name="observacion" class="textarea textarea-bordered">{{ old('observacion') }}</textarea>
+                        <textarea name="observacion" class="textarea textarea-bordered w-full">{{ old('observacion') }}</textarea>
                     </label>
                 </div>
             </section>
 
-            <div class="app-form-actions">
-                <button type="submit" class="btn btn-primary">Guardar</button>
-                <a href="{{ route('gestion-academica-cup.notas.index') }}" class="btn btn-outline">Volver</a>
+            <div class="app-form-actions flex flex-wrap gap-2">
+                <button type="submit" class="btn btn-primary w-full sm:w-auto">Guardar</button>
+                <a href="{{ route('gestion-academica-cup.notas.index') }}" class="btn btn-outline w-full sm:w-auto">Volver</a>
             </div>
         </form>
     </x-card>

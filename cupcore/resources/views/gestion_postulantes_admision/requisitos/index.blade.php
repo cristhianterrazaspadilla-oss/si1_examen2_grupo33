@@ -3,11 +3,11 @@
 @section('title', 'CU6 Gestionar Requisitos de Admisión | Requisitos')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <x-page-title title="Requisitos de Admisión" subtitle="CU6 Gestionar Requisitos de Admisión" />
-        <div class="flex gap-2">
-            <a href="{{ route('gestion-postulantes-admision.requisitos-postulantes.index') }}" class="btn btn-outline">Validar requisitos</a>
-            <a href="{{ route('gestion-postulantes-admision.requisitos.create') }}" class="btn btn-primary">Nuevo requisito</a>
+        <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+            <a href="{{ route('gestion-postulantes-admision.requisitos-postulantes.index') }}" class="btn btn-outline w-full sm:w-auto">Validar requisitos</a>
+            <a href="{{ route('gestion-postulantes-admision.requisitos.create') }}" class="btn btn-primary w-full sm:w-auto">Nuevo requisito</a>
         </div>
     </div>
 
@@ -18,16 +18,18 @@
     @endif
 
     <x-card title="Búsqueda de requisitos">
-        <form method="GET" action="{{ route('gestion-postulantes-admision.requisitos.index') }}" class="flex gap-2">
-            <input type="text" name="search" value="{{ $search }}" class="input input-bordered w-full max-w-xl" placeholder="Buscar por nombre o descripción">
-            <button type="submit" class="btn btn-primary">Buscar</button>
-            <a href="{{ route('gestion-postulantes-admision.requisitos.index') }}" class="btn btn-outline">Limpiar</a>
+        <form method="GET" action="{{ route('gestion-postulantes-admision.requisitos.index') }}" class="flex flex-col sm:flex-row gap-2">
+            <input type="text" name="search" value="{{ $search }}" class="input input-bordered w-full sm:max-w-xl" placeholder="Buscar por nombre o descripción">
+            <div class="flex gap-2 w-full sm:w-auto">
+                <button type="submit" class="btn btn-primary flex-1 sm:flex-none">Buscar</button>
+                <a href="{{ route('gestion-postulantes-admision.requisitos.index') }}" class="btn btn-outline flex-1 sm:flex-none">Limpiar</a>
+            </div>
         </form>
     </x-card>
 
     <x-card title="Catálogo de requisitos">
         <div class="overflow-x-auto">
-            <table class="table">
+            <table class="table min-w-[700px]">
                 <thead>
                     <tr>
                         <th>Nombre</th>

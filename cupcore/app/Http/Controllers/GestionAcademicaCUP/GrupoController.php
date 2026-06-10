@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Grupo;
 use App\Models\GrupoPostulante;
 use App\Models\Postulante;
+use App\Support\BitacoraHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,13 @@ use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Throwable;
 
+/**
+ * Paquete: Gestión Académica del CUP
+ * Caso de Uso: CU10 (Organizar Grupos Académicos)
+ * 
+ * Implementa el algoritmo de distribución y agrupamiento automático de postulantes inscritos.
+ * Organiza a los estudiantes en grupos alfabéticos con capacidad parametrizable (máximo 70 estudiantes).
+ */
 class GrupoController extends Controller
 {
     // Controlador del caso de uso: CU10 Organizar Grupos Academicos
@@ -169,8 +177,14 @@ class GrupoController extends Controller
                 return redirect()
                     ->back()
                     ->withInput()
-                    ->withErrors(['organizacion' => 'No se pudo crear el grupo: ' . $exception->getMessage()]);
+                    ->withErrors(['organizacion' => 'No se pudo crear el grupo. Inténtalo nuevamente.']);
             }
+
+            BitacoraHelper::registrar(
+                'CREAR_GRUPO',
+                'Grupos',
+                'Se creo el grupo ' . $grupo->nombre . ' gestion ' . $grupo->gestion . '.'
+            );
 
             foreach ($grupoPlanificado['postulantes'] as $postulante) {
                 try {
@@ -195,8 +209,14 @@ class GrupoController extends Controller
                     return redirect()
                         ->back()
                         ->withInput()
-                        ->withErrors(['organizacion' => 'No se pudo asignar el postulante al grupo: ' . $exception->getMessage()]);
+                        ->withErrors(['organizacion' => 'No se pudo asignar el postulante al grupo. Inténtalo nuevamente.']);
                 }
+
+                BitacoraHelper::registrar(
+                    'ASIGNAR_POSTULANTE_GRUPO',
+                    'Grupos',
+                    'Se asigno el postulante CI ' . $postulante->ci . ' al grupo ' . $grupo->nombre . '.'
+                );
             }
 
             $grupo->cantidad_estudiantes = GrupoPostulante::query()
@@ -205,6 +225,12 @@ class GrupoController extends Controller
                 ->count();
             $grupo->save();
         }
+
+        BitacoraHelper::registrar(
+            'ORGANIZAR_GRUPOS',
+            'Grupos',
+            'Se organizo la distribucion de grupos academicos para la gestion ' . $gestion . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.grupos.index', ['gestion' => $gestion])
@@ -249,6 +275,11 @@ class GrupoController extends Controller
         ]);
 
         $grupo->update($validated);
+        BitacoraHelper::registrar(
+            'ACTUALIZAR_GRUPO',
+            'Grupos',
+            'Se actualizo el grupo ' . $grupo->nombre . ' gestion ' . $grupo->gestion . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.grupos.show', $grupo)
@@ -268,6 +299,12 @@ class GrupoController extends Controller
                     'updated_at' => now(),
                 ]);
         });
+
+        BitacoraHelper::registrar(
+            'DESACTIVAR_GRUPO',
+            'Grupos',
+            'Se desactivo el grupo ' . $grupo->nombre . '.'
+        );
 
         return redirect()
             ->route('gestion-academica-cup.grupos.index')

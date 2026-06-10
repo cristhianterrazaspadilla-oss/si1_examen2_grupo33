@@ -9,6 +9,13 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
+/**
+ * Paquete: Gestión de Postulantes y Admisión
+ * Caso de Uso: CU6 (Cargar Requisitos de Inscripción - Sección Configuración)
+ * 
+ * Permite configurar y parametrizar los requisitos documentales (obligatorios o no) 
+ * que cada postulante debe cargar para su posterior validación.
+ */
 class RequisitoController extends Controller
 {
     // Controlador del caso de uso: CU6 Gestionar Requisitos de Admisión

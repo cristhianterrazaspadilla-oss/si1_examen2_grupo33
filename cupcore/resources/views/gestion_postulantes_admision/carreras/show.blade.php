@@ -3,9 +3,9 @@
 @section('title', 'CU8 Administrar Carreras y Cupos | Detalle de Carrera')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
+    <div class="flex flex-wrap items-start justify-between gap-3">
         <x-page-title title="Detalle de Carrera" subtitle="CU8 Administrar Carreras y Cupos" />
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2 shrink-0">
             <a href="{{ route('gestion-postulantes-admision.carreras.edit', $carrera) }}" class="btn btn-info">Editar</a>
             <a href="{{ route('gestion-postulantes-admision.carreras.index') }}" class="btn btn-outline">Volver</a>
         </div>
@@ -36,7 +36,7 @@
 
     <x-card title="Cupos asociados">
         <div class="overflow-x-auto">
-            <table class="table">
+            <table class="table min-w-[580px]">
                 <thead>
                     <tr>
                         <th>Gestion</th>
