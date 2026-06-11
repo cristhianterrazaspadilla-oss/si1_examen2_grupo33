@@ -27,7 +27,7 @@
     @endif
 
     <div class="alert alert-info">
-        <span>El historial registra las exportaciones realizadas. Los archivos CSV, EXCEL y la vista imprimible/PDF se generan al momento de la descarga o apertura.</span>
+        <span>El historial registra las exportaciones realizadas. Los archivos CSV, EXCEL y PDF se generan al momento de la descarga.</span>
     </div>
 
     <x-card title="Filtros del historial">

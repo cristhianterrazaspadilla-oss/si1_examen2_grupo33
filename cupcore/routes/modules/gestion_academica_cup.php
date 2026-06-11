@@ -84,8 +84,8 @@ Route::prefix('gestion-academica-cup')->name('gestion-academica-cup.')->group(fu
             ->name('reportes.exportar.excel');
         Route::get('reportes/historial', [ReporteAcademicoController::class, 'historial'])
             ->name('reportes.historial');
-        Route::get('reportes/imprimir', [ReporteAcademicoController::class, 'imprimir'])
-            ->name('reportes.imprimir');
+        Route::get('reportes/exportar/pdf', [ReporteAcademicoController::class, 'exportarPdf'])
+            ->name('reportes.exportar.pdf');
         Route::get('reportes/dashboard', [ReporteAcademicoController::class, 'dashboard'])
             ->name('reportes.dashboard');
         Route::get('bitacoras', [BitacoraController::class, 'index'])
@@ -109,4 +109,3 @@ Route::prefix('gestion-academica-cup')->name('gestion-academica-cup.')->group(fu
     });
     Route::resource('grupo-postulantes', GrupoPostulanteController::class);
 });
-

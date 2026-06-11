@@ -8,19 +8,14 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 32px;
+            padding: 18px;
             color: #111827;
-            background: #f8fafc;
+            background: #ffffff;
         }
 
         .page {
-            max-width: 1200px;
-            margin: 0 auto;
             background: #ffffff;
-            border: 1px solid #dbeafe;
-            border-radius: 18px;
-            padding: 32px;
-            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+            padding: 0;
         }
 
         .meta,
@@ -58,22 +53,6 @@
             background: #e2e8f0;
         }
 
-        .actions {
-            margin-top: 24px;
-            display: flex;
-            gap: 12px;
-        }
-
-        .button {
-            padding: 10px 16px;
-            border-radius: 10px;
-            border: 1px solid #94a3b8;
-            background: #eff6ff;
-            color: #1e3a8a;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
         .warning {
             margin-top: 16px;
             padding: 12px 14px;
@@ -91,22 +70,8 @@
             background: #f8fafc;
         }
 
-        @media print {
-            body {
-                background: #ffffff;
-                padding: 0;
-            }
-
-            .page {
-                box-shadow: none;
-                border: none;
-                border-radius: 0;
-                padding: 0;
-            }
-
-            .actions {
-                display: none;
-            }
+        @page {
+            margin: 18px;
         }
     </style>
 </head>
@@ -136,7 +101,7 @@
 
         @if ($reportData['was_limited'])
             <div class="warning">
-                Se muestran solo los primeros {{ $reportData['limit'] }} registros para impresion. El reporte completo excede ese limite.
+                El PDF incluye solo los primeros {{ $reportData['limit'] }} registros. El reporte completo excede ese limite.
             </div>
         @endif
 
@@ -165,10 +130,6 @@
             </table>
         @endif
 
-        <div class="actions">
-            <button type="button" class="button" onclick="window.print()">Imprimir / Guardar como PDF</button>
-            <button type="button" class="button" onclick="window.close()">Cerrar</button>
-        </div>
     </div>
 </body>
 </html>

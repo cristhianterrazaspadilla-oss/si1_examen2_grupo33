@@ -15,7 +15,7 @@
     <div class="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
         <x-card title="Alcance actual de CU16">
             <div class="space-y-3 text-sm text-base-content/80">
-                <p>CU16 ya cuenta con KPIs academicos, reportes consultables en pantalla, exportacion CSV, Excel, vista imprimible/PDF e historial de exportaciones registradas en la tabla real <code>reportes</code>.</p>
+                <p>CU16 ya cuenta con KPIs academicos, reportes consultables en pantalla, descarga CSV, Excel y PDF, e historial de exportaciones registradas en la tabla real <code>reportes</code>.</p>
                 <p>Tambien incluye comandos por voz con interpretacion local y apoyo opcional desde Groq, siempre validado desde backend contra listas permitidas.</p>
             </div>
         </x-card>

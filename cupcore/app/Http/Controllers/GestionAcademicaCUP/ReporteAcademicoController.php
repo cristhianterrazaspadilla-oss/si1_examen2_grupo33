@@ -7,6 +7,7 @@ use App\Models\Carrera;
 use App\Models\Grupo;
 use App\Models\Materia;
 use App\Support\BitacoraHelper;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
@@ -447,9 +449,9 @@ class ReporteAcademicoController extends Controller
     }
 
     /**
-     * Genera una vista limpia y optimizada para impresión (con CSS print/PDF) del reporte actual.
+     * Genera y descarga el reporte actual como archivo PDF.
      */
-    public function imprimir(Request $request): View|RedirectResponse
+    public function exportarPdf(Request $request): Response
     {
         $this->authorizeRoles();
 
@@ -460,27 +462,32 @@ class ReporteAcademicoController extends Controller
         }
 
         $reportData = $this->getReporteData($request, false);
-        $logicalName = 'reporte_' . $reportData['type'] . '_' . now()->format('Y-m-d');
+        $filename = 'reporte_' . $reportData['type'] . '_' . now()->format('Y-m-d') . '.pdf';
 
         $this->registrarHistorialReporte(
             $reportData['type'],
             'PDF',
             $this->sanitizeReportFilters($validation),
-            'impresion://' . $logicalName
+            'descarga://' . $filename
         );
 
         BitacoraHelper::registrar(
             'EXPORTAR_REPORTE_PDF',
             'Reportes',
-            'Se abrio la vista imprimible del reporte ' . $reportData['type'] . '.'
+            'Se exporto el reporte ' . $reportData['type'] . ' en formato PDF.'
         );
 
-        return view('gestion_academica_cup.reportes.imprimir', [
-            'filters' => $validation,
-            'reportData' => $reportData,
-            'appliedFilters' => $this->appliedFiltersSummary($validation),
-            'generatedAt' => now(),
-        ]);
+        return Pdf::loadView(
+            'gestion_academica_cup.reportes.imprimir',
+            [
+                'filters' => $validation,
+                'reportData' => $reportData,
+                'appliedFilters' => $this->appliedFiltersSummary($validation),
+                'generatedAt' => now(),
+            ]
+        )
+            ->setPaper('a4', 'landscape')
+            ->download($filename);
     }
 
     /**

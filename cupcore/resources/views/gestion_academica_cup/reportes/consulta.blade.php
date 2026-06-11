@@ -71,9 +71,9 @@
     </x-card>
 
     {{-- Sección de filtros estructurados:
-        - Permite construir consultas precisas que luego pueden exportarse a CSV/Excel o abrir una vista imprimible.
+        - Permite construir consultas precisas que luego pueden descargarse como CSV, Excel o PDF.
         - Los filtros aplican sólo si son compatibles con el tipo de reporte seleccionado.
-        - Exportaciones: CSV, Excel y vista imprimible/PDF; las rutas de exportación generan los archivos en el servidor y se registran en el historial.
+        - Exportaciones: CSV, Excel y PDF; las rutas generan los archivos en el servidor y registran la descarga en el historial.
         - Seguridad: el JS de voz/IA sólo envía texto al backend; las API keys (si existen) quedan en el servidor. El frontend no las contiene.
     --}}
     <x-card title="Configuracion del reporte">
@@ -216,9 +216,9 @@
             <div class="mt-4 flex flex-wrap gap-3">
                 <a href="{{ route('gestion-academica-cup.reportes.exportar.csv', request()->query()) }}" class="btn btn-primary w-full sm:w-auto">Exportar CSV</a>
                 <a href="{{ route('gestion-academica-cup.reportes.exportar.excel', request()->query()) }}" class="btn btn-outline w-full sm:w-auto">Exportar Excel</a>
-                <a href="{{ route('gestion-academica-cup.reportes.imprimir', request()->query()) }}" class="btn btn-outline w-full sm:w-auto" target="_blank" rel="noopener">Vista imprimible / PDF</a>
+                <a href="{{ route('gestion-academica-cup.reportes.exportar.pdf', request()->query()) }}" class="btn btn-outline w-full sm:w-auto">Exportar PDF</a>
             </div>
-            <p class="mt-3 text-sm text-base-content/70">Puedes exportar el reporte en CSV, Excel o abrir una vista imprimible para guardar como PDF. Las exportaciones se registran en el historial de reportes.</p>
+            <p class="mt-3 text-sm text-base-content/70">Puedes descargar el reporte en CSV, Excel o PDF. Las exportaciones se registran en el historial de reportes.</p>
         </x-card>
 
         {{-- Tabla de resultados: sus columnas cambian según el tipo de reporte y la paginación evita cargar todos los registros en una sola vista. --}}
