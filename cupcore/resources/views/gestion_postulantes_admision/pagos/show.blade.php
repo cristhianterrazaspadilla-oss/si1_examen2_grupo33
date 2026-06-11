@@ -4,9 +4,16 @@
 
 @section('content')
     <div class="flex items-center justify-between gap-4">
-        <x-page-title title="Detalle del Pago" subtitle="Consulta el enlace generado, el estado actual y verifica directamente el pago contra Stripe." />
+        <x-page-title
+            title="Detalle del Pago"
+            :subtitle="$isPostulante
+                ? 'Consulta el estado y la información de tu pago.'
+                : 'Consulta el enlace generado, el estado actual y verifica directamente el pago contra Stripe.'"
+        />
         <div class="flex gap-2">
-            <a href="{{ route('gestion-postulantes-admision.pagos.edit', $pago) }}" class="btn btn-info">Editar</a>
+            @if ($canManagePayments)
+                <a href="{{ route('gestion-postulantes-admision.pagos.edit', $pago) }}" class="btn btn-info">Editar</a>
+            @endif
             <a href="{{ route('gestion-postulantes-admision.pagos.index') }}" class="btn btn-outline">Volver</a>
         </div>
     </div>
@@ -43,7 +50,11 @@
     @endif
 
     <div class="alert alert-info mb-6">
-        <span>La verificacion consulta directamente el estado del pago en Stripe. Solo si Stripe devuelve payment_status paid se confirmara el pago.</span>
+        <span>
+            {{ $isPostulante
+                ? 'El estado se actualizará cuando la administración verifique el pago.'
+                : 'La verificacion consulta directamente el estado del pago en Stripe. Solo si Stripe devuelve payment_status paid se confirmara el pago.' }}
+        </span>
     </div>
 
     <div class="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
@@ -94,15 +105,17 @@
                     <p class="text-xs font-semibold uppercase tracking-[0.22em] text-blue-200/75">Observacion</p>
                     <p class="mt-2 text-base text-white">{{ $pago->observacion ?: 'Sin observacion registrada' }}</p>
                 </div>
-                <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.22em] text-blue-200/75">Stripe session ID</p>
-                    <p class="mt-2 break-all text-sm text-base-content/75">{{ $pago->stripe_payment_id ?: 'Sin referencia' }}</p>
-                </div>
-                <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.22em] text-blue-200/75">Stripe payment link</p>
-                    <p class="mt-2 break-all text-sm text-base-content/75">{{ $pago->stripe_payment_link ?: 'Sin enlace' }}</p>
-                </div>
-                @if ($pago->estado_pago === 'PENDIENTE' && $pago->stripe_payment_id)
+                @unless ($isPostulante)
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-blue-200/75">Stripe session ID</p>
+                        <p class="mt-2 break-all text-sm text-base-content/75">{{ $pago->stripe_payment_id ?: 'Sin referencia' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-blue-200/75">Stripe payment link</p>
+                        <p class="mt-2 break-all text-sm text-base-content/75">{{ $pago->stripe_payment_link ?: 'Sin enlace' }}</p>
+                    </div>
+                @endunless
+                @if ($canManagePayments && $pago->estado_pago === 'PENDIENTE' && $pago->stripe_payment_id)
                     <form method="POST" action="{{ route('gestion-postulantes-admision.pagos.verificar', $pago) }}">
                         @csrf
                         <button type="submit" class="btn btn-primary w-full">Verificar pago</button>

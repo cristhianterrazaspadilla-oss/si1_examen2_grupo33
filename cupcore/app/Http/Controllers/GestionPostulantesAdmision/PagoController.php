@@ -31,9 +31,17 @@ class PagoController extends Controller
     {
         $search = trim((string) $request->string('search'));
         $estadoPago = $request->string('estado_pago')->toString();
+        $isPostulante = $this->isPostulante();
+        $canManagePayments = $this->canManagePayments();
 
         $pagos = Pago::query()
             ->with('postulante')
+            ->when($isPostulante, function ($query): void {
+                $query->whereHas(
+                    'postulante',
+                    fn ($postulanteQuery) => $postulanteQuery->where('usuario_id', auth()->id())
+                );
+            })
             ->when($search !== '', function ($query) use ($search): void {
                 $query->whereHas('postulante', function ($postulanteQuery) use ($search): void {
                     $postulanteQuery->where('ci', 'like', "%{$search}%")
@@ -51,11 +59,15 @@ class PagoController extends Controller
             'pagos' => $pagos,
             'search' => $search,
             'estadoPago' => $estadoPago,
+            'isPostulante' => $isPostulante,
+            'canManagePayments' => $canManagePayments,
         ]);
     }
 
     public function create(): View
     {
+        $this->authorizePaymentManagement();
+
         $postulantes = Postulante::query()
             ->where('estado_inscripcion', 'REQUISITOS_APROBADOS')
             ->whereDoesntHave('pagos', fn ($query) => $query->where('estado_pago', 'PENDIENTE'))
@@ -70,6 +82,8 @@ class PagoController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $this->authorizePaymentManagement();
+
         $validated = $request->validate([
             'postulante_id' => ['required', 'exists:postulantes,id'],
             'monto' => ['required', 'numeric', 'min:1'],
@@ -201,12 +215,18 @@ class PagoController extends Controller
     public function show(Pago $pago): View
     {
         $pago->load('postulante');
+        $this->authorizePago($pago);
 
-        return view('gestion_postulantes_admision.pagos.show', compact('pago'));
+        return view('gestion_postulantes_admision.pagos.show', [
+            'pago' => $pago,
+            'isPostulante' => $this->isPostulante(),
+            'canManagePayments' => $this->canManagePayments(),
+        ]);
     }
 
     public function edit(Pago $pago): View
     {
+        $this->authorizePaymentManagement();
         $pago->load('postulante');
 
         return view('gestion_postulantes_admision.pagos.edit', compact('pago'));
@@ -214,6 +234,8 @@ class PagoController extends Controller
 
     public function update(Request $request, Pago $pago): RedirectResponse
     {
+        $this->authorizePaymentManagement();
+
         $validated = $request->validate([
             'observacion' => ['nullable', 'string'],
         ]);
@@ -229,6 +251,7 @@ class PagoController extends Controller
 
     public function verificar(Pago $pago): RedirectResponse
     {
+        $this->authorizePaymentManagement();
         $pago->load('postulante');
 
         if ($pago->estado_pago === 'CONFIRMADO') {
@@ -372,6 +395,7 @@ class PagoController extends Controller
 
     public function destroy(Pago $pago): RedirectResponse
     {
+        $this->authorizePaymentManagement();
         $pago->loadMissing('postulante');
 
         DB::transaction(function () use ($pago): void {
@@ -397,5 +421,37 @@ class PagoController extends Controller
         return redirect()
             ->route('gestion-postulantes-admision.pagos.index')
             ->with('success', 'Pago anulado correctamente.');
+    }
+
+    protected function authorizePago(Pago $pago): void
+    {
+        if (! $this->isPostulante()) {
+            return;
+        }
+
+        abort_unless($pago->postulante?->usuario_id === auth()->id(), 403);
+    }
+
+    protected function authorizePaymentManagement(): void
+    {
+        abort_unless($this->canManagePayments(), 403);
+    }
+
+    protected function isPostulante(): bool
+    {
+        return $this->roleName() === 'postulante';
+    }
+
+    protected function canManagePayments(): bool
+    {
+        return $this->roleName() === 'administrador';
+    }
+
+    protected function roleName(): string
+    {
+        return Str::of((string) (auth()->user()?->rol?->nombre ?? ''))
+            ->lower()
+            ->ascii()
+            ->toString();
     }
 }

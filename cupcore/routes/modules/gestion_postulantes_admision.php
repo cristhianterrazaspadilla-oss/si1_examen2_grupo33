@@ -22,12 +22,12 @@ Route::prefix('gestion-postulantes-admision')->name('gestion-postulantes-admisio
     Route::put('requisitos-postulantes/{postulante}', [PostulanteRequisitoController::class, 'update'])
         ->middleware('auth')
         ->name('requisitos-postulantes.update');
-    Route::post('pagos/{pago}/verificar', [PagoController::class, 'verificar'])
-        ->middleware('auth')
-        ->name('pagos.verificar');
-    Route::resource('pagos', PagoController::class);
+    Route::middleware('auth')->group(function (): void {
+        Route::post('pagos/{pago}/verificar', [PagoController::class, 'verificar'])
+            ->name('pagos.verificar');
+        Route::resource('pagos', PagoController::class);
+    });
     Route::resource('carreras', CarreraController::class);
     Route::resource('cupos', CupoCarreraController::class);
     Route::resource('resultados', ResultadoAdmisionController::class);
 });
-

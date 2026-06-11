@@ -4,8 +4,15 @@
 
 @section('content')
     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
-        <x-page-title title="Gestionar Pagos" subtitle="CU7 Fase 1 y 2. Genera enlaces de Stripe Checkout y permite verificar el estado real del pago en Stripe." />
-        <a href="{{ route('gestion-postulantes-admision.pagos.create') }}" class="btn btn-primary w-full sm:w-auto">Nuevo pago</a>
+        <x-page-title
+            :title="$isPostulante ? 'Mis Pagos' : 'Gestionar Pagos'"
+            :subtitle="$isPostulante
+                ? 'Consulta únicamente tus pagos y verifica su estado en Stripe.'
+                : 'CU7 Fase 1 y 2. Genera enlaces de Stripe Checkout y permite verificar el estado real del pago en Stripe.'"
+        />
+        @if ($canManagePayments)
+            <a href="{{ route('gestion-postulantes-admision.pagos.create') }}" class="btn btn-primary w-full sm:w-auto">Nuevo pago</a>
+        @endif
     </div>
 
     @if (session('success'))
@@ -40,15 +47,21 @@
     @endif
 
     <div class="alert alert-info mb-6">
-        <span>La verificacion consulta directamente el estado del pago en Stripe. Solo si Stripe devuelve payment_status paid se confirma el pago y se inscribe al postulante.</span>
+        <span>
+            {{ $isPostulante
+                ? 'Aquí puedes consultar el estado de tus pagos y abrir el enlace de pago cuando esté disponible.'
+                : 'La verificacion consulta directamente el estado del pago en Stripe. Solo si Stripe devuelve payment_status paid se confirma el pago y se inscribe al postulante.' }}
+        </span>
     </div>
 
-    <x-card title="Busqueda y filtros">
+    <x-card :title="$isPostulante ? 'Filtros de mis pagos' : 'Busqueda y filtros'">
         <form method="GET" action="{{ route('gestion-postulantes-admision.pagos.index') }}" class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            <label class="form-control sm:col-span-2 md:col-span-3">
-                <span class="label-text">Buscar por CI, nombres, apellidos o correo del postulante</span>
-                <input type="text" name="search" value="{{ $search }}" class="input input-bordered">
-            </label>
+            @unless ($isPostulante)
+                <label class="form-control sm:col-span-2 md:col-span-3">
+                    <span class="label-text">Buscar por CI, nombres, apellidos o correo del postulante</span>
+                    <input type="text" name="search" value="{{ $search }}" class="input input-bordered">
+                </label>
+            @endunless
 
             <label class="form-control">
                 <span class="label-text">Estado del pago</span>
@@ -67,7 +80,7 @@
         </form>
     </x-card>
 
-    <x-card title="Listado de pagos">
+    <x-card :title="$isPostulante ? 'Mis pagos registrados' : 'Listado de pagos'">
         <div class="overflow-x-auto">
             <table class="table min-w-[1100px]">
                 <thead>
@@ -108,18 +121,20 @@
                             <td>
                                 <div class="flex justify-end gap-2">
                                     <a href="{{ route('gestion-postulantes-admision.pagos.show', $pago) }}" class="btn btn-sm btn-outline">Ver</a>
-                                    @if ($pago->estado_pago === 'PENDIENTE' && $pago->stripe_payment_id)
-                                        <form method="POST" action="{{ route('gestion-postulantes-admision.pagos.verificar', $pago) }}">
+                                    @if ($canManagePayments)
+                                        @if ($pago->estado_pago === 'PENDIENTE' && $pago->stripe_payment_id)
+                                            <form method="POST" action="{{ route('gestion-postulantes-admision.pagos.verificar', $pago) }}">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-primary">Verificar pago</button>
+                                            </form>
+                                        @endif
+                                        <a href="{{ route('gestion-postulantes-admision.pagos.edit', $pago) }}" class="btn btn-sm btn-info">Editar</a>
+                                        <form method="POST" action="{{ route('gestion-postulantes-admision.pagos.destroy', $pago) }}">
                                             @csrf
-                                            <button type="submit" class="btn btn-sm btn-primary">Verificar pago</button>
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-warning" onclick="return confirm('Deseas anular este pago pendiente?')">Anular</button>
                                         </form>
                                     @endif
-                                    <a href="{{ route('gestion-postulantes-admision.pagos.edit', $pago) }}" class="btn btn-sm btn-info">Editar</a>
-                                    <form method="POST" action="{{ route('gestion-postulantes-admision.pagos.destroy', $pago) }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-warning" onclick="return confirm('Deseas anular este pago pendiente?')">Anular</button>
-                                    </form>
                                 </div>
                             </td>
                         </tr>
