@@ -10,7 +10,10 @@
     use Illuminate\Support\Facades\Route;
     use Illuminate\Support\Str;
 
-    $isLoginScreen = request()->routeIs('login') || request()->routeIs('login.process');
+    $isLoginScreen = request()->routeIs('login')
+        || request()->routeIs('login.process')
+        || request()->routeIs('password.demo')
+        || request()->routeIs('password.demo.store');
     $currentTitle = trim($__env->yieldContent('title', 'CUPCore'));
     $authenticatedUser = auth()->user();
     $displayName = trim((string) (($authenticatedUser?->nombre ?? '') . ' ' . ($authenticatedUser?->apellido ?? '')));
@@ -38,7 +41,7 @@
             'title' => 'Gestión de Postulantes y Admisión',
             'roles' => ['administrador', 'coordinador', 'postulante'],
             'items' => [
-                ['label' => 'Postulantes / Inscripción', 'route' => 'gestion-postulantes-admision.postulantes.index', 'roles' => ['administrador', 'postulante'], 'active' => ['gestion-postulantes-admision.postulantes.*']],
+                ['label' => $normalizedRole === 'postulante' ? 'Mi inscripción' : 'Postulantes / Inscripción', 'route' => 'gestion-postulantes-admision.postulantes.index', 'roles' => ['administrador', 'postulante'], 'active' => ['gestion-postulantes-admision.postulantes.*']],
                 ['label' => 'Requisitos', 'route' => 'gestion-postulantes-admision.requisitos-postulantes.index', 'roles' => ['administrador', 'coordinador'], 'active' => ['gestion-postulantes-admision.requisitos-postulantes.*', 'gestion-postulantes-admision.requisitos.*']],
                 ['label' => 'Pagos', 'route' => 'gestion-postulantes-admision.pagos.index', 'roles' => ['administrador', 'coordinador', 'postulante'], 'active' => ['gestion-postulantes-admision.pagos.*']],
                 ['label' => 'Carreras', 'route' => 'gestion-postulantes-admision.carreras.index', 'roles' => ['administrador', 'coordinador'], 'active' => ['gestion-postulantes-admision.carreras.*']],

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Pago;
 use App\Models\Postulante;
 use App\Support\BitacoraHelper;
+use App\Support\NotificacionHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -201,6 +202,13 @@ class PagoController extends Controller
             'Se genero un enlace de pago para el postulante CI ' . $postulante->ci . '.'
         );
 
+        NotificacionHelper::enviar(
+            $postulante->usuario_id,
+            'Enlace de pago disponible',
+            'Se generó tu enlace de pago de inscripción. Puedes abrirlo desde la sección Mis Pagos.',
+            'PAGO'
+        );
+
         BitacoraHelper::registrar(
             'REGISTRAR_PAGO',
             'Pagos',
@@ -371,6 +379,13 @@ class PagoController extends Controller
                 'Se confirmo el pago del postulante CI ' . (string) $pago->postulante?->ci . '.'
             );
 
+            NotificacionHelper::enviar(
+                $pago->postulante?->usuario_id,
+                'Pago confirmado',
+                'Tu pago fue confirmado correctamente y tu estado de inscripción cambió a INSCRITO.',
+                'PAGO'
+            );
+
             return redirect()
                 ->route('gestion-postulantes-admision.pagos.show', $pago)
                 ->with('success', 'Pago confirmado correctamente. El postulante fue inscrito.');
@@ -444,7 +459,7 @@ class PagoController extends Controller
 
     protected function canManagePayments(): bool
     {
-        return $this->roleName() === 'administrador';
+        return in_array($this->roleName(), ['administrador', 'coordinador'], true);
     }
 
     protected function roleName(): string

@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Support\BitacoraHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -22,8 +23,16 @@ use Illuminate\View\View;
 class PostulanteController extends Controller
 {
     // Controlador del caso de uso: CU5 Gestionar Inscripción de Postulantes
-    public function index(Request $request): View
+    public function index(Request $request): View|RedirectResponse
     {
+        if ($this->isPostulante()) {
+            $postulante = Postulante::query()->where('usuario_id', auth()->id())->first();
+
+            return $postulante
+                ? redirect()->route('gestion-postulantes-admision.postulantes.show', $postulante)
+                : redirect()->route('gestion-postulantes-admision.postulantes.create');
+        }
+
         $search = trim((string) $request->string('search'));
         $estadoInscripcion = $request->string('estado_inscripcion')->toString();
         $estadoAdmision = $request->string('estado_admision')->toString();
@@ -53,8 +62,16 @@ class PostulanteController extends Controller
         ]);
     }
 
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
+        if ($this->isPostulante()) {
+            $postulante = Postulante::query()->where('usuario_id', auth()->id())->first();
+
+            if ($postulante) {
+                return redirect()->route('gestion-postulantes-admision.postulantes.edit', $postulante);
+            }
+        }
+
         return view('gestion_postulantes_admision.postulantes.create', [
             'carreras' => $this->getCarrerasActivas(),
             'usuarios' => $this->getUsuariosPostulanteDisponibles(),
@@ -64,6 +81,10 @@ class PostulanteController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $this->validatePostulante($request);
+        if ($this->isPostulante()) {
+            abort_if(Postulante::query()->where('usuario_id', auth()->id())->exists(), 403);
+            $validated['usuario_id'] = auth()->id();
+        }
         $validated['estado_inscripcion'] = 'PRE_REGISTRADO';
         $validated['estado_admision'] = 'PENDIENTE';
 
@@ -81,6 +102,7 @@ class PostulanteController extends Controller
 
     public function show(Postulante $postulante): View
     {
+        $this->authorizePostulante($postulante);
         $postulante->load(['usuario.rol', 'carreraPrimeraOpcion', 'carreraSegundaOpcion']);
 
         return view('gestion_postulantes_admision.postulantes.show', compact('postulante'));
@@ -88,6 +110,8 @@ class PostulanteController extends Controller
 
     public function edit(Postulante $postulante): View
     {
+        $this->authorizePostulante($postulante);
+
         return view('gestion_postulantes_admision.postulantes.edit', [
             'postulante' => $postulante,
             'carreras' => $this->getCarrerasActivas(),
@@ -97,7 +121,11 @@ class PostulanteController extends Controller
 
     public function update(Request $request, Postulante $postulante): RedirectResponse
     {
+        $this->authorizePostulante($postulante);
         $validated = $this->validatePostulante($request, $postulante);
+        if ($this->isPostulante()) {
+            $validated['usuario_id'] = auth()->id();
+        }
         $postulante->update($validated);
         BitacoraHelper::registrar(
             'ACTUALIZAR_POSTULANTE',
@@ -112,6 +140,7 @@ class PostulanteController extends Controller
 
     public function destroy(Postulante $postulante): RedirectResponse
     {
+        abort_unless($this->roleName() === 'administrador', 403);
         $postulante->update(['estado_inscripcion' => 'OBSERVADO']);
         BitacoraHelper::registrar(
             'DESACTIVAR_POSTULANTE',
@@ -182,6 +211,10 @@ class PostulanteController extends Controller
 
     protected function getUsuariosPostulanteDisponibles(?Postulante $postulante = null)
     {
+        if ($this->isPostulante()) {
+            return User::query()->whereKey(auth()->id())->get();
+        }
+
         return User::query()
             ->with('rol')
             ->where('estado', 'ACTIVO')
@@ -196,5 +229,25 @@ class PostulanteController extends Controller
             ->orderBy('nombre')
             ->orderBy('apellido')
             ->get();
+    }
+
+    protected function authorizePostulante(Postulante $postulante): void
+    {
+        if ($this->isPostulante()) {
+            abort_unless((int) $postulante->usuario_id === (int) auth()->id(), 403);
+        }
+    }
+
+    protected function isPostulante(): bool
+    {
+        return $this->roleName() === 'postulante';
+    }
+
+    protected function roleName(): string
+    {
+        return Str::of((string) (auth()->user()?->rol?->nombre ?? ''))
+            ->lower()
+            ->ascii()
+            ->toString();
     }
 }

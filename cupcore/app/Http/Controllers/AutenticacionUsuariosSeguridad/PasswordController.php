@@ -15,33 +15,16 @@ class PasswordController extends Controller
         return view('autenticacion_usuarios_seguridad.password.index');
     }
 
-    public function create(): View
-    {
-        return view('autenticacion_usuarios_seguridad.password.create');
-    }
-
     public function store(Request $request): RedirectResponse
     {
-        return redirect()->route('autenticacion-usuarios-seguridad.password.index');
+        $request->validate([
+            'correo' => ['required', 'email'],
+        ]);
+
+        // Flujo demostrativo solicitado: no revela si el correo existe ni envía mensajes reales.
+        return redirect()
+            ->route('password.demo')
+            ->with('success', 'Si el correo está registrado, recibirás instrucciones para recuperar tu contraseña. Esta versión es demostrativa y no envía correos.');
     }
 
-    public function show(string $id): View
-    {
-        return view('autenticacion_usuarios_seguridad.password.show', compact('id'));
-    }
-
-    public function edit(string $id): View
-    {
-        return view('autenticacion_usuarios_seguridad.password.edit', compact('id'));
-    }
-
-    public function update(Request $request, string $id): RedirectResponse
-    {
-        return redirect()->route('autenticacion-usuarios-seguridad.password.show', $id);
-    }
-
-    public function destroy(string $id): RedirectResponse
-    {
-        return redirect()->route('autenticacion-usuarios-seguridad.password.index');
-    }
 }

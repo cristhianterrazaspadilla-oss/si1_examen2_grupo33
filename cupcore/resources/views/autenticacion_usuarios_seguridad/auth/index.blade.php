@@ -168,7 +168,7 @@
                                 >
                                 <span class="label-text text-sm text-slate-300">Recordar sesion</span>
                             </label>
-                            <a href="{{ route('login') }}#soporte-acceso" class="text-sm font-medium text-blue-300 transition hover:text-blue-200">
+                            <a href="{{ route('password.demo') }}" class="text-sm font-medium text-blue-300 transition hover:text-blue-200">
                                 Olvidaste tu contrasena?
                             </a>
                         </div>

@@ -15,6 +15,7 @@ beforeEach(function () {
     Schema::create('roles', function (Blueprint $table): void {
         $table->id();
         $table->string('nombre');
+        $table->string('estado')->default('ACTIVO');
         $table->timestamps();
     });
 
@@ -25,6 +26,7 @@ beforeEach(function () {
         $table->string('apellido');
         $table->string('correo');
         $table->string('password');
+        $table->string('estado')->default('ACTIVO');
         $table->timestamps();
     });
 
@@ -184,5 +186,25 @@ test('a postulante cannot access payment management actions', function () {
     $this
         ->actingAs($scenario['user'])
         ->delete(route('gestion-postulantes-admision.pagos.destroy', $scenario['ownPayment']))
+        ->assertForbidden();
+});
+
+test('a postulante cannot open or modify another postulante profile', function () {
+    $scenario = createPaymentScenario();
+    $otherPostulante = $scenario['otherPayment']->postulante;
+
+    $this
+        ->actingAs($scenario['user'])
+        ->get(route('gestion-postulantes-admision.postulantes.show', $otherPostulante))
+        ->assertForbidden();
+
+    $this
+        ->actingAs($scenario['user'])
+        ->get(route('gestion-postulantes-admision.postulantes.edit', $otherPostulante))
+        ->assertForbidden();
+
+    $this
+        ->actingAs($scenario['user'])
+        ->delete(route('gestion-postulantes-admision.postulantes.destroy', $scenario['ownPayment']->postulante))
         ->assertForbidden();
 });

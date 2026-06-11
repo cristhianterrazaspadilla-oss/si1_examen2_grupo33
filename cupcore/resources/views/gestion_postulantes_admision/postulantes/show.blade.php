@@ -7,11 +7,13 @@
         <x-page-title title="Detalle de Postulante" subtitle="CU5 Gestionar Inscripcion de Postulantes" />
         <div class="flex flex-wrap gap-2 w-full sm:w-auto">
             <a href="{{ route('gestion-postulantes-admision.postulantes.edit', $postulante) }}" class="btn btn-info w-full sm:w-auto">Editar</a>
-            <form method="POST" action="{{ route('gestion-postulantes-admision.postulantes.destroy', $postulante) }}" class="w-full sm:w-auto">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-warning w-full" onclick="return confirm('Deseas marcar este pre-registro como OBSERVADO?')">Observar</button>
-            </form>
+            @if ($normalizedRole === 'administrador')
+                <form method="POST" action="{{ route('gestion-postulantes-admision.postulantes.destroy', $postulante) }}" class="w-full sm:w-auto">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-warning w-full" onclick="return confirm('Deseas marcar este pre-registro como OBSERVADO?')">Observar</button>
+                </form>
+            @endif
             <a href="{{ route('gestion-postulantes-admision.postulantes.index') }}" class="btn btn-outline w-full sm:w-auto">Volver</a>
         </div>
     </div>

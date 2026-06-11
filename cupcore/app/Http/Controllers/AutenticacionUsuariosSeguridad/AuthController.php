@@ -51,6 +51,16 @@ class AuthController extends Controller
                 ->onlyInput('correo');
         }
 
+        if (auth()->user()?->rol?->estado !== 'ACTIVO') {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return back()
+                ->withInput($request->only('correo'))
+                ->withErrors(['correo' => 'El rol de esta cuenta se encuentra inactivo.']);
+        }
+
         $request->session()->regenerate();
 
         BitacoraHelper::registrar(

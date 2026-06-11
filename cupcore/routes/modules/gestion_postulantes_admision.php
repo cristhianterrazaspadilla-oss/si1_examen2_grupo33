@@ -10,24 +10,25 @@ use App\Http\Controllers\GestionPostulantesAdmision\CupoCarreraController;
 use App\Http\Controllers\GestionPostulantesAdmision\ResultadoAdmisionController;
 
 Route::prefix('gestion-postulantes-admision')->name('gestion-postulantes-admision.')->group(function (): void {
-    Route::resource('postulantes', PostulanteController::class);
-    Route::resource('requisitos', RequisitoController::class);
-    Route::resource('postulante-requisitos', PostulanteRequisitoController::class);
-    Route::get('requisitos-postulantes', [PostulanteRequisitoController::class, 'index'])
-        ->middleware('auth')
-        ->name('requisitos-postulantes.index');
-    Route::get('requisitos-postulantes/{postulante}', [PostulanteRequisitoController::class, 'show'])
-        ->middleware('auth')
-        ->name('requisitos-postulantes.show');
-    Route::put('requisitos-postulantes/{postulante}', [PostulanteRequisitoController::class, 'update'])
-        ->middleware('auth')
-        ->name('requisitos-postulantes.update');
-    Route::middleware('auth')->group(function (): void {
+    Route::middleware(['auth', 'role:administrador,postulante'])->group(function (): void {
+        Route::resource('postulantes', PostulanteController::class);
+    });
+
+    Route::middleware(['auth', 'role:administrador,coordinador'])->group(function (): void {
+        Route::resource('requisitos', RequisitoController::class);
+        Route::get('requisitos-postulantes', [PostulanteRequisitoController::class, 'index'])
+            ->name('requisitos-postulantes.index');
+        Route::get('requisitos-postulantes/{postulante}', [PostulanteRequisitoController::class, 'show'])
+            ->name('requisitos-postulantes.show');
+        Route::put('requisitos-postulantes/{postulante}', [PostulanteRequisitoController::class, 'update'])
+            ->name('requisitos-postulantes.update');
+        Route::resource('carreras', CarreraController::class);
+        Route::resource('cupos', CupoCarreraController::class);
+    });
+
+    Route::middleware(['auth', 'role:administrador,coordinador,postulante'])->group(function (): void {
         Route::post('pagos/{pago}/verificar', [PagoController::class, 'verificar'])
             ->name('pagos.verificar');
         Route::resource('pagos', PagoController::class);
     });
-    Route::resource('carreras', CarreraController::class);
-    Route::resource('cupos', CupoCarreraController::class);
-    Route::resource('resultados', ResultadoAdmisionController::class);
 });

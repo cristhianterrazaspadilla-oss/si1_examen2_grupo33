@@ -7,6 +7,7 @@ use App\Models\Grupo;
 use App\Models\GrupoPostulante;
 use App\Models\Postulante;
 use App\Support\BitacoraHelper;
+use App\Support\NotificacionHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -216,6 +217,13 @@ class GrupoController extends Controller
                     'ASIGNAR_POSTULANTE_GRUPO',
                     'Grupos',
                     'Se asigno el postulante CI ' . $postulante->ci . ' al grupo ' . $grupo->nombre . '.'
+                );
+
+                NotificacionHelper::enviar(
+                    $postulante->usuario_id,
+                    'Asignación de grupo',
+                    'Fuiste asignado al ' . $grupo->nombre . ' para la gestión ' . $grupo->gestion . '.',
+                    'GRUPO'
                 );
             }
 

@@ -11,6 +11,7 @@ use App\Models\Materia;
 use App\Models\Postulante;
 use App\Models\ResultadoAdmision;
 use App\Support\BitacoraHelper;
+use App\Support\NotificacionHelper;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -628,7 +629,16 @@ class ResultadoAdmisionController extends Controller
             }
         }
 
-        return ResultadoAdmision::query()->findOrFail($resultadoId);
+        $resultado = ResultadoAdmision::query()->findOrFail($resultadoId);
+
+        NotificacionHelper::enviar(
+            $postulante->usuario_id,
+            'Resultado de admisión disponible',
+            'Tu resultado de admisión ya está disponible. Estado: ' . $resultado->estado_resultado . '.',
+            'RESULTADO'
+        );
+
+        return $resultado;
     }
 
     /**

@@ -9,14 +9,15 @@ use App\Http\Controllers\AutenticacionUsuariosSeguridad\PasswordController;
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+Route::get('/recuperar-password', [PasswordController::class, 'index'])->name('password.demo');
+Route::post('/recuperar-password', [PasswordController::class, 'store'])->name('password.demo.store');
 
 Route::prefix('autenticacion-usuarios-seguridad')
     ->name('autenticacion-usuarios-seguridad.')
-    ->middleware('auth')
+    ->middleware(['auth', 'role:administrador'])
     ->group(function (): void {
         Route::resource('usuarios', UsuarioController::class);
         Route::resource('roles', RolController::class);
         Route::resource('importaciones', ImportacionController::class);
-        Route::resource('password', PasswordController::class);
     });

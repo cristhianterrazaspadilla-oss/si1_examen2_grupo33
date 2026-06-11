@@ -8,6 +8,7 @@ use App\Models\Horario;
 use App\Support\BitacoraHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -27,8 +28,15 @@ class AsistenciaDocenteController extends Controller
      */
     public function index(Request $request): View
     {
+        $currentDocenteId = $this->currentDocenteId();
+        $horariosDocente = Horario::query()
+            ->where('docente_id', $currentDocenteId)
+            ->where('estado', 'ACTIVO');
+        $grupoIds = (clone $horariosDocente)->pluck('grupo_id');
+        $materiaIds = (clone $horariosDocente)->pluck('materia_id');
+        $aulaIds = (clone $horariosDocente)->pluck('aula_id');
         $fecha = $request->string('fecha')->toString();
-        $docenteId = $request->string('docente_id')->toString();
+        $docenteId = (string) $currentDocenteId;
         $grupoId = $request->string('grupo_id')->toString();
         $materiaId = $request->string('materia_id')->toString();
         $aulaId = $request->string('aula_id')->toString();
@@ -40,6 +48,7 @@ class AsistenciaDocenteController extends Controller
             ->join('horarios', 'horarios.id', '=', 'asistencias_docentes.horario_id')
             ->join('grupos', 'grupos.id', '=', 'horarios.grupo_id')
             ->with(['docente', 'horario.grupo', 'horario.materia', 'horario.aula'])
+            ->where('asistencias_docentes.docente_id', $currentDocenteId)
             ->when($fecha !== '', fn ($query) => $query->whereDate('asistencias_docentes.fecha', $fecha))
             ->when($docenteId !== '', fn ($query) => $query->where('asistencias_docentes.docente_id', $docenteId))
             ->when($grupoId !== '', fn ($query) => $query->where('horarios.grupo_id', $grupoId))
@@ -65,15 +74,15 @@ class AsistenciaDocenteController extends Controller
             'gestion' => $gestion,
             'estadosAsistencia' => $this->estadosAsistencia(),
             'gestionesAcademicas' => $this->gestionesAcademicas(),
-            'docentes' => DB::table('docentes')->where('estado', 'ACTIVO')->orderBy('apellidos')->orderBy('nombres')->get(),
-            'grupos' => DB::table('grupos')->where('estado', 'ACTIVO')->orderByDesc('gestion')->orderBy('nombre')->get(),
-            'materias' => DB::table('materias')->where('estado', 'ACTIVO')->orderBy('nombre')->get(),
-            'aulas' => DB::table('aulas')->where('estado', 'ACTIVO')->orderBy('nombre')->get(),
-            'totalAsistencias' => AsistenciaDocente::count(),
-            'presentesCount' => AsistenciaDocente::where('estado_asistencia', 'PRESENTE')->count(),
-            'ausentesCount' => AsistenciaDocente::where('estado_asistencia', 'AUSENTE')->count(),
-            'retrasosCount' => AsistenciaDocente::where('estado_asistencia', 'RETRASO')->count(),
-            'justificadasCount' => AsistenciaDocente::where('estado_asistencia', 'JUSTIFICADO')->count(),
+            'docentes' => DB::table('docentes')->where('id', $currentDocenteId)->get(),
+            'grupos' => DB::table('grupos')->whereIn('id', $grupoIds)->where('estado', 'ACTIVO')->orderByDesc('gestion')->orderBy('nombre')->get(),
+            'materias' => DB::table('materias')->whereIn('id', $materiaIds)->where('estado', 'ACTIVO')->orderBy('nombre')->get(),
+            'aulas' => DB::table('aulas')->whereIn('id', $aulaIds)->where('estado', 'ACTIVO')->orderBy('nombre')->get(),
+            'totalAsistencias' => AsistenciaDocente::where('docente_id', $currentDocenteId)->count(),
+            'presentesCount' => AsistenciaDocente::where('docente_id', $currentDocenteId)->where('estado_asistencia', 'PRESENTE')->count(),
+            'ausentesCount' => AsistenciaDocente::where('docente_id', $currentDocenteId)->where('estado_asistencia', 'AUSENTE')->count(),
+            'retrasosCount' => AsistenciaDocente::where('docente_id', $currentDocenteId)->where('estado_asistencia', 'RETRASO')->count(),
+            'justificadasCount' => AsistenciaDocente::where('docente_id', $currentDocenteId)->where('estado_asistencia', 'JUSTIFICADO')->count(),
         ]);
     }
 
@@ -93,13 +102,14 @@ class AsistenciaDocenteController extends Controller
     {
         $validated = $this->validateAsistenciaRequest($request);
         $horario = $this->resolveHorarioValido((int) $validated['horario_id']);
+        $this->validateScheduledDate($horario, $validated['fecha']);
         $this->ensureNoDuplicate($horario->docente_id, $horario->id, $validated['fecha']);
 
         $asistenciaId = DB::table('asistencias_docentes')->insertGetId([
             'horario_id' => $horario->id,
             'docente_id' => $horario->docente_id,
             'fecha' => $validated['fecha'],
-            'hora_registro' => $validated['hora_registro'] ?? null,
+            'hora_registro' => now()->format('H:i'),
             'estado_asistencia' => $validated['estado_asistencia'],
             'observacion' => $validated['observacion'] ?? null,
             'created_at' => now(),
@@ -119,6 +129,7 @@ class AsistenciaDocenteController extends Controller
 
     public function show(AsistenciaDocente $asistenciaDocente): View
     {
+        $this->authorizeAsistencia($asistenciaDocente);
         $asistenciaDocente->load(['docente', 'horario.grupo', 'horario.materia', 'horario.aula']);
 
         return view('gestion_academica_cup.asistencias_docentes.show', [
@@ -128,6 +139,7 @@ class AsistenciaDocenteController extends Controller
 
     public function edit(AsistenciaDocente $asistenciaDocente): View
     {
+        $this->authorizeAsistencia($asistenciaDocente);
         $asistenciaDocente->load(['horario.grupo', 'horario.materia', 'horario.docente', 'horario.aula']);
 
         return view('gestion_academica_cup.asistencias_docentes.edit', [
@@ -143,8 +155,10 @@ class AsistenciaDocenteController extends Controller
      */
     public function update(Request $request, AsistenciaDocente $asistenciaDocente): RedirectResponse
     {
+        $this->authorizeAsistencia($asistenciaDocente);
         $validated = $this->validateAsistenciaRequest($request);
         $horario = $this->resolveHorarioValido((int) $validated['horario_id']);
+        $this->validateScheduledDate($horario, $validated['fecha']);
         $this->ensureNoDuplicate($horario->docente_id, $horario->id, $validated['fecha'], $asistenciaDocente->id);
 
         DB::table('asistencias_docentes')
@@ -153,7 +167,7 @@ class AsistenciaDocenteController extends Controller
                 'horario_id' => $horario->id,
                 'docente_id' => $horario->docente_id,
                 'fecha' => $validated['fecha'],
-                'hora_registro' => $validated['hora_registro'] ?? null,
+                'hora_registro' => $asistenciaDocente->hora_registro ?: now()->format('H:i'),
                 'estado_asistencia' => $validated['estado_asistencia'],
                 'observacion' => $validated['observacion'] ?? null,
                 'updated_at' => now(),
@@ -173,7 +187,7 @@ class AsistenciaDocenteController extends Controller
     protected function validateAsistenciaRequest(Request $request): array
     {
         return $request->validate([
-            'fecha' => ['required', 'date'],
+            'fecha' => ['required', 'date', 'before_or_equal:today'],
             'horario_id' => ['required', 'exists:horarios,id'],
             'estado_asistencia' => ['required', Rule::in($this->estadosAsistencia())],
             'hora_registro' => ['nullable', 'date_format:H:i'],
@@ -192,8 +206,11 @@ class AsistenciaDocenteController extends Controller
             ->findOrFail($horarioId);
 
         $errors = [];
+        $currentDocenteId = $this->currentDocenteId();
 
-        if ($horario->estado !== 'ACTIVO') {
+        if ((int) $horario->docente_id !== $currentDocenteId) {
+            $errors['horario_id'] = 'Solo puedes registrar asistencia en tus propios horarios.';
+        } elseif ($horario->estado !== 'ACTIVO') {
             $errors['horario_id'] = 'Solo se pueden registrar asistencias sobre horarios activos.';
         } elseif (! $horario->docente || $horario->docente->estado !== 'ACTIVO') {
             $errors['horario_id'] = 'El docente del horario seleccionado esta inactivo.';
@@ -239,6 +256,7 @@ class AsistenciaDocenteController extends Controller
                     $query->orWhere('id', $currentHorarioId);
                 }
             })
+            ->where('docente_id', $this->currentDocenteId())
             ->orderByDesc(
                 DB::table('grupos')
                     ->select('gestion')
@@ -255,6 +273,40 @@ class AsistenciaDocenteController extends Controller
                     && $horario->aula?->estado === 'ACTIVO';
             })
             ->values();
+    }
+
+    protected function currentDocenteId(): int
+    {
+        $docente = auth()->user()?->docente;
+
+        abort_unless($docente && $docente->estado === 'ACTIVO', 403);
+
+        return (int) $docente->id;
+    }
+
+    protected function authorizeAsistencia(AsistenciaDocente $asistencia): void
+    {
+        abort_unless((int) $asistencia->docente_id === $this->currentDocenteId(), 403);
+    }
+
+    protected function validateScheduledDate(Horario $horario, string $fecha): void
+    {
+        $dias = [
+            1 => 'LUNES',
+            2 => 'MARTES',
+            3 => 'MIERCOLES',
+            4 => 'JUEVES',
+            5 => 'VIERNES',
+            6 => 'SABADO',
+            7 => 'DOMINGO',
+        ];
+        $diaFecha = $dias[Carbon::parse($fecha)->dayOfWeekIso];
+
+        if ($diaFecha !== $horario->dia_semana) {
+            throw ValidationException::withMessages([
+                'fecha' => "La fecha seleccionada no corresponde al día {$horario->dia_semana} del horario.",
+            ]);
+        }
     }
 
     protected function estadosAsistencia(): array

@@ -34,15 +34,9 @@
                 <span class="label-text">Fecha</span>
                 <input type="date" name="fecha" value="{{ $fecha }}" class="input input-bordered w-full">
             </label>
-            <label class="form-control">
-                <span class="label-text">Docente</span>
-                <select name="docente_id" class="select select-bordered w-full">
-                    <option value="">Todos</option>
-                    @foreach ($docentes as $docente)
-                        <option value="{{ $docente->id }}" @selected((string) $docenteId === (string) $docente->id)>{{ trim($docente->nombres . ' ' . $docente->apellidos) }}</option>
-                    @endforeach
-                </select>
-            </label>
+            <div class="rounded-2xl border border-blue-300/15 bg-blue-500/8 p-4 text-sm text-blue-100">
+                Solo se muestran asistencias y horarios asociados a tu perfil docente.
+            </div>
             <label class="form-control">
                 <span class="label-text">Estado asistencia</span>
                 <select name="estado_asistencia" class="select select-bordered w-full">

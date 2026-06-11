@@ -25,7 +25,7 @@
                 <div class="app-form-grid cols-2">
                     <label class="form-control">
                         <span class="label-text">Fecha</span>
-                        <input type="date" name="fecha" value="{{ old('fecha', optional($asistencia->fecha)->format('Y-m-d') ?? $asistencia->fecha) }}" class="input input-bordered w-full" required>
+                        <input type="date" name="fecha" value="{{ old('fecha', optional($asistencia->fecha)->format('Y-m-d') ?? $asistencia->fecha) }}" max="{{ now()->toDateString() }}" class="input input-bordered w-full" required>
                     </label>
                     <label class="form-control md:col-span-2">
                         <span class="label-text">Horario</span>
@@ -52,10 +52,9 @@
                             @endforeach
                         </select>
                     </label>
-                    <label class="form-control">
-                        <span class="label-text">Hora de registro</span>
-                        <input type="time" name="hora_registro" value="{{ old('hora_registro', $asistencia->hora_registro ? substr((string) $asistencia->hora_registro, 0, 5) : '') }}" class="input input-bordered w-full">
-                    </label>
+                    <div class="rounded-2xl border border-blue-300/15 bg-blue-500/8 p-4 text-sm text-blue-100">
+                        Hora registrada: {{ $asistencia->hora_registro ?: 'sin registro' }}. Este valor no se modifica manualmente.
+                    </div>
                 </div>
             </section>
 

@@ -30,15 +30,17 @@
             <section class="app-form-section">
                 <h2 class="app-section-title">Datos principales</h2>
                 <div class="grid gap-4 md:grid-cols-2">
-                    <label class="form-control">
-                        <span class="label-text">Usuario asociado</span>
-                        <select name="usuario_id" class="select select-bordered">
-                            <option value="">Sin asociar</option>
-                            @foreach ($usuarios as $usuario)
-                                <option value="{{ $usuario->id }}" @selected((string) old('usuario_id', $postulante->usuario_id) === (string) $usuario->id)>{{ $usuario->nombre }} {{ $usuario->apellido }} - {{ $usuario->correo }}</option>
-                            @endforeach
-                        </select>
-                    </label>
+                    @if ($normalizedRole === 'administrador')
+                        <label class="form-control">
+                            <span class="label-text">Usuario asociado</span>
+                            <select name="usuario_id" class="select select-bordered">
+                                <option value="">Sin asociar</option>
+                                @foreach ($usuarios as $usuario)
+                                    <option value="{{ $usuario->id }}" @selected((string) old('usuario_id', $postulante->usuario_id) === (string) $usuario->id)>{{ $usuario->nombre }} {{ $usuario->apellido }} - {{ $usuario->correo }}</option>
+                                @endforeach
+                            </select>
+                        </label>
+                    @endif
                     <label class="form-control">
                         <span class="label-text">CI</span>
                         <input type="text" name="ci" value="{{ old('ci', $postulante->ci) }}" class="input input-bordered" maxlength="20" required>

@@ -7,6 +7,7 @@ use App\Models\Postulante;
 use App\Models\PostulanteRequisito;
 use App\Models\Requisito;
 use App\Support\BitacoraHelper;
+use App\Support\NotificacionHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -80,6 +81,7 @@ class PostulanteRequisitoController extends Controller
     public function update(Request $request, Postulante $postulante): RedirectResponse
     {
         $this->ensureRequisitosForPostulante($postulante);
+        $estadoInscripcionAnterior = $postulante->estado_inscripcion;
 
         $validated = $request->validate([
             'requisitos' => ['required', 'array'],
@@ -120,6 +122,25 @@ class PostulanteRequisitoController extends Controller
         }
 
         $this->actualizarEstadoInscripcion($postulante->fresh());
+        $postulanteActualizado = $postulante->fresh();
+
+        if ($postulanteActualizado->estado_inscripcion !== $estadoInscripcionAnterior) {
+            if ($postulanteActualizado->estado_inscripcion === 'REQUISITOS_APROBADOS') {
+                NotificacionHelper::enviar(
+                    $postulanteActualizado->usuario_id,
+                    'Requisitos aprobados',
+                    'Tus requisitos obligatorios fueron aprobados. Ya estás habilitado para continuar con el proceso de pago.',
+                    'REQUISITO'
+                );
+            } elseif ($postulanteActualizado->estado_inscripcion === 'OBSERVADO') {
+                NotificacionHelper::enviar(
+                    $postulanteActualizado->usuario_id,
+                    'Requisitos observados',
+                    'Uno o más requisitos fueron observados. Revisa las observaciones registradas y regulariza la documentación.',
+                    'REQUISITO'
+                );
+            }
+        }
 
         return redirect()
             ->route('gestion-postulantes-admision.requisitos-postulantes.show', $postulante)
