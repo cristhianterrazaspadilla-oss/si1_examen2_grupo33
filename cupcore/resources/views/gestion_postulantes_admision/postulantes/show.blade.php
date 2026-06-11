@@ -7,7 +7,7 @@
         <x-page-title title="Detalle de Postulante" subtitle="CU5 Gestionar Inscripcion de Postulantes" />
         <div class="flex flex-wrap gap-2 w-full sm:w-auto">
             <a href="{{ route('gestion-postulantes-admision.postulantes.edit', $postulante) }}" class="btn btn-info w-full sm:w-auto">Editar</a>
-            @if ($normalizedRole === 'administrador')
+            @if (auth()->user()?->hasRole('Administrador'))
                 <form method="POST" action="{{ route('gestion-postulantes-admision.postulantes.destroy', $postulante) }}" class="w-full sm:w-auto">
                     @csrf
                     @method('DELETE')

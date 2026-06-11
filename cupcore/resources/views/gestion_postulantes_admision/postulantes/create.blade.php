@@ -29,7 +29,7 @@
             <section class="app-form-section">
                 <h2 class="app-section-title">Datos principales</h2>
                 <div class="grid gap-4 md:grid-cols-2">
-                    @if ($normalizedRole === 'administrador')
+                    @if (auth()->user()?->hasRole('Administrador'))
                         <label class="form-control">
                             <span class="label-text">Usuario asociado</span>
                             <select name="usuario_id" class="select select-bordered">
