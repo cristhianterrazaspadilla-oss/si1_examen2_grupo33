@@ -7,7 +7,6 @@ use App\Models\Notificacion;
 use App\Models\Role;
 use App\Models\User;
 use App\Support\BitacoraHelper;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -167,7 +166,7 @@ class NotificacionController extends Controller
         BitacoraHelper::registrar(
             'CREAR_NOTIFICACION',
             'Notificaciones',
-            'Se envio notificacion interna a ' . $receptor->correo . ' con tipo ' . $tipo . '.'
+            'Se envio notificacion interna a '.$receptor->correo.' con tipo '.$tipo.'.'
         );
 
         return redirect()
@@ -214,7 +213,7 @@ class NotificacionController extends Controller
         BitacoraHelper::registrar(
             'MARCAR_NOTIFICACION_LEIDA',
             'Notificaciones',
-            'Se marco como leida la notificacion ID ' . $notificacion->id . '.'
+            'Se marco como leida la notificacion ID '.$notificacion->id.'.'
         );
 
         return redirect()
@@ -248,12 +247,12 @@ class NotificacionController extends Controller
         BitacoraHelper::registrar(
             'MARCAR_TODAS_NOTIFICACIONES_LEIDAS',
             'Notificaciones',
-            'Se marcaron como leidas ' . $cantidad . ' notificaciones.'
+            'Se marcaron como leidas '.$cantidad.' notificaciones.'
         );
 
         return redirect()
             ->route('gestion-academica-cup.notificaciones.index')
-            ->with('success', 'Se marcaron como leidas ' . $cantidad . ' notificaciones.');
+            ->with('success', 'Se marcaron como leidas '.$cantidad.' notificaciones.');
     }
 
     protected function receivedQuery(int $userId, array $filters): Builder
@@ -268,7 +267,7 @@ class NotificacionController extends Controller
             ->when($filters['fecha_desde'] !== '', fn (Builder $query) => $query->whereDate('notificaciones.created_at', '>=', $filters['fecha_desde']))
             ->when($filters['fecha_hasta'] !== '', fn (Builder $query) => $query->whereDate('notificaciones.created_at', '<=', $filters['fecha_hasta']))
             ->when($filters['busqueda'] !== '', function (Builder $query) use ($filters): void {
-                $term = '%' . $filters['busqueda'] . '%';
+                $term = '%'.$filters['busqueda'].'%';
 
                 $query->where(function (Builder $subQuery) use ($term): void {
                     $subQuery->where('notificaciones.titulo', 'like', $term)
@@ -294,7 +293,7 @@ class NotificacionController extends Controller
             ->when($filters['fecha_desde'] !== '', fn (Builder $query) => $query->whereDate('notificaciones.created_at', '>=', $filters['fecha_desde']))
             ->when($filters['fecha_hasta'] !== '', fn (Builder $query) => $query->whereDate('notificaciones.created_at', '<=', $filters['fecha_hasta']))
             ->when($filters['busqueda'] !== '', function (Builder $query) use ($filters): void {
-                $term = '%' . $filters['busqueda'] . '%';
+                $term = '%'.$filters['busqueda'].'%';
 
                 $query->where(function (Builder $subQuery) use ($term): void {
                     $subQuery->where('notificaciones.titulo', 'like', $term)
@@ -320,6 +319,7 @@ class NotificacionController extends Controller
     protected function rolesActivos()
     {
         return Role::query()
+            ->institutional()
             ->where('estado', 'ACTIVO')
             ->orderBy('nombre')
             ->get();

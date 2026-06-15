@@ -4,24 +4,17 @@ namespace App\Http\Controllers\AutenticacionUsuariosSeguridad;
 
 use App\Http\Controllers\Controller;
 use App\Models\Role;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 /**
- * Paquete: Autenticación, Usuarios y Seguridad
- * Caso de Uso: CU3 (Administrar Usuarios y Roles - Sección Roles)
- * 
- * Modela los roles y alcances del sistema (Administrador, Coordinador, Docente, Postulante, Autoridad Académica).
- * Los roles inactivos restringen el acceso a los usuarios que los posean.
+ * Permite consultar los roles institucionales fijos y sus usuarios asociados.
  */
 class RolController extends Controller
 {
-    // Controlador del caso de uso: CU3 Administrar Usuarios y Roles
     public function index(): View
     {
         $roles = Role::query()
+            ->institutional()
             ->withCount('usuarios')
             ->orderBy('nombre')
             ->paginate(10);
@@ -29,28 +22,10 @@ class RolController extends Controller
         return view('autenticacion_usuarios_seguridad.roles.index', compact('roles'));
     }
 
-    public function create(): View
-    {
-        return view('autenticacion_usuarios_seguridad.roles.create');
-    }
-
-    public function store(Request $request): RedirectResponse
-    {
-        $validated = $request->validate([
-            'nombre' => ['required', 'string', 'max:100', 'unique:roles,nombre'],
-            'descripcion' => ['nullable', 'string', 'max:255'],
-            'estado' => ['required', Rule::in(['ACTIVO', 'INACTIVO'])],
-        ]);
-
-        $rol = Role::create($validated);
-
-        return redirect()
-            ->route('autenticacion-usuarios-seguridad.roles.show', $rol)
-            ->with('success', 'Rol creado correctamente.');
-    }
-
     public function show(Role $role): View
     {
+        abort_unless(in_array($role->nombre, Role::INSTITUTIONAL_NAMES, true), 404);
+
         $role->loadCount('usuarios');
         $usuarios = $role->usuarios()
             ->orderBy('nombre')
@@ -61,34 +36,5 @@ class RolController extends Controller
             'rol' => $role,
             'usuarios' => $usuarios,
         ]);
-    }
-
-    public function edit(Role $role): View
-    {
-        return view('autenticacion_usuarios_seguridad.roles.edit', ['rol' => $role]);
-    }
-
-    public function update(Request $request, Role $role): RedirectResponse
-    {
-        $validated = $request->validate([
-            'nombre' => ['required', 'string', 'max:100', Rule::unique('roles', 'nombre')->ignore($role->id)],
-            'descripcion' => ['nullable', 'string', 'max:255'],
-            'estado' => ['required', Rule::in(['ACTIVO', 'INACTIVO'])],
-        ]);
-
-        $role->update($validated);
-
-        return redirect()
-            ->route('autenticacion-usuarios-seguridad.roles.show', $role)
-            ->with('success', 'Rol actualizado correctamente.');
-    }
-
-    public function destroy(Role $role): RedirectResponse
-    {
-        $role->update(['estado' => 'INACTIVO']);
-
-        return redirect()
-            ->route('autenticacion-usuarios-seguridad.roles.index')
-            ->with('success', 'Rol desactivado correctamente.');
     }
 }

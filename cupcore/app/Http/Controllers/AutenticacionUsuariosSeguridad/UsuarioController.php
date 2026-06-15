@@ -15,9 +15,9 @@ use Illuminate\View\View;
 /**
  * Paquete: Autenticación, Usuarios y Seguridad
  * Caso de Uso: CU3 (Administrar Usuarios y Roles - Sección Usuarios)
- * 
+ *
  * Gestiona el ciclo de vida de los usuarios institucionales (Administradores, Coordinadores, Docentes y Postulantes).
- * Registra auditorías automáticas a través de BitacoraHelper en la creación, edición, asignación de roles 
+ * Registra auditorías automáticas a través de BitacoraHelper en la creación, edición, asignación de roles
  * y cambios de estado (activar/desactivar).
  */
 class UsuarioController extends Controller
@@ -36,6 +36,7 @@ class UsuarioController extends Controller
     public function create(): View
     {
         $roles = Role::query()
+            ->institutional()
             ->where('estado', 'ACTIVO')
             ->orderBy('nombre')
             ->get();
@@ -46,7 +47,12 @@ class UsuarioController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'rol_id' => ['required', 'exists:roles,id'],
+            'rol_id' => [
+                'required',
+                Rule::exists('roles', 'id')->where(
+                    fn ($query) => $query->whereIn('nombre', Role::INSTITUTIONAL_NAMES)
+                ),
+            ],
             'nombre' => ['required', 'string', 'max:100'],
             'apellido' => ['required', 'string', 'max:100'],
             'ci' => ['required', 'string', 'max:30', 'unique:usuarios,ci'],
@@ -63,7 +69,7 @@ class UsuarioController extends Controller
         BitacoraHelper::registrar(
             'CREAR_USUARIO',
             'Usuarios',
-            'Se creo el usuario ' . $usuario->correo . '.'
+            'Se creo el usuario '.$usuario->correo.'.'
         );
 
         return redirect()
@@ -81,6 +87,7 @@ class UsuarioController extends Controller
     public function edit(User $usuario): View
     {
         $roles = Role::query()
+            ->institutional()
             ->where(function ($query) use ($usuario): void {
                 $query->where('estado', 'ACTIVO')
                     ->orWhere('id', $usuario->rol_id);
@@ -98,7 +105,12 @@ class UsuarioController extends Controller
         $correoAnterior = $usuario->correo;
 
         $validated = $request->validate([
-            'rol_id' => ['required', 'exists:roles,id'],
+            'rol_id' => [
+                'required',
+                Rule::exists('roles', 'id')->where(
+                    fn ($query) => $query->whereIn('nombre', Role::INSTITUTIONAL_NAMES)
+                ),
+            ],
             'nombre' => ['required', 'string', 'max:100'],
             'apellido' => ['required', 'string', 'max:100'],
             'ci' => ['required', 'string', 'max:30', Rule::unique('usuarios', 'ci')->ignore($usuario->id)],
@@ -119,14 +131,14 @@ class UsuarioController extends Controller
         BitacoraHelper::registrar(
             'ACTUALIZAR_USUARIO',
             'Usuarios',
-            'Se actualizo el usuario ' . $usuario->correo . '.'
+            'Se actualizo el usuario '.$usuario->correo.'.'
         );
 
         if ((int) $rolAnterior !== (int) $usuario->rol_id) {
             BitacoraHelper::registrar(
                 'ASIGNAR_ROL',
                 'Usuarios',
-                'Se cambio el rol del usuario ' . $usuario->correo . '.'
+                'Se cambio el rol del usuario '.$usuario->correo.'.'
             );
         }
 
@@ -134,19 +146,19 @@ class UsuarioController extends Controller
             BitacoraHelper::registrar(
                 'ACTIVAR_USUARIO',
                 'Usuarios',
-                'Se activo el usuario ' . $usuario->correo . '.'
+                'Se activo el usuario '.$usuario->correo.'.'
             );
         } elseif ($estadoAnterior === 'ACTIVO' && $usuario->estado === 'INACTIVO') {
             BitacoraHelper::registrar(
                 'DESACTIVAR_USUARIO',
                 'Usuarios',
-                'Se desactivo el usuario ' . $usuario->correo . '.'
+                'Se desactivo el usuario '.$usuario->correo.'.'
             );
         } elseif ($correoAnterior !== $usuario->correo) {
             BitacoraHelper::registrar(
                 'ACTUALIZAR_USUARIO',
                 'Usuarios',
-                'El usuario actualizo su identificacion de correo a ' . $usuario->correo . '.'
+                'El usuario actualizo su identificacion de correo a '.$usuario->correo.'.'
             );
         }
 
@@ -162,7 +174,7 @@ class UsuarioController extends Controller
         BitacoraHelper::registrar(
             'DESACTIVAR_USUARIO',
             'Usuarios',
-            'Se desactivo el usuario ' . $usuario->correo . '.'
+            'Se desactivo el usuario '.$usuario->correo.'.'
         );
 
         return redirect()

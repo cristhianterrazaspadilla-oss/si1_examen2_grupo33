@@ -1,11 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AutenticacionUsuariosSeguridad\AuthController;
-use App\Http\Controllers\AutenticacionUsuariosSeguridad\UsuarioController;
-use App\Http\Controllers\AutenticacionUsuariosSeguridad\RolController;
 use App\Http\Controllers\AutenticacionUsuariosSeguridad\ImportacionController;
 use App\Http\Controllers\AutenticacionUsuariosSeguridad\PasswordController;
+use App\Http\Controllers\AutenticacionUsuariosSeguridad\RolController;
+use App\Http\Controllers\AutenticacionUsuariosSeguridad\UsuarioController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
@@ -18,6 +18,6 @@ Route::prefix('autenticacion-usuarios-seguridad')
     ->middleware(['auth', 'role:administrador'])
     ->group(function (): void {
         Route::resource('usuarios', UsuarioController::class);
-        Route::resource('roles', RolController::class);
+        Route::resource('roles', RolController::class)->only(['index', 'show']);
         Route::resource('importaciones', ImportacionController::class);
     });

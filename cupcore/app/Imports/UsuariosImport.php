@@ -61,10 +61,14 @@ class UsuariosImport implements ToCollection, WithHeadingRow
         if (! $data['rol']) {
             $rowErrors[] = 'el campo rol es obligatorio.';
         } else {
-            $rol = Role::query()->where('nombre', $data['rol'])->first();
+            $rol = Role::query()
+                ->institutional()
+                ->where('estado', 'ACTIVO')
+                ->where('nombre', $data['rol'])
+                ->first();
 
             if (! $rol) {
-                $rowErrors[] = "el rol '{$data['rol']}' no existe en la tabla roles.";
+                $rowErrors[] = "el rol '{$data['rol']}' no es un rol institucional activo permitido.";
             }
         }
 

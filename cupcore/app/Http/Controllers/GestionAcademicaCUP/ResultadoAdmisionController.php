@@ -28,7 +28,7 @@ use Throwable;
  * Paquete: Gestión Académica del CUP
  * Caso de Uso: CU15 - Generación y recalculo de resultados de admisión.
  *
- * Evalúa el promedio final de notas de los postulantes, define su estado de aprobación (min. 51.00) 
+ * Evalúa el promedio final de notas de los postulantes, define su estado de aprobación (min. 51.00)
  * y les asigna carrera/cupo disponible según sus opciones de preferencia (1ra y 2da opción).
  */
 class ResultadoAdmisionController extends Controller
@@ -68,6 +68,7 @@ class ResultadoAdmisionController extends Controller
     public function create(): View
     {
         $this->authorizeRoles();
+
         return view('gestion_academica_cup.resultados.generar', [
             'postulantes' => $this->postulantesInscritosSinResultado(),
             'notaMinimaAprobacion' => number_format($this->notaMinimaAprobacion, 2, '.', ''),
@@ -91,7 +92,7 @@ class ResultadoAdmisionController extends Controller
         } catch (ValidationException $exception) {
             throw $exception;
         } catch (Throwable $exception) {
-            Log::error('Error al generar resultado de admisión: ' . $exception->getMessage(), [
+            Log::error('Error al generar resultado de admisión: '.$exception->getMessage(), [
                 'postulante_id' => $postulante->id,
             ]);
 
@@ -103,7 +104,7 @@ class ResultadoAdmisionController extends Controller
         BitacoraHelper::registrar(
             'GENERAR_RESULTADO',
             'Resultados',
-            'Se genero resultado de admision para el postulante CI ' . $postulante->ci . '.'
+            'Se genero resultado de admision para el postulante CI '.$postulante->ci.'.'
         );
 
         return redirect()
@@ -182,7 +183,7 @@ class ResultadoAdmisionController extends Controller
             } catch (ValidationException $exception) {
                 throw $exception;
             } catch (Throwable $exception) {
-                Log::error('Error al recalcular resultado de admisión: ' . $exception->getMessage(), [
+                Log::error('Error al recalcular resultado de admisión: '.$exception->getMessage(), [
                     'resultado_id' => $resultado->id,
                 ]);
 
@@ -194,7 +195,7 @@ class ResultadoAdmisionController extends Controller
             BitacoraHelper::registrar(
                 'RECALCULAR_RESULTADO',
                 'Resultados',
-                'Se recalculo el resultado del postulante CI ' . (string) $resultado->postulante?->ci . '.'
+                'Se recalculo el resultado del postulante CI '.(string) $resultado->postulante?->ci.'.'
             );
 
             return redirect()
@@ -211,7 +212,7 @@ class ResultadoAdmisionController extends Controller
         BitacoraHelper::registrar(
             'ACTUALIZAR_RESULTADO',
             'Resultados',
-            'Se actualizo la observacion del resultado del postulante CI ' . (string) $resultado->postulante?->ci . '.'
+            'Se actualizo la observacion del resultado del postulante CI '.(string) $resultado->postulante?->ci.'.'
         );
 
         return redirect()
@@ -249,12 +250,13 @@ class ResultadoAdmisionController extends Controller
     }
 
     /**
-     * Lote masivo que recorre todos los postulantes inscritos y genera su resultado
-     * si todas sus calificaciones de materias están cargadas de forma completa.
+     * Filtra los candidatos y asigna cupos por orden de merito.
      */
     public function generacionMasiva(Request $request): RedirectResponse
     {
         $this->authorizeRoles();
+
+        // Solo participan postulantes inscritos.
         $postulantes = Postulante::query()
             ->where('estado_inscripcion', 'INSCRITO')
             ->orderBy('id')
@@ -264,30 +266,58 @@ class ResultadoAdmisionController extends Controller
         $omitidosIncompletos = 0;
         $omitidosExistentes = 0;
         $errores = [];
+        $candidatos = collect();
 
+        // Filtra candidatos con notas completas y sin resultado previo.
         foreach ($postulantes as $postulante) {
             if ($postulante->resultadoAdmision()->exists()) {
                 $omitidosExistentes++;
+
                 continue;
             }
 
             try {
-                $this->generarResultadoParaPostulante($postulante);
-                $generados++;
+                $calculo = $this->calcularPromediosPostulante($postulante);
+                $this->validarNotasCompletas($calculo);
+
+                $candidatos->push([
+                    'postulante' => $postulante,
+                    'calculo' => $calculo,
+                    'promedio_final' => (float) $calculo['promedio_final'],
+                ]);
             } catch (ValidationException $exception) {
                 $messages = collect($exception->errors())->flatten()->implode(' ');
 
                 if (str_contains(Str::lower($messages), 'incomplet')) {
                     $omitidosIncompletos++;
                 } else {
-                    $errores[] = trim($postulante->nombres . ' ' . $postulante->apellidos) . ': ' . $messages;
+                    $errores[] = trim($postulante->nombres.' '.$postulante->apellidos).': '.$messages;
                 }
             } catch (Throwable $exception) {
-                Log::error('Error en generacion masiva para postulante: ' . $exception->getMessage(), [
+                Log::error('Error en generacion masiva para postulante: '.$exception->getMessage(), [
                     'postulante_id' => $postulante->id,
                 ]);
 
-                $errores[] = trim($postulante->nombres . ' ' . $postulante->apellidos) . ': No se pudo generar el resultado para este postulante.';
+                $errores[] = trim($postulante->nombres.' '.$postulante->apellidos).': No se pudo generar el resultado para este postulante.';
+            }
+        }
+
+        // Asigna cupos desde el promedio mas alto.
+        foreach ($this->ordenarCandidatosPorMerito($candidatos) as $candidato) {
+            $postulante = $candidato['postulante'];
+
+            try {
+                $this->generarResultadoParaPostulante($postulante, $candidato['calculo']);
+                $generados++;
+            } catch (ValidationException $exception) {
+                $messages = collect($exception->errors())->flatten()->implode(' ');
+                $errores[] = trim($postulante->nombres.' '.$postulante->apellidos).': '.$messages;
+            } catch (Throwable $exception) {
+                Log::error('Error en generacion masiva para postulante: '.$exception->getMessage(), [
+                    'postulante_id' => $postulante->id,
+                ]);
+
+                $errores[] = trim($postulante->nombres.' '.$postulante->apellidos).': No se pudo generar el resultado para este postulante.';
             }
         }
 
@@ -297,7 +327,7 @@ class ResultadoAdmisionController extends Controller
             BitacoraHelper::registrar(
                 'GENERAR_RESULTADO',
                 'Resultados',
-                'Se ejecuto generacion masiva de resultados. Generados: ' . $generados . '.'
+                'Se ejecuto generacion masiva de resultados. Generados: '.$generados.'.'
             );
         }
 
@@ -305,6 +335,24 @@ class ResultadoAdmisionController extends Controller
             ->route('gestion-academica-cup.resultados.index')
             ->with('success', $message)
             ->with('batch_errors', $errores);
+    }
+
+    /**
+     * Ordena por mayor promedio y desempata por el menor ID.
+     */
+    protected function ordenarCandidatosPorMerito(Collection $candidatos): Collection
+    {
+        return $candidatos
+            ->sort(function (array $primerCandidato, array $segundoCandidato): int {
+                $comparacionPromedio = $segundoCandidato['promedio_final'] <=> $primerCandidato['promedio_final'];
+
+                if ($comparacionPromedio !== 0) {
+                    return $comparacionPromedio;
+                }
+
+                return $primerCandidato['postulante']->id <=> $segundoCandidato['postulante']->id;
+            })
+            ->values();
     }
 
     protected function authorizeRoles(): void
@@ -338,9 +386,9 @@ class ResultadoAdmisionController extends Controller
                 $term = $filters['search'];
                 $query->where(function (Builder $innerQuery) use ($term): void {
                     $innerQuery
-                        ->where('postulantes.ci', 'like', '%' . $term . '%')
-                        ->orWhere('postulantes.nombres', 'like', '%' . $term . '%')
-                        ->orWhere('postulantes.apellidos', 'like', '%' . $term . '%');
+                        ->where('postulantes.ci', 'like', '%'.$term.'%')
+                        ->orWhere('postulantes.nombres', 'like', '%'.$term.'%')
+                        ->orWhere('postulantes.apellidos', 'like', '%'.$term.'%');
                 });
             })
             ->when($filters['gestion'] !== '', function (Builder $query) use ($filters): void {
@@ -444,7 +492,7 @@ class ResultadoAdmisionController extends Controller
                 if (! $nota) {
                     $materiaCompleta = false;
                     $completo = false;
-                    $materiaFaltantes[] = $materia->nombre . ' - Evaluacion ' . $evaluacion->numero_evaluacion;
+                    $materiaFaltantes[] = $materia->nombre.' - Evaluacion '.$evaluacion->numero_evaluacion;
                 } else {
                     $ponderado += ((float) $nota->nota) * (((float) $evaluacion->porcentaje) / 100);
                 }
@@ -459,7 +507,7 @@ class ResultadoAdmisionController extends Controller
                 $materiaCompleta = false;
                 $completo = false;
                 for ($numero = $evaluaciones->count() + 1; $numero <= 3; $numero++) {
-                    $materiaFaltantes[] = $materia->nombre . ' - Evaluacion ' . $numero;
+                    $materiaFaltantes[] = $materia->nombre.' - Evaluacion '.$numero;
                 }
             }
 
@@ -498,16 +546,15 @@ class ResultadoAdmisionController extends Controller
             $faltantes = $calculo['faltantes'] !== [] ? implode(', ', $calculo['faltantes']) : 'No se pudo completar el calculo.';
 
             throw ValidationException::withMessages([
-                'postulante_id' => 'Notas incompletas: no se puede generar resultado. Faltantes: ' . $faltantes,
+                'postulante_id' => 'Notas incompletas: no se puede generar resultado. Faltantes: '.$faltantes,
             ]);
         }
     }
 
     /**
-     * Motor principal de generación de resultados. Realiza el cálculo de promedios, valida la disponibilidad 
-     * de cupos en base a opciones de carrera e inserta el resultado atómicamente, actualizando los contadores de cupos.
+     * Genera el resultado y ocupa el cupo seleccionado.
      */
-    protected function generarResultadoParaPostulante(Postulante $postulante): ResultadoAdmision
+    protected function generarResultadoParaPostulante(Postulante $postulante, ?array $calculoPrecalculado = null): ResultadoAdmision
     {
         if ($postulante->estado_inscripcion !== 'INSCRITO') {
             throw ValidationException::withMessages([
@@ -525,9 +572,10 @@ class ResultadoAdmisionController extends Controller
             $grupoPostulante = $this->resolverGrupoActivoUnicoDelPostulante($postulante);
             $grupo = $grupoPostulante->grupo;
             $gestion = (string) $grupo->gestion;
-            $calculo = $this->calcularPromediosPostulante($postulante);
+            $calculo = $calculoPrecalculado ?? $this->calcularPromediosPostulante($postulante);
             $this->validarNotasCompletas($calculo);
             $promedioFinal = (float) $calculo['promedio_final'];
+
             $asignacion = $this->asignarCarrera($postulante, $gestion, $promedioFinal);
         } catch (ValidationException $exception) {
             throw $exception;
@@ -584,6 +632,7 @@ class ResultadoAdmisionController extends Controller
 
         if ($cupoId !== null) {
             try {
+                // Evita ocupar un cupo agotado o dejar el contador negativo.
                 $updated = DB::table('cupos_carrera')
                     ->where('id', $cupoId)
                     ->where('cupos_disponibles', '>', 0)
@@ -634,7 +683,7 @@ class ResultadoAdmisionController extends Controller
         NotificacionHelper::enviar(
             $postulante->usuario_id,
             'Resultado de admisión disponible',
-            'Tu resultado de admisión ya está disponible. Estado: ' . $resultado->estado_resultado . '.',
+            'Tu resultado de admisión ya está disponible. Estado: '.$resultado->estado_resultado.'.',
             'RESULTADO'
         );
 
@@ -695,12 +744,11 @@ class ResultadoAdmisionController extends Controller
     }
 
     /**
-     * Aplica las reglas del negocio de asignación:
-     * Si el promedio final es menor a 51.00 es REPROBADO.
-     * Si aprueba, evalúa disponibilidad de cupos en Carrera Primera Opción, luego en Segunda Opción.
+     * Asigna primera opcion, segunda opcion o deja al postulante sin cupo.
      */
     protected function asignarCarrera(Postulante $postulante, string $gestion, float $promedioFinal): array
     {
+        // Los reprobados no participan por un cupo.
         if ($promedioFinal < $this->notaMinimaAprobacion) {
             return [
                 'estado_resultado' => 'REPROBADO',
@@ -714,6 +762,7 @@ class ResultadoAdmisionController extends Controller
         $primeraOpcion = $postulante->carreraPrimeraOpcion;
         $segundaOpcion = $postulante->carreraSegundaOpcion;
 
+        // Primero intenta asignar la primera opcion.
         if ($primeraOpcion) {
             $cupo = $this->buscarCupoDisponible($primeraOpcion->id, $gestion);
 
@@ -728,6 +777,7 @@ class ResultadoAdmisionController extends Controller
             }
         }
 
+        // Si no hay cupo, intenta la segunda opcion.
         if ($segundaOpcion) {
             $cupo = $this->buscarCupoDisponible($segundaOpcion->id, $gestion);
 
@@ -751,6 +801,9 @@ class ResultadoAdmisionController extends Controller
         ];
     }
 
+    /**
+     * Busca un cupo activo y disponible para la carrera.
+     */
     protected function buscarCupoDisponible(int $carreraId, string $gestion, bool $requireAvailability = true): ?CupoCarrera
     {
         $gestiones = array_unique(array_filter([

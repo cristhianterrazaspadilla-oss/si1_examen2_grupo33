@@ -6,7 +6,6 @@
     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <x-page-title title="Detalle de Rol" subtitle="CU3 Administrar Usuarios y Roles" />
         <div class="flex flex-wrap gap-2 w-full sm:w-auto">
-            <a href="{{ route('autenticacion-usuarios-seguridad.roles.edit', $rol) }}" class="btn btn-info w-full sm:w-auto">Editar</a>
             <a href="{{ route('autenticacion-usuarios-seguridad.roles.index') }}" class="btn btn-outline w-full sm:w-auto">Volver</a>
         </div>
     </div>

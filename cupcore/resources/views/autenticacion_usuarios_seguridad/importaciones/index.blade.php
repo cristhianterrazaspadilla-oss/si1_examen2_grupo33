@@ -64,7 +64,7 @@
                     <p class="text-sm font-semibold uppercase tracking-[0.16em] text-blue-200/75">Recomendaciones</p>
                     <ul class="mt-4 list-disc space-y-2 pl-5 text-sm leading-7 text-slate-300">
                          <li>Verifica que la primera fila contenga los encabezados exactos.</li>
-                         <li>Usa roles existentes en la tabla `roles` para evitar observaciones.</li>
+                         <li>Usa uno de los roles institucionales: Administrador, Coordinador, Docente, Postulante o Autoridad Académica.</li>
                          <li>Si una fila falla, el resto del archivo seguira procesandose.</li>
                     </ul>
                 </div>
@@ -129,7 +129,7 @@
                 <div class="rounded-[1.4rem] border border-blue-300/12 bg-slate-950/35 p-5">
                     <p class="text-sm font-semibold uppercase tracking-[0.16em] text-blue-200/75">Reglas del formato</p>
                     <ul class="mt-4 list-disc space-y-2 pl-5 text-sm leading-7 text-slate-300">
-                        <li>El rol se busca por `roles.nombre`.</li>
+                        <li>El nombre del rol debe coincidir exactamente con uno de los roles institucionales activos.</li>
                         <li>Si `estado` viene vacio, se usara `ACTIVO`.</li>
                         <li>No se importan filas con `ci` o `correo` duplicados o invalidos.</li>
                         <li>Una fila con error no detiene la importacion del resto del archivo.</li>
