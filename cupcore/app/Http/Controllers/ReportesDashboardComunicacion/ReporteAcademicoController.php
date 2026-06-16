@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\GestionAcademicaCUP;
+namespace App\Http\Controllers\ReportesDashboardComunicacion;
 
 use App\Http\Controllers\Controller;
 use App\Models\Carrera;
@@ -184,7 +184,7 @@ class ReporteAcademicoController extends Controller
                 DB::raw('SUM(cupos_carrera.cupos_disponibles) as disponibles'),
             ]);
 
-        return view('gestion_academica_cup.reportes.dashboard', [
+        return view('reportes_dashboard_comunicacion.reportes.dashboard', [
             'filters' => $filters,
             'summary' => $summary,
             'aprobadosPorCarrera' => $aprobadosPorCarrera,
@@ -226,7 +226,7 @@ class ReporteAcademicoController extends Controller
             $reportData = $this->getReporteData($request, true);
         }
 
-        return view('gestion_academica_cup.reportes.consulta', [
+        return view('reportes_dashboard_comunicacion.reportes.consulta', [
             'filters' => $filters,
             'reportTypes' => $this->getReporteOptions(),
             'reportData' => $reportData,
@@ -478,7 +478,7 @@ class ReporteAcademicoController extends Controller
         );
 
         return Pdf::loadView(
-            'gestion_academica_cup.reportes.imprimir',
+            'reportes_dashboard_comunicacion.reportes.imprimir',
             [
                 'filters' => $validation,
                 'reportData' => $reportData,
@@ -582,7 +582,7 @@ class ReporteAcademicoController extends Controller
             })
         );
 
-        return view('gestion_academica_cup.reportes.historial', [
+        return view('reportes_dashboard_comunicacion.reportes.historial', [
             'filters' => $filters,
             'historial' => $historial,
             'reportTypes' => $reportTypes,

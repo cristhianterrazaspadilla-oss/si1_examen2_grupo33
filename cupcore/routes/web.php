@@ -14,3 +14,5 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 require __DIR__.'/modules/autenticacion_usuarios_seguridad.php';
 require __DIR__.'/modules/gestion_postulantes_admision.php';
 require __DIR__.'/modules/gestion_academica_cup.php';
+require __DIR__.'/modules/gestion_docente_evaluacion.php';
+require __DIR__.'/modules/reportes_dashboard_comunicacion.php';

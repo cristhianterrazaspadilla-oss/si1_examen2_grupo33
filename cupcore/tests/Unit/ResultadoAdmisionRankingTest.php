@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\GestionAcademicaCUP\ResultadoAdmisionController;
+use App\Http\Controllers\GestionPostulantesAdmision\ResultadoAdmisionController;
 use App\Models\Postulante;
 use Illuminate\Support\Collection;
 

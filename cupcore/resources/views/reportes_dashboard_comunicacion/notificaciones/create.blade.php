@@ -1,16 +1,86 @@
 @extends('layouts.app')
 
-@section('title', 'Notificaciones | CUPCore')
+@section('title', 'Crear notificacion interna | CUPCore')
 
 @section('content')
-    <x-page-title title="Notificaciones" subtitle="CU19 Gestionar Notificaciones Internas" />
-
-    <x-card title="Formulario de registro">
-        <p class="mb-4">Vista base de Notificaciones para la estructura inicial del proyecto.</p>
-
-        <div class="flex gap-2">
-            <a href="{{ url()->previous() }}" class="btn btn-primary">Volver</a>
-            <button type="button" class="btn btn-outline">Acción pendiente</button>
+    {{-- CU19 Crear notificación interna:
+        - Formulario para enviar notificaciones dentro del sistema a usuarios activos.
+        - Campos: destinatario (usuario), tipo, título y mensaje. Respeta names/actions y métodos HTTP.
+        - Las notificaciones enviadas se registran y aparecen en "Enviadas" para seguimiento.
+    --}}
+    <div class="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+        <x-page-title title="Crear notificacion interna" subtitle="La notificacion se mostrara dentro del sistema al usuario destinatario." />
+        <div class="flex flex-wrap gap-2">
+            <a href="{{ route('gestion-academica-cup.notificaciones.index') }}" class="btn btn-outline w-full sm:w-auto">Cancelar</a>
+            <a href="{{ route('gestion-academica-cup.notificaciones.enviadas') }}" class="btn btn-info w-full sm:w-auto">Ver enviadas</a>
         </div>
+    </div>
+
+    @if ($errors->any())
+        <div class="mb-6 space-y-2">
+            @foreach ($errors->all() as $error)
+                <x-alert type="error" :message="$error" />
+            @endforeach
+        </div>
+    @endif
+
+    <x-card title="Formulario de notificacion">
+        <form method="POST" action="{{ route('gestion-academica-cup.notificaciones.store') }}" class="app-form">
+            @csrf
+
+            <section class="app-form-section">
+                <h2 class="app-section-title">Destinatario y tipo</h2>
+                <p class="app-section-subtitle">Selecciona el usuario receptor y clasifica la notificacion para facilitar el seguimiento.</p>
+                <div class="app-form-grid cols-2">
+                    <label class="form-control">
+                        <span class="label-text">Destinatario</span>
+                        <select name="usuario_receptor_id" class="select select-bordered w-full" required>
+                            <option value="">Selecciona un usuario activo</option>
+                            @foreach ($usuariosActivos as $usuario)
+                                <option value="{{ $usuario->id }}" @selected((string) old('usuario_receptor_id') === (string) $usuario->id)>
+                                    {{ trim($usuario->nombre . ' ' . $usuario->apellido) }} | {{ $usuario->correo }}{{ $usuario->rol ? ' | ' . $usuario->rol->nombre : '' }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </label>
+                    <label class="form-control">
+                        <span class="label-text">Tipo</span>
+                        <select name="tipo" class="select select-bordered w-full">
+                            @foreach ($tiposNotificacion as $tipo)
+                                <option value="{{ $tipo }}" @selected(old('tipo', 'GENERAL') === $tipo)>{{ $tipo }}</option>
+                            @endforeach
+                        </select>
+                    </label>
+                </div>
+            </section>
+
+            <section class="app-form-section">
+                <h2 class="app-section-title">Contenido</h2>
+                <div class="app-form-grid">
+                    <label class="form-control">
+                        <span class="label-text">Titulo</span>
+                        <input type="text" name="titulo" value="{{ old('titulo') }}" class="input input-bordered w-full" maxlength="150" required>
+                    </label>
+                    <label class="form-control">
+                        <span class="label-text">Mensaje</span>
+                        <textarea name="mensaje" class="textarea textarea-bordered w-full" maxlength="1000" required>{{ old('mensaje') }}</textarea>
+                    </label>
+                </div>
+            </section>
+
+            <section class="app-form-section">
+                <h2 class="app-section-title">Roles activos</h2>
+                <div class="flex flex-wrap gap-2">
+                    @foreach ($rolesActivos as $rol)
+                        <span class="badge border border-blue-300/25 bg-slate-800/80 text-slate-100">{{ $rol->nombre }}</span>
+                    @endforeach
+                </div>
+            </section>
+
+            <div class="app-form-actions">
+                <button type="submit" class="btn btn-primary">Enviar notificacion</button>
+                <a href="{{ route('gestion-academica-cup.notificaciones.index') }}" class="btn btn-outline">Cancelar</a>
+            </div>
+        </form>
     </x-card>
 @endsection

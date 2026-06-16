@@ -27,7 +27,7 @@ test('trusted proxy headers generate secure urls', function () {
 });
 
 test('the report template renders a valid pdf', function () {
-    $output = Pdf::loadView('gestion_academica_cup.reportes.imprimir', [
+    $output = Pdf::loadView('reportes_dashboard_comunicacion.reportes.imprimir', [
         'reportData' => [
             'label' => 'Reporte de prueba',
             'total' => 1,
